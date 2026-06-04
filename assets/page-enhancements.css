@@ -1,0 +1,185 @@
+/* ============================================================
+   PAGE ENHANCEMENTS — methods · results · about
+   White-primary, teal/blue accent tech layer
+   ============================================================ */
+
+/* ── Subtle dot-grid texture on white section backgrounds ── */
+main > section {
+  background-image: radial-gradient(circle, rgba(13,148,136,0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -12px -12px;
+}
+
+/* ── HR dividers: teal gradient, animated via JS ─────────── */
+hr.divider {
+  border: none !important;
+  border-top: none !important;
+  height: 1px;
+  background: linear-gradient(to right, rgba(13,148,136,0.38), rgba(56,189,248,0.15), transparent);
+  margin: 0;
+  transform-origin: left center;
+}
+
+/* ── Section eyebrow: teal pulse dot prefix ─────────────── */
+.section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal, #0d9488);
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  animation: eyebrow-pulse 2.4s ease-in-out infinite;
+}
+@keyframes eyebrow-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(0.7); }
+}
+
+/* ── Cards: teal-tinted glass feel on white ──────────────── */
+.card {
+  border: 1px solid rgba(13,148,136,0.12) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 0 0 1px rgba(13,148,136,0.04) !important;
+  transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease !important;
+}
+.card:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(13,148,136,0.28) !important;
+  box-shadow:
+    0 12px 32px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(13,148,136,0.18),
+    0 0 20px rgba(13,148,136,0.06) !important;
+}
+
+/* ── Pipeline step cards: left accent reveal on hover ────── */
+.pipeline-step .card {
+  border-left: 3px solid rgba(13,148,136,0.1) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-left-color 0.25s ease !important;
+}
+.pipeline-step:hover .card {
+  transform: translateX(5px) translateY(-2px) !important;
+  border-left-color: #0d9488 !important;
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.08),
+    -4px 0 14px rgba(13,148,136,0.08),
+    0 0 0 1px rgba(13,148,136,0.14) !important;
+}
+
+/* Step-number node: glow when parent is hovered */
+.step-number {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform;
+}
+.pipeline-step:hover .step-number {
+  box-shadow: 0 0 0 6px rgba(13,148,136,0.1), 0 0 22px rgba(13,148,136,0.28);
+  transform: scale(1.1);
+}
+
+/* Connector line: ensure transform-origin is set for JS draw */
+.step-connector-line {
+  transform-origin: top center;
+}
+
+/* ── Chart placeholders: hover zoom ─────────────────────── */
+.chart-placeholder {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease !important;
+  will-change: transform;
+}
+.chart-placeholder:hover {
+  transform: scale(1.025) translateY(-3px) !important;
+  border-color: rgba(13,148,136,0.35) !important;
+  box-shadow:
+    0 12px 32px rgba(0,0,0,0.1),
+    0 0 0 1px rgba(13,148,136,0.15) !important;
+}
+.chart-icon {
+  transition: transform 0.3s ease;
+}
+.chart-placeholder:hover .chart-icon {
+  transform: scale(1.15);
+}
+
+/* ── Result sections: teal left accent on hover ──────────── */
+.result-section {
+  border-left: 3px solid transparent !important;
+  transition:
+    border-left-color 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+.result-section:hover {
+  border-left-color: rgba(13,148,136,0.4) !important;
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.05),
+    -3px 0 12px rgba(13,148,136,0.06) !important;
+}
+
+/* ── Finding chips: hover polish ─────────────────────────── */
+.finding-chip {
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+  cursor: default;
+}
+.finding-chip:hover {
+  transform: translateY(-1px) !important;
+  background: rgba(13,148,136,0.12) !important;
+  border-color: rgba(13,148,136,0.3) !important;
+  color: #0f766e !important;
+}
+
+/* ── Tool tags: hover teal tint ──────────────────────────── */
+.tool-tag {
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.tool-tag:hover {
+  background: rgba(13,148,136,0.1) !important;
+  border-color: rgba(13,148,136,0.3) !important;
+  color: #0d9488 !important;
+  transform: translateY(-1px);
+}
+
+/* ── Avatar: glow ring on hover ──────────────────────────── */
+.avatar-ring {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+  will-change: transform;
+}
+.avatar-ring:hover {
+  box-shadow:
+    0 0 0 5px rgba(13,148,136,0.1),
+    0 0 0 10px rgba(13,148,136,0.05),
+    0 14px 32px rgba(0,0,0,0.14);
+  transform: scale(1.05);
+}
+
+/* ── Skill bars: smoother fill ───────────────────────────── */
+.skill-bar-fill {
+  transition: none !important; /* JS handles animation */
+}
+.skill-bar-track {
+  overflow: visible;
+  position: relative;
+}
+.skill-bar-track::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+  pointer-events: none;
+}
+
+/* ── Contact/CTA buttons: polished hover ────────────────── */
+a.btn-primary {
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+a.btn-primary:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 22px rgba(13,148,136,0.35) !important;
+}
+
+/* ── Stat numbers (if any) ───────────────────────────────── */
+.stat-number {
+  transition: color 0.2s ease;
+}
