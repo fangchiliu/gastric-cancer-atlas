@@ -7,15 +7,17 @@
     { href: 'index.html',   label: 'Overview' },
     { href: 'methods.html', label: 'Methods' },
     { href: 'results.html', label: 'Results' },
+    { href: 'https://github.com/fangchiliu/stomach-cancer/tree/main', label: 'Code', external: true },
     { href: 'about.html',   label: 'About' },
   ];
 
   const current = window.location.pathname.split('/').pop() || 'index.html';
 
   const links = pages
-    .map(({ href, label }) => {
-      const isActive = href === current || (current === '' && href === 'index.html');
-      return `<a href="${href}" class="${isActive ? 'active' : ''}">${label}</a>`;
+    .map(({ href, label, external }) => {
+      const isActive = !external && (href === current || (current === '' && href === 'index.html'));
+      const attrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${href}"${attrs} class="${isActive ? 'active' : ''}">${label}</a>`;
     })
     .join('');
 
