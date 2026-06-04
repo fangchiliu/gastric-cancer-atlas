@@ -269,6 +269,30 @@
     </div>
   </section>
 
+  <!-- ── 3D UMAP Cell Cloud ────────────────────────────────── -->
+  <section id="umap-section" style="margin-bottom:3rem;">
+    <span class="section-eyebrow">scRNA-seq Preview</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Single-Cell Transcriptomic Landscape</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+      3D UMAP projection — scroll to explore cell populations
+    </p>
+
+    <!-- Outer wrapper: position:relative anchors the legend and tooltip inside the frame -->
+    <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(0,212,170,0.18); box-shadow:0 4px 32px rgba(0,0,0,0.18);">
+      <div id="umap-container" style="width:100%; height:560px; background:#0a1628; display:block;"></div>
+
+      <!-- Floating legend — top-right, clickable to toggle clusters -->
+      <div id="umap-legend" style="position:absolute; top:14px; right:14px; background:rgba(8,18,34,0.88); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:10px 14px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); min-width:148px; user-select:none;"></div>
+
+      <!-- Hover tooltip -->
+      <div id="umap-tooltip" style="display:none; position:absolute; background:rgba(8,18,34,0.92); border:1px solid rgba(0,212,170,0.3); border-radius:7px; padding:5px 11px; font-size:12px; color:#fff; pointer-events:none; z-index:10; white-space:nowrap;"></div>
+    </div>
+
+    <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.6rem; line-height:1.5;">
+      Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Click legend to toggle cell types
+    </p>
+  </section>
+
   <!-- ── 4. scRNA-seq Deconvolution ─────────────────────────── -->
   <section style="margin-bottom:1rem;">
     <span class="section-eyebrow">Module 4</span>
@@ -604,6 +628,312 @@
     gsap.from('#gene-network-section', {
       opacity: 0, y: 36, duration: 0.78, ease: 'power2.out',
       scrollTrigger: { trigger: '#gene-network-section', start: 'top 82%', once: true }
+    });
+  }
+})();
+</script>
+
+<!-- Three.js r128 for UMAP — loads global THREE before init script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   3D UMAP Cell Cloud — Single-Cell Transcriptomic Landscape
+
+   DATA-READY: to load real data instead of mock, replace the call
+     initUMAP(generateMockData());
+   with:
+     fetch('data/umap.json').then(r => r.json()).then(initUMAP);
+
+   Expected JSON format (one object per cell):
+     [{"x":1.2, "y":-3.4, "z":0.8, "cluster":"Epithelial cells", "expression":2.3}, ...]
+   Cluster names must exactly match the `name` fields in CELL_TYPES below.
+════════════════════════════════════════════════════════════════ */
+(function () {
+  var container = document.getElementById('umap-container');
+  if (!container || typeof THREE === 'undefined') return;
+
+  /* ── Cell type registry ──────────────────────────────────────── */
+  var CELL_TYPES = [
+    { name:'Epithelial cells',  color:'#00d4aa', cx: 2,   cy: 1,   cz: 0.5,  n:400, std:0.4 },
+    { name:'Cancer cells',      color:'#ff4757', cx: 3,   cy:-1,   cz:-0.3,  n:300, std:0.4 },
+    { name:'T cells',           color:'#4895ef', cx:-2,   cy: 2,   cz: 1.2,  n:200, std:0.4 },
+    { name:'B cells',           color:'#9b59b6', cx:-3,   cy: 1,   cz:-0.8,  n:150, std:0.4 },
+    { name:'Macrophages',       color:'#ff6b35', cx:-1,   cy:-2,   cz: 0.8,  n:150, std:0.4 },
+    { name:'Fibroblasts',       color:'#2ed573', cx: 1,   cy:-3,   cz:-1.0,  n:150, std:0.4 },
+    { name:'Endothelial cells', color:'#ffd700', cx: 2,   cy: 3,   cz: 1.5,  n:100, std:0.4 },
+    { name:'NK cells',          color:'#ff6eb4', cx:-2,   cy:-1,   cz:-0.5,  n: 50, std:0.4 }
+  ];
+
+  /* ── Gaussian sampler (Box-Muller) ───────────────────────────── */
+  function randn(m, s) {
+    var u = 1 - Math.random(), v = Math.random();
+    return m + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  /* ── Mock data generator ─────────────────────────────────────── */
+  function generateMockData() {
+    var all = [];
+    CELL_TYPES.forEach(function (ct) {
+      for (var i = 0; i < ct.n; i++) {
+        all.push({
+          x:          randn(ct.cx, ct.std),
+          y:          randn(ct.cy, ct.std),
+          z:          randn(ct.cz, ct.std * 0.65),
+          cluster:    ct.name,
+          expression: Math.random() * 3
+        });
+      }
+    });
+    return all;
+  }
+
+  /* ── Bootstrap ───────────────────────────────────────────────── */
+  initUMAP(generateMockData());
+
+  /* ════════════════════════════════════════════════════════════
+     initUMAP(rawData) — builds the Three.js scene.
+     rawData: array of {x,y,z,cluster,expression} objects.
+  ════════════════════════════════════════════════════════════ */
+  function initUMAP(rawData) {
+    var W = container.offsetWidth || 800;
+    var H = container.offsetHeight || 560;
+
+    /* ── Scene ─────────────────────────────────────────────────── */
+    var scene    = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a1628);
+    var camera   = new THREE.PerspectiveCamera(55, W / H, 0.1, 500);
+    camera.position.set(0, 0, 18);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.domElement.style.display = 'block';
+    container.appendChild(renderer.domElement);
+
+    /* ── Radial glow sprite texture per cluster color ──────────── */
+    function makeGlowTex(hex) {
+      var r = parseInt(hex.slice(1,3),16);
+      var g = parseInt(hex.slice(3,5),16);
+      var b = parseInt(hex.slice(5,7),16);
+      var rgba = function (a) { return 'rgba('+r+','+g+','+b+','+a+')'; };
+      var cv = document.createElement('canvas');
+      cv.width = cv.height = 64;
+      var cx = cv.getContext('2d');
+      var grd = cx.createRadialGradient(32,32,0, 32,32,32);
+      grd.addColorStop(0,    rgba(1));
+      grd.addColorStop(0.3,  rgba(0.8));
+      grd.addColorStop(0.65, rgba(0.22));
+      grd.addColorStop(1,    rgba(0));
+      cx.fillStyle = grd;
+      cx.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(cv);
+    }
+
+    /* ── Build one Points mesh per cluster ─────────────────────── */
+    var clusters = [];
+    CELL_TYPES.forEach(function (ct) {
+      var cpts = rawData.filter(function (d) { return d.cluster === ct.name; });
+      if (!cpts.length) return;
+
+      var pos = new Float32Array(cpts.length * 3);
+      cpts.forEach(function (d, i) {
+        pos[i*3] = d.x; pos[i*3+1] = d.y; pos[i*3+2] = d.z;
+      });
+
+      var geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+
+      var mat = new THREE.PointsMaterial({
+        color:          new THREE.Color(ct.color),
+        size:           0.18,
+        map:            makeGlowTex(ct.color),
+        transparent:    true,
+        opacity:        0.88,
+        depthWrite:     false,
+        blending:       THREE.AdditiveBlending,
+        sizeAttenuation: true
+      });
+
+      var mesh = new THREE.Points(geo, mat);
+      scene.add(mesh);
+      clusters.push({ mesh: mesh, ct: ct, on: true });
+    });
+
+    /* ── Legend ────────────────────────────────────────────────── */
+    var legendEl = document.getElementById('umap-legend');
+    if (legendEl) {
+      legendEl.innerHTML =
+        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;'
+        + 'color:#64748b;margin-bottom:8px;font-family:system-ui,sans-serif;">Cell Types</div>';
+
+      clusters.forEach(function (cl) {
+        var row = document.createElement('div');
+        row.style.cssText =
+          'display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;'
+          + 'border-radius:5px;transition:opacity 0.2s;font-size:12px;'
+          + 'font-family:system-ui,sans-serif;color:rgba(255,255,255,0.82);'
+          + 'font-weight:500;margin-bottom:1px;';
+        var dot = '<span style="width:9px;height:9px;border-radius:50%;background:'
+          + cl.ct.color + ';box-shadow:0 0 5px ' + cl.ct.color
+          + ';flex-shrink:0;display:inline-block;transition:box-shadow 0.2s;"></span>';
+        row.innerHTML = dot + cl.ct.name;
+
+        row.addEventListener('click', function () {
+          cl.on = !cl.on;
+          cl.mesh.visible = cl.on;
+          row.style.opacity = cl.on ? '1' : '0.3';
+        });
+        row.addEventListener('mouseenter', function () {
+          row.querySelector('span').style.boxShadow = '0 0 10px ' + cl.ct.color;
+        });
+        row.addEventListener('mouseleave', function () {
+          row.querySelector('span').style.boxShadow = '0 0 5px ' + cl.ct.color;
+        });
+        legendEl.appendChild(row);
+      });
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       Minimal OrbitControls — inline, no extra imports needed.
+       Left-drag → rotate   Right-drag → pan   Wheel → zoom
+    ══════════════════════════════════════════════════════════ */
+    var sph = { theta: 0.3, phi: Math.PI * 0.45, r: 18 };
+    var tgt = new THREE.Vector3(0, 0, 0);
+    var dragging = false, panning = false;
+    var lm = { x: 0, y: 0 };
+    var autoRotate = true;
+
+    function updateCam() {
+      camera.position.set(
+        tgt.x + sph.r * Math.sin(sph.phi) * Math.sin(sph.theta),
+        tgt.y + sph.r * Math.cos(sph.phi),
+        tgt.z + sph.r * Math.sin(sph.phi) * Math.cos(sph.theta)
+      );
+      camera.lookAt(tgt);
+    }
+
+    var cvs = renderer.domElement;
+
+    cvs.addEventListener('mousedown', function (e) {
+      if (e.button === 0) { dragging = true; panning = false; }
+      if (e.button === 2) { panning  = true; dragging = false; }
+      lm = { x: e.clientX, y: e.clientY };
+    });
+
+    cvs.addEventListener('mousemove', function (e) {
+      var dx = e.clientX - lm.x, dy = e.clientY - lm.y;
+      if (dragging) {
+        sph.theta -= dx * 0.006;
+        sph.phi   -= dy * 0.006;
+        sph.phi = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
+        updateCam();
+      }
+      if (panning) {
+        var spd = sph.r * 0.0008;
+        var dir = new THREE.Vector3();
+        camera.getWorldDirection(dir);
+        var rt = new THREE.Vector3().crossVectors(dir, camera.up).normalize();
+        tgt.addScaledVector(rt, -dx * spd);
+        tgt.addScaledVector(camera.up, dy * spd);
+        updateCam();
+      }
+      lm = { x: e.clientX, y: e.clientY };
+      doRaycast(e);
+    });
+
+    cvs.addEventListener('mouseup',    function () { dragging = false; panning = false; });
+    cvs.addEventListener('mouseleave', function () { dragging = false; panning = false; });
+    cvs.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    cvs.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      sph.r = Math.max(4, Math.min(55, sph.r * (1 + e.deltaY * 0.001)));
+      updateCam();
+    }, { passive: false });
+
+    /* Touch orbit */
+    cvs.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      if (e.touches.length === 1) { dragging = true; lm = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+    }, { passive: false });
+    cvs.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+      if (dragging && e.touches.length === 1) {
+        var dx = e.touches[0].clientX - lm.x, dy = e.touches[0].clientY - lm.y;
+        sph.theta -= dx * 0.006; sph.phi -= dy * 0.006;
+        sph.phi = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
+        updateCam(); lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    }, { passive: false });
+    cvs.addEventListener('touchend', function () { dragging = false; });
+
+    /* Auto-rotate pauses on mouse-enter, resumes 1.5s after leave */
+    container.addEventListener('mouseenter', function () { autoRotate = false; });
+    container.addEventListener('mouseleave', function () {
+      dragging = false; panning = false;
+      setTimeout(function () { autoRotate = true; }, 1500);
+    });
+
+    /* ── Raycasting + tooltip ───────────────────────────────────── */
+    var rc  = new THREE.Raycaster();
+    rc.params.Points = { threshold: 0.22 };
+    var ttEl = document.getElementById('umap-tooltip');
+
+    function doRaycast(e) {
+      if (!ttEl) return;
+      var rect = cvs.getBoundingClientRect();
+      var mx = new THREE.Vector2(
+        ((e.clientX - rect.left) / rect.width)  *  2 - 1,
+        -((e.clientY - rect.top)  / rect.height) *  2 + 1
+      );
+      rc.setFromCamera(mx, camera);
+
+      var hit = null, best = Infinity;
+      clusters.forEach(function (cl) {
+        if (!cl.on) return;
+        var ix = rc.intersectObject(cl.mesh);
+        if (ix.length && ix[0].distance < best) { best = ix[0].distance; hit = cl.ct; }
+      });
+
+      if (hit) {
+        var outerRect = container.parentElement.getBoundingClientRect();
+        ttEl.style.display  = 'block';
+        ttEl.style.left     = (e.clientX - outerRect.left + 12) + 'px';
+        ttEl.style.top      = (e.clientY - outerRect.top  - 38) + 'px';
+        ttEl.innerHTML =
+          '<span style="color:' + hit.color + ';font-weight:700;">' + hit.name + '</span>';
+      } else {
+        ttEl.style.display = 'none';
+      }
+    }
+
+    /* ── Responsive resize ──────────────────────────────────────── */
+    new ResizeObserver(function () {
+      var w = container.offsetWidth, h = container.offsetHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }).observe(container);
+
+    /* ── Render loop (paused when section not in viewport) ──────── */
+    var inView = false;
+    new IntersectionObserver(function (en) {
+      inView = en[0].isIntersecting;
+    }, { threshold: 0.05 }).observe(container);
+
+    updateCam();
+    (function loop() {
+      requestAnimationFrame(loop);
+      if (!inView) return;
+      if (autoRotate && !dragging) { sph.theta += 0.003; updateCam(); }
+      renderer.render(scene, camera);
+    })();
+  }
+
+  /* ── GSAP entrance ──────────────────────────────────────────── */
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.from('#umap-section', {
+      opacity: 0, y: 36, duration: 0.78, ease: 'power2.out',
+      scrollTrigger: { trigger: '#umap-section', start: 'top 82%', once: true }
     });
   }
 })();
