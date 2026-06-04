@@ -42,6 +42,8 @@
 
   /* ── 3. H2 headings — slide from left ──────────────────────── */
   gsap.utils.toArray('h2').forEach(el => {
+    // Skip the bio name h2 — owned by the bio cinematic sequence (step 14)
+    if (el.closest('div[style*="display:flex"]')?.querySelector('.avatar-ring')) return;
     gsap.from(el, {
       opacity: 0, x: -44, duration: 0.7, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 86%', once: true }
