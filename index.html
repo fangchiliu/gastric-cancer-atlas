@@ -6,290 +6,83 @@
   <title>Transcriptomic Landscape of Gastric Adenocarcinoma</title>
   <meta name="description" content="A multi-modal RNA-seq analysis of gastric adenocarcinoma integrating TCGA-STAD bulk transcriptomics and CZ CELLxGENE single-cell data." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
   <style>
-    /* ── Reset & dark base ──────────────────────────────────── */
+    /* ── Variables ──────────────────────────────────────────────── */
+    :root {
+      --bg:       #0a1628;
+      --bg-deep:  #060d1a;
+      --bg-card:  rgba(255,255,255,0.035);
+      --teal:     #00d4aa;
+      --sky:      #38bdf8;
+      --text:     #dbeafe;
+      --muted:    #4d6a80;
+      --dim:      #1e3248;
+      --border:   rgba(0,212,170,0.14);
+      --bsub:     rgba(255,255,255,0.06);
+      --glow:     0 0 40px rgba(0,212,170,0.25);
+    }
+
+    /* ── Reset & base ───────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #0a0a0a;
-      color: #f0f0f0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
       overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* ── Nav overrides for dark bg ──────────────────────────── */
+    /* ── Nav overrides ──────────────────────────────────────────── */
     #site-nav {
-      background: rgba(10,10,10,0.82) !important;
-      border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+      background: rgba(6,13,26,0.88) !important;
+      backdrop-filter: blur(16px) !important;
+      border-bottom: 1px solid rgba(0,212,170,0.1) !important;
       box-shadow: none !important;
     }
-    #site-nav a { color: rgba(255,255,255,0.65) !important; border-bottom: none !important; }
+    #site-nav a {
+      color: rgba(219,234,254,0.6) !important;
+      border-bottom: none !important;
+    }
     #site-nav a:hover, #site-nav a.active {
-      color: #2dd4bf !important;
+      color: var(--teal) !important;
       border-bottom: none !important;
     }
     .nav-brand { color: #fff !important; }
-    .nav-brand span { color: #2dd4bf !important; }
-    #nav-toggle span { background: #fff !important; }
+    .nav-brand span { color: var(--teal) !important; }
+    #nav-toggle span { background: var(--text) !important; }
 
     @media (max-width: 768px) {
       #nav-links {
-        background: #111 !important;
-        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+        background: #060d1a !important;
+        border-bottom: 1px solid rgba(0,212,170,0.1) !important;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.6) !important;
       }
-      #nav-links a { color: rgba(255,255,255,0.75) !important; }
-      #nav-links a:hover { background: rgba(255,255,255,0.05) !important; }
+      #nav-links a { color: rgba(219,234,254,0.75) !important; }
+      #nav-links a:hover { background: rgba(0,212,170,0.06) !important; }
     }
 
-    /* ── Hero ───────────────────────────────────────────────── */
-    #hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 7rem 2rem 5rem;
-    }
-
-    /* Grid overlay */
-    #hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-      background-size: 64px 64px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Gradient orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb-1 {
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(13,148,136,0.16) 0%, transparent 65%);
-      top: -15%; right: -12%;
-      animation: orb-drift-1 14s ease-in-out infinite;
-    }
-    .orb-2 {
-      width: 550px; height: 550px;
-      background: radial-gradient(circle, rgba(99,102,241,0.11) 0%, transparent 65%);
-      bottom: -10%; left: -8%;
-      animation: orb-drift-2 18s ease-in-out infinite;
-    }
-    .orb-3 {
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(45,212,191,0.07) 0%, transparent 65%);
-      top: 45%; left: 38%;
-      animation: orb-drift-3 11s ease-in-out infinite;
-    }
-    @keyframes orb-drift-1 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      40%      { transform: translate(-28px,22px) scale(1.04); }
-      70%      { transform: translate(18px,-24px) scale(0.97); }
-    }
-    @keyframes orb-drift-2 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      35%      { transform: translate(24px,-18px) scale(1.06); }
-      65%      { transform: translate(-16px,22px) scale(0.96); }
-    }
-    @keyframes orb-drift-3 {
-      0%,100% { transform: translate(0,0); }
-      50%      { transform: translate(18px,-14px); }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 860px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #2dd4bf;
-      border: 1px solid rgba(45,212,191,0.22);
-      padding: 0.4rem 1.1rem;
-      border-radius: 100px;
-      margin-bottom: 2.25rem;
-      background: rgba(45,212,191,0.05);
-    }
-
-    .hero-title {
-      font-size: clamp(3rem, 8.5vw, 6.5rem);
-      font-weight: 900;
-      line-height: 1.0;
-      letter-spacing: -0.04em;
-      color: #fff;
-      margin-bottom: 0.6rem;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1.4rem, 3.5vw, 2.8rem);
-      font-weight: 300;
-      letter-spacing: -0.02em;
-      color: #475569;
-      margin-bottom: 2rem;
-    }
-
-    .hero-desc {
-      font-size: 1rem;
-      color: #64748b;
-      max-width: 520px;
-      margin: 0 auto 2.75rem;
-      line-height: 1.75;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 0.9rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 5rem;
-    }
-
-    .btn-glow {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.78rem 1.75rem;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      text-decoration: none;
-      background: #2dd4bf;
-      color: #0a0a0a;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    .btn-glow:hover {
-      background: #5eead4;
-      transform: translateY(-2px);
-      box-shadow: 0 0 28px rgba(45,212,191,0.4);
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.78rem 1.75rem;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      text-decoration: none;
-      background: transparent;
-      color: #e2e8f0;
-      border: 1px solid rgba(255,255,255,0.14);
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-ghost:hover {
-      border-color: rgba(255,255,255,0.32);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .hero-stats-strip {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding-top: 2.5rem;
-    }
-
-    .hstat {
-      padding: 0 2.25rem;
-      text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.07);
-    }
-    .hstat:last-child { border-right: none; }
-
-    .hstat-val {
-      display: block;
-      font-size: 2.1rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-    }
-    .hstat-label {
-      font-size: 0.68rem;
-      color: #475569;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-top: 0.3rem;
-    }
-
-    .scroll-cue {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.62rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #1e293b;
-      z-index: 2;
-    }
-    .scroll-cue::after {
-      content: '';
-      width: 1px;
-      height: 38px;
-      background: linear-gradient(to bottom, #334155, transparent);
-      animation: cue-line 1.8s ease-in-out infinite;
-    }
-    @keyframes cue-line {
-      0%   { opacity: 1; transform: scaleY(0); transform-origin: top; }
-      49%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
-      50%  { transform-origin: bottom; }
-      100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
-    }
-
-    /* ── Dark sections ──────────────────────────────────────── */
-    .dsec {
-      padding: 7rem 2rem;
-      position: relative;
-    }
-    .dsec-inner { max-width: 1000px; margin: 0 auto; }
-
-    /* Section divider line — animated on scroll */
-    .sec-line {
-      height: 1px;
-      background: linear-gradient(to right, #2dd4bf, rgba(45,212,191,0.1), transparent);
-      margin-bottom: 3.5rem;
-      transform-origin: left;
-    }
+    /* ── Shared section styles ──────────────────────────────────── */
+    .sec { padding: 7rem 2rem; position: relative; }
+    .sec-inner { max-width: 1040px; margin: 0 auto; }
 
     .sec-tag {
       font-size: 0.68rem;
       font-weight: 700;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: #2dd4bf;
+      color: var(--teal);
       margin-bottom: 0.85rem;
     }
 
     .sec-heading {
-      font-size: clamp(2rem, 4vw, 3rem);
+      font-size: clamp(2rem, 4vw, 3.2rem);
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.035em;
       line-height: 1.1;
       color: #fff;
       margin-bottom: 1.1rem;
@@ -297,61 +90,293 @@
 
     .sec-desc {
       font-size: 0.95rem;
-      color: #64748b;
+      color: var(--muted);
       max-width: 500px;
-      line-height: 1.75;
-      margin-bottom: 3.5rem;
+      line-height: 1.8;
     }
 
-    /* ── Overview cards ─────────────────────────────────────── */
-    .card-row-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 1.25rem;
+    /* Animated section rule */
+    .sec-rule {
+      height: 1px;
+      background: linear-gradient(to right, var(--teal), rgba(56,189,248,0.3), transparent);
+      margin-bottom: 4rem;
+      transform-origin: left;
     }
 
-    .dcard {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 1.75rem;
-      transition: border-color 0.25s, background 0.25s;
-    }
-    .dcard:hover {
-      border-color: rgba(45,212,191,0.2);
-      background: rgba(45,212,191,0.025);
-    }
-    .dcard-icon { font-size: 1.35rem; margin-bottom: 1rem; }
-    .dcard-title { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.55rem; }
-    .dcard-text { font-size: 0.82rem; color: #64748b; line-height: 1.75; }
-
-    /* ── Pinned findings ────────────────────────────────────── */
-    #pin-wrap { height: 300vh; position: relative; }
-
-    #pin-inner {
-      height: 100vh;
-      padding-top: 56px;
-      background: #0a0a0a;
-      overflow: hidden;
+    /* ── HERO ───────────────────────────────────────────────────── */
+    #hero {
       position: relative;
-      display: flex;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
+      gap: 2rem;
+      padding: 9rem 4rem 6rem;
+      overflow: hidden;
     }
-    #pin-inner::before {
+
+    /* Gradient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-a {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 70%);
+      top: -15%; left: -8%;
+      animation: drift-a 16s ease-in-out infinite;
+    }
+    .orb-b {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%);
+      bottom: -10%; right: -5%;
+      animation: drift-b 20s ease-in-out infinite;
+    }
+    .orb-c {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      animation: drift-c 12s ease-in-out infinite;
+    }
+    @keyframes drift-a {
+      0%,100% { transform: translate(0,0); }
+      40%      { transform: translate(30px,25px); }
+      70%      { transform: translate(-20px,40px); }
+    }
+    @keyframes drift-b {
+      0%,100% { transform: translate(0,0); }
+      35%      { transform: translate(-35px,-20px); }
+      65%      { transform: translate(20px,30px); }
+    }
+    @keyframes drift-c {
+      0%,100% { transform: translate(0,0); }
+      50%      { transform: translate(25px,-30px); }
+    }
+
+    /* Subtle grid overlay */
+    #hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-      background-size: 64px 64px;
+        linear-gradient(rgba(0,212,170,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.025) 1px, transparent 1px);
+      background-size: 70px 70px;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .pin-grid {
+    .hero-left {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid rgba(0,212,170,0.22);
+      padding: 0.38rem 1rem;
+      border-radius: 100px;
+      background: rgba(0,212,170,0.06);
+      margin-bottom: 2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 5.5vw, 5.8rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title .accent-line {
+      display: block;
+      background: linear-gradient(90deg, var(--teal), var(--sky));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.8;
+      margin: 1.75rem 0 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.78rem 1.65rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-decoration: none;
+      background: var(--teal);
+      color: var(--bg-deep);
+      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary:hover {
+      background: #1fffc8;
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(0,212,170,0.45);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.78rem 1.65rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--bsub);
+      color: rgba(219,234,254,0.75);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(0,212,170,0.3);
+      color: var(--teal);
+      background: rgba(0,212,170,0.05);
+    }
+
+    /* DNA canvas */
+    .hero-right {
+      position: relative;
+      z-index: 2;
+      height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #dna-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Scroll cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 3;
+    }
+    .scroll-cue-text {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .scroll-cue-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, var(--teal), transparent);
+      animation: cue-pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes cue-pulse {
+      0%   { opacity:1; transform: scaleY(0); transform-origin: top; }
+      49%  { opacity:1; transform: scaleY(1); transform-origin: top; }
+      50%  { transform-origin: bottom; }
+      100% { opacity:0; transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ── STATS ──────────────────────────────────────────────────── */
+    #stats {
+      background: linear-gradient(180deg, #0d1f38 0%, var(--bg) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+    .stats-row {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 1fr;
+      align-items: center;
+      gap: 0;
+    }
+    .stat-sep { background: var(--border); height: 80px; }
+    .stat-block { text-align: center; padding: 0 2.5rem; }
+    .stat-num {
+      font-size: clamp(3.5rem, 6vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1;
+      color: var(--teal);
+      text-shadow: 0 0 50px rgba(0,212,170,0.3);
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      margin-top: 0.6rem;
+      text-transform: uppercase;
+    }
+
+    /* ── NARRATIVE (pinned) ─────────────────────────────────────── */
+    #narrative-wrap { height: 400vh; position: relative; }
+
+    #narrative-inner {
+      height: 100vh;
+      background: var(--bg-deep);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    #narrative-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px);
+      background-size: 70px 70px;
+    }
+    /* animated gradient accent sweeping through the background */
+    #narrative-inner::after {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 65%);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      animation: drift-a 18s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .narrative-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 5rem;
-      max-width: 960px;
+      max-width: 1040px;
       margin: 0 auto;
       padding: 0 2rem;
       width: 100%;
@@ -359,88 +384,224 @@
       z-index: 1;
     }
 
-    .pin-left { display: flex; flex-direction: column; justify-content: center; }
-    .pin-right { display: flex; flex-direction: column; justify-content: center; }
+    .narrative-left { position: relative; }
 
-    .finding-panel { display: none; }
-    .finding-panel.active { display: block; }
+    /* All panels stacked, shown/hidden via timeline */
+    .n-panel {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      opacity: 0;
+    }
+    .n-panel:first-child { opacity: 1; position: relative; }
 
-    .f-index {
+    .n-step {
       font-size: 0.65rem;
       font-weight: 700;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #2dd4bf;
+      color: var(--teal);
       margin-bottom: 1.25rem;
     }
-    .f-title {
-      font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    .n-title {
+      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
       font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
       color: #fff;
-      letter-spacing: -0.025em;
-      line-height: 1.2;
       margin-bottom: 1rem;
     }
-    .f-body {
-      font-size: 0.875rem;
-      color: #64748b;
-      line-height: 1.8;
-      max-width: 380px;
+    .n-body {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.85;
+      max-width: 400px;
     }
 
-    .pin-dots {
+    /* progress dots */
+    .n-dots {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       margin-top: 2.5rem;
     }
-    .pin-dot {
-      width: 6px; height: 6px;
-      border-radius: 3px;
-      background: rgba(255,255,255,0.15);
-      transition: width 0.35s, background 0.35s;
+    .n-dot {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--dim);
+      transition: width 0.4s, background 0.4s;
+      width: 18px;
     }
-    .pin-dot.active { width: 22px; background: #2dd4bf; }
+    .n-dot.on { width: 32px; background: var(--teal); }
 
-    .big-num-wrap {}
-    .big-num {
-      font-size: clamp(4rem, 9vw, 7.5rem);
+    /* Right side big visuals */
+    .narrative-right { position: relative; height: 260px; }
+
+    .n-vis {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+    }
+    .n-vis:first-child { opacity: 1; }
+
+    .n-big {
+      font-size: clamp(4.5rem, 8vw, 8rem);
       font-weight: 900;
       letter-spacing: -0.05em;
       line-height: 1;
       color: #fff;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
-    .big-num em { color: #2dd4bf; font-style: normal; }
-    .big-label {
+    .n-big em { color: var(--teal); font-style: normal; }
+    .n-big-label {
       font-size: 0.75rem;
-      color: #334155;
+      color: var(--muted);
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    /* ── Dataset cards ──────────────────────────────────────── */
-    .card-row-2 {
+    /* ── OVERVIEW CARDS ─────────────────────────────────────────── */
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3.5rem;
+    }
+
+    .dcard {
+      background: var(--bg-card);
+      border: 1px solid var(--bsub);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .dcard:hover {
+      border-color: var(--border);
+      background: rgba(0,212,170,0.04);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    }
+    .dcard-icon { font-size: 1.3rem; margin-bottom: 1rem; }
+    .dcard-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e2f4f0;
+      margin-bottom: 0.55rem;
+      letter-spacing: -0.01em;
+    }
+    .dcard-text { font-size: 0.82rem; color: var(--muted); line-height: 1.8; }
+
+    /* ── TIMELINE ────────────────────────────────────────────────── */
+    #timeline { background: var(--bg-deep); }
+
+    .tl-wrap {
+      margin-top: 4rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+    /* Vertical spine */
+    .tl-wrap::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--teal), rgba(0,212,170,0.05));
+    }
+
+    .tl-item {
+      position: relative;
+      padding: 0 0 3.5rem 2.5rem;
+    }
+    .tl-item:last-child { padding-bottom: 0; }
+
+    /* Circle node */
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 6px;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--bg-deep);
+      border: 2px solid var(--teal);
+      box-shadow: 0 0 12px rgba(0,212,170,0.35);
+      transition: background 0.3s;
+    }
+    .tl-item.done::before { background: var(--teal); }
+    .tl-item.active-item::before {
+      background: var(--sky);
+      border-color: var(--sky);
+      box-shadow: 0 0 16px rgba(56,189,248,0.5);
+    }
+
+    .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .tl-date {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+    .tl-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.18rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(0,212,170,0.12);
+      color: var(--teal);
+      text-transform: uppercase;
+    }
+    .tl-badge.in-progress {
+      background: rgba(56,189,248,0.12);
+      color: var(--sky);
+    }
+
+    .tl-title {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: #e2f4f0;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.4rem;
+    }
+    .tl-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.75; }
+
+    /* ── DATA SOURCES ────────────────────────────────────────────── */
+    .ds-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 1.5rem;
+      margin-top: 3.5rem;
     }
 
     .ds-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--bsub);
+      border-radius: 14px;
       padding: 2rem;
       position: relative;
       overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .ds-card:hover {
+      border-color: var(--border);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
     }
     .ds-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 3px;
+      height: 2px;
     }
-    .ds-card.teal::before  { background: linear-gradient(to right, #0d9488, #2dd4bf); }
+    .ds-card.teal::before { background: linear-gradient(to right, var(--teal), var(--sky)); }
     .ds-card.amber::before { background: linear-gradient(to right, #d97706, #fbbf24); }
 
     .ds-head {
@@ -449,16 +610,15 @@
       align-items: flex-start;
       margin-bottom: 1.5rem;
     }
-    .ds-name { font-size: 1.05rem; font-weight: 800; color: #f0f0f0; margin-bottom: 0.2rem; }
-    .ds-sub  { font-size: 0.76rem; color: #475569; }
+    .ds-name { font-size: 1.05rem; font-weight: 800; color: #e2f4f0; margin-bottom: 0.2rem; }
+    .ds-sub  { font-size: 0.76rem; color: var(--muted); }
 
     .status-pill {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      padding: 0.28rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.28rem 0.7rem;
       border-radius: 100px;
-      white-space: nowrap;
     }
     .s-active   { background: rgba(16,185,129,0.12); color: #34d399; }
     .s-progress { background: rgba(251,191,36,0.12);  color: #fbbf24; }
@@ -467,92 +627,100 @@
       display: flex;
       gap: 2rem;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
     }
-    .ds-stat-val {
+    .ds-val {
       display: block;
-      font-size: 1.65rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: #fff;
       letter-spacing: -0.03em;
     }
-    .ds-stat-key {
-      font-size: 0.68rem;
-      color: #475569;
+    .ds-key {
+      font-size: 0.66rem;
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
     .ds-list {
       font-size: 0.79rem;
-      color: #475569;
+      color: var(--muted);
       line-height: 2;
       padding-left: 1rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid var(--bsub);
       padding-top: 1rem;
-      margin-top: 0.5rem;
     }
 
-    /* ── Highlight stats ────────────────────────────────────── */
+    /* ── HIGHLIGHTS ──────────────────────────────────────────────── */
     .hl-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      margin-bottom: 2.75rem;
+      margin: 3.5rem 0 3rem;
     }
-
     .hl-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: var(--bg-card);
+      border: 1px solid var(--bsub);
       border-radius: 12px;
       padding: 1.75rem 1.5rem;
       text-align: center;
-      transition: border-color 0.25s;
+      transition: border-color 0.25s, transform 0.25s;
     }
-    .hl-card:hover { border-color: rgba(45,212,191,0.2); }
+    .hl-card:hover {
+      border-color: var(--border);
+      transform: translateY(-3px);
+    }
     .hl-val {
-      font-size: 2.1rem;
+      font-size: 2rem;
       font-weight: 800;
-      color: #2dd4bf;
+      color: var(--teal);
       letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
     }
-    .hl-desc { font-size: 0.76rem; color: #475569; line-height: 1.65; }
+    .hl-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.65; }
 
-    /* ── Footer ─────────────────────────────────────────────── */
-    #dark-footer {
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    #footer {
       padding: 2.5rem 2rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid var(--bsub);
     }
     .footer-inner {
-      max-width: 1000px;
+      max-width: 1040px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      font-size: 0.8rem;
-      color: #1e293b;
+      font-size: 0.79rem;
+      color: var(--dim);
     }
     .footer-inner a {
-      color: #334155;
+      color: var(--muted);
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-inner a:hover { color: #2dd4bf; }
+    .footer-inner a:hover { color: var(--teal); }
 
-    /* ── Responsive ─────────────────────────────────────────── */
-    @media (max-width: 700px) {
-      .hstat { padding: 0 1.2rem; }
-      .hstat-val { font-size: 1.55rem; }
-      .pin-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .pin-right { display: none; }
-      #pin-wrap { height: 280vh; }
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      #hero {
+        grid-template-columns: 1fr;
+        padding: 8rem 2rem 5rem;
+        text-align: center;
+      }
+      .hero-cta { justify-content: center; }
+      .hero-right { display: none; }
+      .narrative-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .narrative-right { display: none; }
+      .stats-row { grid-template-columns: 1fr; gap: 2rem; }
+      .stat-sep { display: none; }
     }
-    @media (max-width: 480px) {
-      .hero-stats-strip { gap: 1.5rem; justify-content: flex-start; }
-      .hstat { border-right: none; padding: 0; }
+    @media (max-width: 560px) {
+      .sec { padding: 5rem 1.5rem; }
+      #hero { padding: 8rem 1.5rem 5rem; }
+      .tl-wrap { padding-left: 1.5rem; }
+      .tl-item { padding-left: 1.75rem; }
     }
   </style>
 </head>
@@ -560,149 +728,148 @@
 
 <header id="site-nav"></header>
 
-<!-- ── Hero ──────────────────────────────────────────────────── -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- HERO                                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
 <section id="hero">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
 
-  <div class="hero-content">
+  <div class="hero-left">
     <div class="hero-eyebrow" id="h-eyebrow">
       TCGA-STAD &nbsp;·&nbsp; Bulk RNA-seq &nbsp;·&nbsp; scRNA-seq in progress
     </div>
 
-    <h1 class="hero-title" id="h-title">Transcriptomic<br/>Landscape</h1>
-    <p class="hero-subtitle" id="h-sub">of Gastric Adenocarcinoma</p>
+    <h1 class="hero-title" id="h-title">
+      Decoding<br/>Gastric Cancer,
+      <span class="accent-line">One Cell at a Time</span>
+    </h1>
 
     <p class="hero-desc" id="h-desc">
-      Integrating bulk and single-cell RNA sequencing to characterize
-      differential gene expression, tumor microenvironment composition,
-      and clinically actionable pathway dysregulation in stomach adenocarcinoma.
+      A multi-modal transcriptomic study integrating TCGA-STAD bulk RNA-seq
+      (N=375) with CZ CELLxGENE single-cell data to map the molecular
+      landscape of stomach adenocarcinoma.
     </p>
 
     <div class="hero-cta" id="h-cta">
-      <a href="results.html" class="btn-glow">View Results &nbsp;→</a>
-      <a href="methods.html" class="btn-ghost">Read Methods</a>
-    </div>
-
-    <div class="hero-stats-strip" id="h-stats">
-      <div class="hstat">
-        <span class="hstat-val" data-count="375">375</span>
-        <span class="hstat-label">TCGA-STAD patients</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-val">~20K</span>
-        <span class="hstat-label">Genes quantified</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-val" data-count="3">3</span>
-        <span class="hstat-label">Analytical modules</span>
-      </div>
-      <div class="hstat">
-        <span class="hstat-val" style="color:#2dd4bf;">Live</span>
-        <span class="hstat-label">scRNA-seq integration</span>
-      </div>
+      <a href="results.html" class="btn-primary">Explore Results &nbsp;→</a>
+      <a href="methods.html" class="btn-outline">View Methods</a>
     </div>
   </div>
 
-  <div class="scroll-cue">scroll</div>
+  <div class="hero-right" id="h-canvas-wrap">
+    <canvas id="dna-canvas"></canvas>
+  </div>
+
+  <div class="scroll-cue" id="h-cue">
+    <span class="scroll-cue-text">scroll to explore</span>
+    <div class="scroll-cue-line"></div>
+  </div>
 </section>
 
-<!-- ── Overview ───────────────────────────────────────────────── -->
-<section class="dsec" id="overview">
-  <div class="dsec-inner">
-    <div class="sec-line js-line"></div>
-    <p class="sec-tag js-tag">Overview</p>
-    <h2 class="sec-heading js-slide">Why Gastric<br/>Adenocarcinoma?</h2>
-    <p class="sec-desc js-fade">
-      STAD is the fifth most common malignancy worldwide, yet actionable
-      molecular targets remain elusive for most patients.
-    </p>
-
-    <div class="card-row-3">
-      <div class="dcard js-card">
-        <div class="dcard-icon">🎯</div>
-        <div class="dcard-title">Clinical Motivation</div>
-        <p class="dcard-text">
-          A 5-year survival rate below 35% for stage III–IV disease and limited
-          actionable targets underscore the need for deeper transcriptomic
-          characterization.
-        </p>
-      </div>
-      <div class="dcard js-card">
-        <div class="dcard-icon">🧬</div>
-        <div class="dcard-title">Scientific Approach</div>
-        <p class="dcard-text">
-          Multi-resolution framework: bulk RNA-seq from TCGA-STAD provides
-          population-level DE and survival associations, while scRNA-seq will
-          resolve cell-type-specific expression programs.
-        </p>
-      </div>
-      <div class="dcard js-card">
-        <div class="dcard-icon">📊</div>
-        <div class="dcard-title">Analytical Scope</div>
-        <p class="dcard-text">
-          DESeq2, Kaplan-Meier survival modeling, GSEA against Hallmark and
-          KEGG gene sets, and cell-type deconvolution — all version-controlled
-          in linked repositories.
-        </p>
-      </div>
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- KEY STATS                                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section id="stats">
+  <div class="stats-row">
+    <div class="stat-block">
+      <span class="stat-num" data-count="375">375</span>
+      <span class="stat-label">patients analyzed</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-block">
+      <span class="stat-num" data-count="20000" data-suffix="+">20,000+</span>
+      <span class="stat-label">genes profiled</span>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-block">
+      <span class="stat-num" data-count="1247">1,247</span>
+      <span class="stat-label">differentially expressed genes</span>
     </div>
   </div>
 </section>
 
-<!-- ── Pinned Key Findings ─────────────────────────────────────── -->
-<div id="pin-wrap">
-  <div id="pin-inner">
-    <div class="pin-grid">
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- NARRATIVE — PINNED + SCRUB                                    -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div id="narrative-wrap">
+  <div id="narrative-inner">
+    <div class="narrative-grid">
 
-      <div class="pin-left">
-        <p class="sec-tag" style="margin-bottom:2rem;">Key Findings</p>
-
-        <div class="finding-panel active" data-panel="0">
-          <div class="f-index">01 / 03 &nbsp;— Differential Expression</div>
-          <h3 class="f-title">1,247 genes<br/>dysregulated in tumor</h3>
-          <p class="f-body">
-            DESeq2 Wald test identified 782 upregulated and 465 downregulated
-            genes (|log₂FC| &gt; 1.5, FDR &lt; 0.05) between primary tumor
-            and adjacent normal tissue. Top hits include <em>MKI67</em>,
-            <em>TOP2A</em>, and <em>CLDN18</em>.
+      <!-- Left: rotating text panels -->
+      <div class="narrative-left">
+        <div class="n-panel" id="np-0">
+          <div class="n-step">01 / 04 &nbsp;— The Cohort</div>
+          <h2 class="n-title">375 patients.<br/>One disease.<br/>Whole transcriptome.</h2>
+          <p class="n-body">
+            TCGA-STAD bulk RNA-seq: 375 primary tumor samples plus 30 matched
+            adjacent normals, harmonized to GRCh38, with comprehensive clinical
+            annotation including stage, grade, overall survival, and molecular
+            subtype (EBV, MSI, CIN, GS).
           </p>
         </div>
 
-        <div class="finding-panel" data-panel="1">
-          <div class="f-index">02 / 03 &nbsp;— Survival Analysis</div>
-          <h3 class="f-title">MKI67 predicts<br/>poor prognosis</h3>
-          <p class="f-body">
-            Elevated MKI67 expression is independently associated with poor
-            overall survival in multivariate Cox modeling (HR = 1.74,
-            95% CI 1.42–2.13, p &lt; 0.001), retaining significance after
-            adjustment for AJCC stage, age, and molecular subtype.
+        <div class="n-panel" id="np-1">
+          <div class="n-step">02 / 04 &nbsp;— Differential Expression</div>
+          <h2 class="n-title">1,247 genes<br/>rewritten by<br/>the tumor.</h2>
+          <p class="n-body">
+            DESeq2 Wald test (FDR &lt; 0.05, |log₂FC| &gt; 1.5) identified 782
+            upregulated and 465 downregulated genes. Cell-cycle drivers
+            <em>MKI67</em>, <em>TOP2A</em>, and <em>PCNA</em> dominate the
+            upregulated landscape; tight-junction gene <em>CLDN18</em> is
+            among the most consistently silenced.
           </p>
         </div>
 
-        <div class="finding-panel" data-panel="2">
-          <div class="f-index">03 / 03 &nbsp;— Pathway Enrichment</div>
-          <h3 class="f-title">E2F &amp; MYC programs<br/>dominate STAD</h3>
-          <p class="f-body">
-            GSEA identified 14 significantly enriched Hallmark gene sets
-            (FDR &lt; 0.25). E2F targets (NES +2.41), MYC targets
-            (NES +2.28), and G2M checkpoint (NES +2.19) are the top
-            upregulated transcriptional programs.
+        <div class="n-panel" id="np-2">
+          <div class="n-step">03 / 04 &nbsp;— Survival Signatures</div>
+          <h2 class="n-title">MKI67 predicts<br/>outcome with<br/>HR = 1.74.</h2>
+          <p class="n-body">
+            Kaplan-Meier stratification and multivariate Cox modeling confirm
+            MKI67-high patients face significantly worse overall survival
+            (HR = 1.74, 95% CI 1.42–2.13, p &lt; 0.001), independent of AJCC
+            stage, age, and molecular subtype. GSEA revealed 14 enriched
+            Hallmark gene sets — E2F and MYC targets top the list.
           </p>
         </div>
 
-        <div class="pin-dots">
-          <div class="pin-dot active"></div>
-          <div class="pin-dot"></div>
-          <div class="pin-dot"></div>
+        <div class="n-panel" id="np-3">
+          <div class="n-step">04 / 04 &nbsp;— The Road Ahead</div>
+          <h2 class="n-title">Single-cell<br/>resolution is<br/>coming.</h2>
+          <p class="n-body">
+            CZ CELLxGENE scRNA-seq data acquisition is underway. Seurat v5
+            clustering, SingleR annotation against the Human Cell Atlas, and
+            CIBERSORT deconvolution will resolve the tumor microenvironment
+            at single-cell resolution — validating and extending bulk findings.
+          </p>
+        </div>
+
+        <div class="n-dots">
+          <div class="n-dot on"></div>
+          <div class="n-dot"></div>
+          <div class="n-dot"></div>
+          <div class="n-dot"></div>
         </div>
       </div>
 
-      <div class="pin-right">
-        <div id="big-display">
-          <div class="big-num" id="big-num">1,<em>247</em></div>
-          <div class="big-label" id="big-label">DE genes identified</div>
+      <!-- Right: large changing visual -->
+      <div class="narrative-right">
+        <div class="n-vis" id="nv-0">
+          <div class="n-big"><em>375</em></div>
+          <div class="n-big-label">TCGA-STAD patients</div>
+        </div>
+        <div class="n-vis" id="nv-1">
+          <div class="n-big">1,<em>247</em></div>
+          <div class="n-big-label">DE genes identified</div>
+        </div>
+        <div class="n-vis" id="nv-2">
+          <div class="n-big">HR&nbsp;<em>1.74</em></div>
+          <div class="n-big-label">hazard ratio — MKI67</div>
+        </div>
+        <div class="n-vis" id="nv-3">
+          <div class="n-big"><em>→</em></div>
+          <div class="n-big-label">scRNA-seq next</div>
         </div>
       </div>
 
@@ -710,18 +877,159 @@
   </div>
 </div>
 
-<!-- ── Data Sources ────────────────────────────────────────────── -->
-<section class="dsec" id="data-sources">
-  <div class="dsec-inner">
-    <div class="sec-line js-line"></div>
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- OVERVIEW CARDS                                                -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="sec" id="overview">
+  <div class="sec-inner">
+    <div class="sec-rule js-rule"></div>
+    <p class="sec-tag js-tag">Overview</p>
+    <h2 class="sec-heading js-slide">Why Gastric<br/>Adenocarcinoma?</h2>
+    <p class="sec-desc js-fade">
+      STAD ranks among the deadliest GI malignancies globally, yet most
+      patients still lack actionable molecular targets.
+    </p>
+
+    <div class="card-grid-3">
+      <div class="dcard js-card">
+        <div class="dcard-icon">🎯</div>
+        <div class="dcard-title">Clinical Motivation</div>
+        <p class="dcard-text">
+          A 5-year survival rate below 35% for stage III–IV disease and limited
+          targeted therapies beyond HER2 and PD-1/PD-L1 make deeper molecular
+          profiling a clinical necessity.
+        </p>
+      </div>
+      <div class="dcard js-card">
+        <div class="dcard-icon">🧬</div>
+        <div class="dcard-title">Multi-Resolution Design</div>
+        <p class="dcard-text">
+          Bulk RNA-seq from TCGA-STAD provides population-level DE and survival
+          associations; upcoming scRNA-seq from CZ CELLxGENE will resolve
+          cell-type-specific expression programs.
+        </p>
+      </div>
+      <div class="dcard js-card">
+        <div class="dcard-icon">📊</div>
+        <div class="dcard-title">Analytical Scope</div>
+        <p class="dcard-text">
+          DESeq2 differential expression, Kaplan-Meier survival modeling, GSEA
+          against Hallmark and KEGG gene sets, and cell-type deconvolution —
+          fully reproducible and version-controlled.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TIMELINE                                                      -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="sec" id="timeline">
+  <div class="sec-inner">
+    <div class="sec-rule js-rule"></div>
+    <p class="sec-tag js-tag">Project Timeline</p>
+    <h2 class="sec-heading js-slide">Milestones</h2>
+    <p class="sec-desc js-fade">A reproducible pipeline built in stages.</p>
+
+    <div class="tl-wrap">
+
+      <div class="tl-item done js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">Nov 2024</span>
+          <span class="tl-badge">Complete</span>
+        </div>
+        <div class="tl-title">Data Acquisition</div>
+        <p class="tl-desc">
+          Downloaded TCGA-STAD cohort (N=375) via GDC Data Portal using
+          TCGAbiolinks. HTSeq-Counts, GRCh38/hg38 reference. Included 30
+          matched adjacent normal samples for contrast analysis.
+        </p>
+      </div>
+
+      <div class="tl-item done js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">Dec 2024</span>
+          <span class="tl-badge">Complete</span>
+        </div>
+        <div class="tl-title">QC &amp; Preprocessing</div>
+        <p class="tl-desc">
+          Library QC with MultiQC and RSeQC. Low-expressed genes filtered;
+          18,342 of 60,483 features retained. DESeq2 median-of-ratios
+          normalization. Batch effects evaluated via ComBat-seq.
+        </p>
+      </div>
+
+      <div class="tl-item done js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">Jan 2025</span>
+          <span class="tl-badge">Complete</span>
+        </div>
+        <div class="tl-title">Differential Expression</div>
+        <p class="tl-desc">
+          DESeq2 Wald test: 1,247 DEGs at FDR &lt; 0.05, |log₂FC| &gt; 1.5.
+          Top upregulated: MKI67, TOP2A, PCNA. Top downregulated: CLDN18,
+          CDH1. Volcano and MA plots generated with EnhancedVolcano.
+        </p>
+      </div>
+
+      <div class="tl-item done js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">Feb 2025</span>
+          <span class="tl-badge">Complete</span>
+        </div>
+        <div class="tl-title">Survival Analysis</div>
+        <p class="tl-desc">
+          Kaplan-Meier estimator and log-rank testing for 50+ candidate genes.
+          Multivariate Cox PH modeling adjusted for stage, age, and TCGA
+          molecular subtype. MKI67: HR 1.74 (p &lt; 0.001).
+        </p>
+      </div>
+
+      <div class="tl-item done js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">Mar 2025</span>
+          <span class="tl-badge">Complete</span>
+        </div>
+        <div class="tl-title">Pathway Enrichment (GSEA)</div>
+        <p class="tl-desc">
+          fgsea with Wald-statistic ranking against MSigDB Hallmark (H) and
+          KEGG (C2). 14 enriched gene sets at FDR &lt; 0.25. Top: E2F Targets
+          (NES +2.41), MYC Targets (NES +2.28), G2M Checkpoint (NES +2.19).
+        </p>
+      </div>
+
+      <div class="tl-item active-item js-tl">
+        <div class="tl-meta">
+          <span class="tl-date">In Progress</span>
+          <span class="tl-badge in-progress">Active</span>
+        </div>
+        <div class="tl-title">scRNA-seq Integration</div>
+        <p class="tl-desc">
+          CZ CELLxGENE gastric cancer dataset acquisition underway. Seurat v5
+          QC, clustering, and SingleR annotation planned. CIBERSORT and MuSiC
+          deconvolution to resolve TME cell-type fractions across TCGA cohort.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- DATA SOURCES                                                  -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="sec" id="data-sources" style="background:var(--bg-deep);">
+  <div class="sec-inner">
+    <div class="sec-rule js-rule"></div>
     <p class="sec-tag js-tag">Data Sources</p>
     <h2 class="sec-heading js-slide">Datasets Used<br/>in This Study</h2>
     <p class="sec-desc js-fade">
-      Both datasets are publicly available through institutional repositories
-      and adhere to all applicable data use agreements.
+      All datasets are publicly available and accessed through institutional
+      repositories under applicable data use agreements.
     </p>
 
-    <div class="card-row-2">
+    <div class="ds-grid">
       <div class="ds-card teal js-card">
         <div class="ds-head">
           <div>
@@ -732,21 +1040,21 @@
         </div>
         <div class="ds-stats">
           <div>
-            <span class="ds-stat-val" data-count="375">375</span>
-            <span class="ds-stat-key">Patients</span>
+            <span class="ds-val" data-count="375">375</span>
+            <span class="ds-key">Patients</span>
           </div>
           <div>
-            <span class="ds-stat-val">~20K</span>
-            <span class="ds-stat-key">Genes</span>
+            <span class="ds-val">~20K</span>
+            <span class="ds-key">Genes</span>
           </div>
           <div>
-            <span class="ds-stat-val">HTSeq</span>
-            <span class="ds-stat-key">Counts</span>
+            <span class="ds-val">HTSeq</span>
+            <span class="ds-key">Counts</span>
           </div>
         </div>
         <ul class="ds-list">
           <li>GDC Data Portal (NCI), harmonized GRCh38</li>
-          <li>RNA-seq read counts (HTSeq, STAR aligner)</li>
+          <li>RNA-seq read counts (HTSeq, STAR 2-pass)</li>
           <li>Clinical metadata: stage, grade, OS, PFS</li>
           <li>Molecular subtypes: EBV, MSI, CIN, GS</li>
         </ul>
@@ -762,12 +1070,12 @@
         </div>
         <div class="ds-stats">
           <div>
-            <span class="ds-stat-val">~50K</span>
-            <span class="ds-stat-key">Est. cells</span>
+            <span class="ds-val">~50K</span>
+            <span class="ds-key">Est. cells</span>
           </div>
           <div>
-            <span class="ds-stat-val">10x</span>
-            <span class="ds-stat-key">Platform</span>
+            <span class="ds-val">10x</span>
+            <span class="ds-key">Platform</span>
           </div>
         </div>
         <ul class="ds-list">
@@ -781,12 +1089,14 @@
   </div>
 </section>
 
-<!-- ── Analysis Highlights ─────────────────────────────────────── -->
-<section class="dsec" style="padding-top:0;">
-  <div class="dsec-inner">
-    <div class="sec-line js-line"></div>
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ANALYSIS HIGHLIGHTS                                           -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="sec" id="highlights">
+  <div class="sec-inner">
+    <div class="sec-rule js-rule"></div>
     <p class="sec-tag js-tag">Analysis Highlights</p>
-    <h2 class="sec-heading js-slide">Key Findings<br/>(Preliminary)</h2>
+    <h2 class="sec-heading js-slide">Key Findings</h2>
 
     <div class="hl-grid">
       <div class="hl-card js-card">
@@ -799,7 +1109,7 @@
       </div>
       <div class="hl-card js-card">
         <div class="hl-val" data-count="14">14</div>
-        <div class="hl-desc">Significantly enriched Hallmark<br/>gene sets (GSEA, FDR &lt; 0.25)</div>
+        <div class="hl-desc">Enriched Hallmark gene sets<br/>(GSEA, FDR &lt; 0.25)</div>
       </div>
       <div class="hl-card js-card">
         <div class="hl-val">E2F/MYC</div>
@@ -808,55 +1118,130 @@
     </div>
 
     <div style="text-align:center;">
-      <a href="results.html" class="btn-glow">Explore Full Results &nbsp;→</a>
+      <a href="results.html" class="btn-primary">Explore Full Results &nbsp;→</a>
     </div>
   </div>
 </section>
 
-<!-- ── Footer ──────────────────────────────────────────────────── -->
-<footer id="dark-footer">
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- FOOTER                                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<footer id="footer">
   <div class="footer-inner">
     <div>
-      <span style="color:#e2e8f0;font-weight:600;">Research Portfolio — Your Name</span>
-      <span style="margin:0 0.5rem;color:#1e293b;">·</span>
+      <span style="color:#7ab3c0;font-weight:600;">Research Portfolio — Your Name</span>
+      <span style="margin:0 0.5rem;color:var(--dim);">·</span>
       <span>TCGA-STAD Transcriptomic Analysis</span>
     </div>
     <div style="display:flex;gap:1.25rem;align-items:center;">
-      <a href="https://github.com/fangchiliu/stomach-cancer" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-      <span style="color:#1e293b;">·</span>
+      <a href="https://github.com/fangchiliu/stomach-cancer" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <span style="color:var(--dim);">·</span>
       <a href="about.html">Contact</a>
     </div>
   </div>
 </footer>
 
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS                                                       -->
+<!-- ══════════════════════════════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
+/* ── DNA Helix canvas ─────────────────────────────────────────── */
 (function () {
+  const canvas = document.getElementById('dna-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let raf, t = 0, W = 0, H = 0;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    const cx        = W * 0.5;
+    const amp       = Math.min(W * 0.22, 90);
+    const waveLen   = Math.min(H * 0.2, 180);
+    const freq      = (Math.PI * 2) / waveLen;
+    const dotStep   = 4;
+    const rungEvery = Math.round(waveLen * 0.5);
+
+    for (let y = 0; y <= H; y += dotStep) {
+      const phase = y * freq - t;
+      const s     = Math.sin(phase);
+      const x1    = cx + amp * s;
+      const x2    = cx - amp * s;
+      const d1    = (s + 1) * 0.5;       // 0..1 depth
+      const d2    = 1 - d1;
+
+      // dot radius scales with depth
+      const r1 = 1.2 + d1 * 2.2;
+      const r2 = 1.2 + d2 * 2.2;
+      const a1 = 0.08 + d1 * 0.55;
+      const a2 = 0.08 + d2 * 0.55;
+
+      ctx.beginPath();
+      ctx.arc(x1, y, r1, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,212,170,${a1.toFixed(2)})`;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(x2, y, r2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(56,189,248,${a2.toFixed(2)})`;
+      ctx.fill();
+
+      // base-pair rungs
+      if (y % rungEvery < dotStep) {
+        const ra = (Math.max(a1, a2) * 0.25).toFixed(2);
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.strokeStyle = `rgba(0,212,170,${ra})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    t += 0.016;
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize();
+  new ResizeObserver(resize).observe(canvas);
+  draw();
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else { raf = requestAnimationFrame(draw); }
+  });
+})();
+
+/* ── GSAP Animations ──────────────────────────────────────────── */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  // ── 1. Hero load timeline ────────────────────────────────────
+  /* 1. Hero entrance timeline */
   gsap.timeline({ defaults: { ease: 'power3.out' } })
-    .from('#h-eyebrow',  { opacity: 0, y: 20, duration: 0.7 })
-    .from('#h-title',    { opacity: 0, y: 48, duration: 0.9 }, '-=0.35')
-    .from('#h-sub',      { opacity: 0, y: 28, duration: 0.7 }, '-=0.55')
-    .from('#h-desc',     { opacity: 0, y: 20, duration: 0.6 }, '-=0.45')
-    .from('#h-cta',      { opacity: 0, y: 16, duration: 0.5 }, '-=0.35')
-    .from('#h-stats',    { opacity: 0, y: 14, duration: 0.5 }, '-=0.25')
-    .from('.scroll-cue', { opacity: 0, duration: 0.7 }, '-=0.1');
+    .from('#h-eyebrow',     { opacity: 0, y: 18,  duration: 0.65 })
+    .from('#h-title',       { opacity: 0, y: 52,  duration: 0.9  }, '-=0.35')
+    .from('#h-desc',        { opacity: 0, y: 22,  duration: 0.65 }, '-=0.5')
+    .from('#h-cta',         { opacity: 0, y: 16,  duration: 0.55 }, '-=0.4')
+    .from('#h-canvas-wrap', { opacity: 0, x: 30,  duration: 0.8  }, '-=0.7')
+    .from('#h-cue',         { opacity: 0,          duration: 0.6  }, '-=0.1');
 
-  // ── 2. Section line — draws itself left to right ─────────────
-  gsap.utils.toArray('.js-line').forEach(el => {
+  /* 2. Section rules draw left → right */
+  gsap.utils.toArray('.js-rule').forEach(el => {
     gsap.from(el, {
-      scaleX: 0,
-      transformOrigin: 'left center',
-      duration: 1.3,
-      ease: 'power2.out',
+      scaleX: 0, transformOrigin: 'left center', duration: 1.2, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 88%', once: true }
     });
   });
 
-  // ── 3. Section tags ──────────────────────────────────────────
+  /* 3. Section tags fade */
   gsap.utils.toArray('.js-tag').forEach(el => {
     gsap.from(el, {
       opacity: 0, y: 10, duration: 0.4, ease: 'power2.out',
@@ -864,15 +1249,15 @@
     });
   });
 
-  // ── 4. Headings slide in from left ───────────────────────────
+  /* 4. Section headings slide from left */
   gsap.utils.toArray('.js-slide').forEach(el => {
     gsap.from(el, {
-      opacity: 0, x: -52, duration: 0.8, ease: 'power3.out',
+      opacity: 0, x: -55, duration: 0.85, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 84%', once: true }
     });
   });
 
-  // ── 5. Fade paragraphs ───────────────────────────────────────
+  /* 5. Paragraphs fade up */
   gsap.utils.toArray('.js-fade').forEach(el => {
     gsap.from(el, {
       opacity: 0, y: 16, duration: 0.55, ease: 'power2.out',
@@ -880,98 +1265,92 @@
     });
   });
 
-  // ── 6. Cards stagger — grouped by parent for proper stagger ──
-  const cardMap = new Map();
+  /* 6. Cards stagger in from bottom — grouped by parent */
+  const cardGroups = new Map();
   gsap.utils.toArray('.js-card').forEach(el => {
-    const key = el.parentElement;
-    if (!cardMap.has(key)) cardMap.set(key, []);
-    cardMap.get(key).push(el);
+    const p = el.parentElement;
+    if (!cardGroups.has(p)) cardGroups.set(p, []);
+    cardGroups.get(p).push(el);
   });
-  cardMap.forEach((cards, parent) => {
+  cardGroups.forEach((cards, parent) => {
     gsap.from(cards, {
-      opacity: 0, y: 40, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+      opacity: 0, y: 44, duration: 0.7, stagger: 0.1, ease: 'power2.out',
       scrollTrigger: { trigger: parent, start: 'top 82%', once: true }
     });
   });
 
-  // ── 7. Count-up numbers ──────────────────────────────────────
+  /* 7. Count-up numbers */
   gsap.utils.toArray('[data-count]').forEach(el => {
-    const end = parseInt(el.dataset.count, 10);
-    const proxy = { val: 0 };
+    const end    = parseInt(el.dataset.count, 10);
+    const suffix = el.dataset.suffix || '';
+    const proxy  = { val: 0 };
     ScrollTrigger.create({
-      trigger: el,
-      start: 'top 88%',
-      once: true,
+      trigger: el, start: 'top 88%', once: true,
       onEnter() {
         gsap.to(proxy, {
-          val: end,
-          duration: 1.8,
-          ease: 'power2.out',
+          val: end, duration: 2, ease: 'power2.out',
           onUpdate() {
             const n = Math.round(proxy.val);
-            el.textContent = n >= 1000 ? n.toLocaleString() : String(n);
+            el.textContent = (n >= 1000 ? n.toLocaleString() : n) + suffix;
           }
         });
       }
     });
   });
 
-  // ── 8. Pinned Key Findings ───────────────────────────────────
-  const panels  = gsap.utils.toArray('.finding-panel');
-  const dots    = gsap.utils.toArray('.pin-dot');
-  const bigNum  = document.getElementById('big-num');
-  const bigLbl  = document.getElementById('big-label');
-
-  const findings = [
-    { num: '1,<em>247</em>',      label: 'DE genes identified' },
-    { num: 'HR&nbsp;<em>1.74</em>', label: 'Hazard ratio — MKI67 (p < 0.001)' },
-    { num: '<em>14</em>',          label: 'Enriched Hallmark gene sets' },
-  ];
-
-  let active = 0;
-
-  function goTo(idx) {
-    if (idx === active) return;
-
-    // Fade out current panel
-    gsap.to(panels[active], {
-      opacity: 0, y: -18, duration: 0.3, ease: 'power2.in',
-      onComplete() {
-        panels[active].classList.remove('active');
-        active = idx;
-        panels[active].classList.add('active');
-        gsap.fromTo(panels[active],
-          { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' }
-        );
-      }
+  /* 8. Stats section entrance */
+  gsap.utils.toArray('.stat-block').forEach((el, i) => {
+    gsap.from(el, {
+      opacity: 0, y: 30, duration: 0.7, delay: i * 0.12, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 86%', once: true }
     });
+  });
 
-    // Dots
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-
-    // Big number
-    gsap.to('#big-display', {
-      opacity: 0, y: -18, duration: 0.28, ease: 'power2.in',
-      onComplete() {
-        bigNum.innerHTML  = findings[idx].num;
-        bigLbl.textContent = findings[idx].label;
-        gsap.fromTo('#big-display',
-          { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
-        );
-      }
+  /* 9. Timeline items — stagger in */
+  gsap.utils.toArray('.js-tl').forEach((el, i) => {
+    gsap.from(el, {
+      opacity: 0, x: 30, duration: 0.65, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 86%', once: true }
     });
+  });
+
+  /* 10. Pinned narrative with scrub ────────────────────────────── */
+  const panels  = gsap.utils.toArray('.n-panel');
+  const visuals = gsap.utils.toArray('.n-vis');
+  const dots    = gsap.utils.toArray('.n-dot');
+  const N       = panels.length;
+
+  // Set initial hidden state for panels 1-3 and visuals 1-3
+  gsap.set(panels.slice(1),  { opacity: 0, y: 40, position: 'absolute', top: 0 });
+  gsap.set(visuals.slice(1), { opacity: 0, y: 30 });
+
+  // Build the scrub timeline
+  const narrativeTl = gsap.timeline();
+
+  for (let i = 0; i < N - 1; i++) {
+    // Hold current panel
+    narrativeTl.to({}, { duration: 1 });
+    // Cross-fade to next panel (ease:none so scrub feels linear)
+    narrativeTl
+      .to(panels[i],   { opacity: 0, y: -35, duration: 0.5, ease: 'none' })
+      .to(panels[i+1], { opacity: 1, y: 0,   duration: 0.5, ease: 'none' }, '<')
+      .to(visuals[i],  { opacity: 0, y: -25, duration: 0.4, ease: 'none' }, '<')
+      .to(visuals[i+1],{ opacity: 1, y: 0,   duration: 0.4, ease: 'none' }, '<0.1');
   }
+  // Final hold
+  narrativeTl.to({}, { duration: 1 });
 
   ScrollTrigger.create({
-    trigger: '#pin-wrap',
+    trigger: '#narrative-wrap',
     start: 'top top',
     end: 'bottom bottom',
-    pin: '#pin-inner',
+    pin: '#narrative-inner',
+    scrub: 1.5,
+    animation: narrativeTl,
     onUpdate(self) {
-      const idx = Math.min(Math.floor(self.progress * 3), 2);
-      goTo(idx);
+      // Sync progress dots
+      const idx = Math.min(Math.floor(self.progress * N), N - 1);
+      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
     }
   });
 
