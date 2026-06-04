@@ -726,6 +726,9 @@
 </head>
 <body>
 
+<!-- Particle network — behind everything -->
+<canvas id="particle-net" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
 <header id="site-nav"></header>
 
 <!-- ══════════════════════════════════════════════════════════════ -->
@@ -1144,6 +1147,72 @@
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- SCRIPTS                                                       -->
 <!-- ══════════════════════════════════════════════════════════════ -->
+<script>
+/* ── Background particle network ─────────────────────────────── */
+(function () {
+  const canvas = document.getElementById('particle-net');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, pts = [], raf;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    resize();
+    const n = Math.min(70, Math.floor(W * H / 18000));
+    pts = Array.from({ length: n }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      r:  Math.random() * 1.2 + 0.4,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const maxD = 130;
+
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,212,170,0.35)';
+      ctx.fill();
+
+      for (let j = i + 1; j < pts.length; j++) {
+        const q  = pts[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < maxD) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(56,189,248,${((1 - d / maxD) * 0.14).toFixed(3)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  init();
+  window.addEventListener('resize', init);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else draw();
+  });
+  draw();
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
