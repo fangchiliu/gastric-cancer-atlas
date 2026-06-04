@@ -233,6 +233,42 @@
     </div>
   </section>
 
+  <!-- ── Gene Regulatory Network ──────────────────────────── -->
+  <section id="gene-network-section" style="margin-bottom:3rem;">
+    <span class="section-eyebrow">Interactive Visualization</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Gene Regulatory Network — Gastric Cancer</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
+      Click any gene to explore its connections &nbsp;·&nbsp; Drag to rotate &nbsp;·&nbsp; Scroll to zoom
+    </p>
+
+    <!-- Legend -->
+    <div style="display:flex; flex-wrap:wrap; gap:0.65rem 1.25rem; margin-bottom:1rem; font-size:0.78rem; color:#475569; font-weight:500;">
+      <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#ff4757;box-shadow:0 0 5px #ff4757;flex-shrink:0;display:inline-block;"></span>Tumor suppressors</span>
+      <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#ff6b35;box-shadow:0 0 5px #ff6b35;flex-shrink:0;display:inline-block;"></span>Oncogenes</span>
+      <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#4895ef;box-shadow:0 0 5px #4895ef;flex-shrink:0;display:inline-block;"></span>Immune markers</span>
+      <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#2ed573;box-shadow:0 0 5px #2ed573;flex-shrink:0;display:inline-block;"></span>Stromal markers</span>
+      <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#00d4aa;box-shadow:0 0 5px #00d4aa;flex-shrink:0;display:inline-block;"></span>Proliferation markers</span>
+    </div>
+
+    <!-- 3D graph container — overflow:hidden clips WebGL canvas to rounded corners -->
+    <div id="gene-graph-3d" style="width:100%;height:580px;background:#0a1628;border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,170,0.18);box-shadow:0 4px 32px rgba(0,0,0,0.18);"></div>
+
+    <!-- Info panel — appears below graph when a node is clicked -->
+    <div id="gene-panel" style="display:none;margin-top:0.85rem;padding:1.1rem 1.4rem;background:#f8fafc;border:1px solid rgba(13,148,136,0.18);border-left:3px solid #0d9488;border-radius:10px;">
+      <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+        <div style="min-width:120px;">
+          <div id="gene-panel-name" style="font-size:1.25rem;font-weight:800;color:#0f172a;margin-bottom:0.12rem;letter-spacing:-0.02em;"></div>
+          <div id="gene-panel-group" style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;"></div>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <div id="gene-panel-count" style="font-size:0.78rem;font-weight:600;color:#475569;margin-bottom:0.35rem;"></div>
+          <div id="gene-panel-links" style="font-size:0.8rem;line-height:2;"></div>
+        </div>
+        <button id="gene-panel-clear" style="font-size:0.72rem;color:#64748b;background:none;border:1px solid #e2e8f0;border-radius:6px;padding:0.22rem 0.6rem;cursor:pointer;flex-shrink:0;transition:border-color 0.15s,color 0.15s;" onmouseover="this.style.borderColor='#0d9488';this.style.color='#0d9488';" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#64748b';">✕ Clear</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ── 4. scRNA-seq Deconvolution ─────────────────────────── -->
   <section style="margin-bottom:1rem;">
     <span class="section-eyebrow">Module 4</span>
@@ -314,6 +350,265 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="assets/page-enhancements.js"></script>
+
+<!-- 3D force graph — must load after GSAP, before init script -->
+<script src="https://unpkg.com/3d-force-graph@1"></script>
+<script>
+/* ── Gene Network 3D Visualization ───────────────────────────────
+   DATA-READY: to load from a file instead of NETWORK_DATA, replace:
+     initGraph(NETWORK_DATA);
+   with:
+     fetch('data/network.json').then(r => r.json()).then(initGraph);
+   The JSON file must use the same { nodes, links } schema.
+──────────────────────────────────────────────────────────────── */
+(function () {
+  /* ── Color & label maps by group ──────────────────────────── */
+  var GROUP_COLORS = {
+    suppressor:    '#ff4757',
+    oncogene:      '#ff6b35',
+    immune:        '#4895ef',
+    stromal:       '#2ed573',
+    proliferation: '#00d4aa'
+  };
+  var GROUP_LABELS = {
+    suppressor:    'Tumor Suppressor',
+    oncogene:      'Oncogene',
+    immune:        'Immune Marker',
+    stromal:       'Stromal Marker',
+    proliferation: 'Proliferation Marker'
+  };
+
+  /* ── Mock network data (30 nodes, 50 edges) ────────────────── */
+  var NETWORK_DATA = {
+    nodes: [
+      { id:'TP53',   group:'suppressor',    val:3   },
+      { id:'CDH1',   group:'suppressor',    val:2   },
+      { id:'APC',    group:'suppressor',    val:2   },
+      { id:'RUNX3',  group:'suppressor',    val:1.5 },
+      { id:'MLH1',   group:'suppressor',    val:1.5 },
+      { id:'ARID1A', group:'suppressor',    val:2   },
+      { id:'ERBB2',  group:'oncogene',      val:2.5 },
+      { id:'VEGFA',  group:'oncogene',      val:2   },
+      { id:'MYC',    group:'oncogene',      val:3   },
+      { id:'KRAS',   group:'oncogene',      val:2.5 },
+      { id:'PIK3CA', group:'oncogene',      val:2   },
+      { id:'CTNNB1', group:'oncogene',      val:2   },
+      { id:'RHOA',   group:'oncogene',      val:1.5 },
+      { id:'CD8A',   group:'immune',        val:2   },
+      { id:'CD4',    group:'immune',        val:2   },
+      { id:'FOXP3',  group:'immune',        val:1.5 },
+      { id:'PDCD1',  group:'immune',        val:2   },
+      { id:'CD274',  group:'immune',        val:2   },
+      { id:'CXCL10', group:'immune',        val:1.5 },
+      { id:'IL6',    group:'immune',        val:2   },
+      { id:'TNF',    group:'immune',        val:2   },
+      { id:'VIM',    group:'stromal',       val:2   },
+      { id:'FN1',    group:'stromal',       val:1.5 },
+      { id:'ACTA2',  group:'stromal',       val:1.5 },
+      { id:'TGFB1',  group:'stromal',       val:2.5 },
+      { id:'MKI67',  group:'proliferation', val:2.5 },
+      { id:'PCNA',   group:'proliferation', val:2   },
+      { id:'EPCAM',  group:'proliferation', val:2   },
+      { id:'CD44',   group:'proliferation', val:2   },
+      { id:'MUC5AC', group:'proliferation', val:1.5 }
+    ],
+    links: [
+      { source:'TP53',   target:'MYC',    weight:0.90 },
+      { source:'TP53',   target:'KRAS',   weight:0.80 },
+      { source:'TP53',   target:'PIK3CA', weight:0.70 },
+      { source:'TP53',   target:'ERBB2',  weight:0.60 },
+      { source:'TP53',   target:'ARID1A', weight:0.80 },
+      { source:'TP53',   target:'CDH1',   weight:0.70 },
+      { source:'CDH1',   target:'VIM',    weight:0.90 },
+      { source:'CDH1',   target:'FN1',    weight:0.80 },
+      { source:'CDH1',   target:'CTNNB1', weight:0.95 },
+      { source:'CDH1',   target:'EPCAM',  weight:0.70 },
+      { source:'VIM',    target:'FN1',    weight:0.85 },
+      { source:'VIM',    target:'ACTA2',  weight:0.70 },
+      { source:'FN1',    target:'ACTA2',  weight:0.75 },
+      { source:'TGFB1',  target:'VIM',    weight:0.80 },
+      { source:'TGFB1',  target:'ACTA2',  weight:0.75 },
+      { source:'TGFB1',  target:'CDH1',   weight:0.65 },
+      { source:'TGFB1',  target:'FOXP3',  weight:0.70 },
+      { source:'MYC',    target:'KRAS',   weight:0.70 },
+      { source:'MYC',    target:'PIK3CA', weight:0.75 },
+      { source:'MYC',    target:'ERBB2',  weight:0.65 },
+      { source:'MYC',    target:'MKI67',  weight:0.85 },
+      { source:'KRAS',   target:'PIK3CA', weight:0.80 },
+      { source:'KRAS',   target:'VEGFA',  weight:0.70 },
+      { source:'PIK3CA', target:'ERBB2',  weight:0.75 },
+      { source:'ERBB2',  target:'VEGFA',  weight:0.70 },
+      { source:'CTNNB1', target:'APC',    weight:0.90 },
+      { source:'CTNNB1', target:'MYC',    weight:0.75 },
+      { source:'APC',    target:'RUNX3',  weight:0.60 },
+      { source:'RHOA',   target:'VIM',    weight:0.65 },
+      { source:'CD8A',   target:'CD274',  weight:0.80 },
+      { source:'CD8A',   target:'PDCD1',  weight:0.75 },
+      { source:'CD8A',   target:'CXCL10', weight:0.70 },
+      { source:'CD4',    target:'FOXP3',  weight:0.70 },
+      { source:'CD4',    target:'IL6',    weight:0.65 },
+      { source:'PDCD1',  target:'CD274',  weight:0.95 },
+      { source:'FOXP3',  target:'IL6',    weight:0.65 },
+      { source:'IL6',    target:'TNF',    weight:0.80 },
+      { source:'IL6',    target:'CXCL10', weight:0.70 },
+      { source:'TNF',    target:'CXCL10', weight:0.75 },
+      { source:'TNF',    target:'VEGFA',  weight:0.60 },
+      { source:'CD274',  target:'TGFB1',  weight:0.65 },
+      { source:'MKI67',  target:'PCNA',   weight:0.90 },
+      { source:'MKI67',  target:'EPCAM',  weight:0.70 },
+      { source:'PCNA',   target:'EPCAM',  weight:0.65 },
+      { source:'CD44',   target:'EPCAM',  weight:0.70 },
+      { source:'CD44',   target:'MUC5AC', weight:0.60 },
+      { source:'CD44',   target:'VIM',    weight:0.65 },
+      { source:'MLH1',   target:'APC',    weight:0.60 },
+      { source:'MLH1',   target:'ARID1A', weight:0.70 },
+      { source:'RUNX3',  target:'CDH1',   weight:0.65 }
+    ]
+  };
+
+  /* ── Bootstrap ─────────────────────────────────────────────── */
+  initGraph(NETWORK_DATA);
+
+  /* ── Main init function ────────────────────────────────────── */
+  function initGraph(data) {
+    var container = document.getElementById('gene-graph-3d');
+    if (!container || typeof ForceGraph3D === 'undefined') return;
+
+    /* Enrich nodes with display properties */
+    var nodes = data.nodes.map(function (n) {
+      return Object.assign({}, n, {
+        color:      GROUP_COLORS[n.group] || '#aaaaaa',
+        groupLabel: GROUP_LABELS[n.group] || n.group
+      });
+    });
+    var gData = { nodes: nodes, links: data.links };
+
+    /* ── Highlight state ──────────────────────────────────────── */
+    var hlNodes = new Set();
+    var hlLinks = new Set();
+    var selectedNode = null;
+
+    function nodeColor(node) {
+      if (!selectedNode) return node.color;
+      return hlNodes.has(node) ? node.color : 'rgba(90,100,120,0.18)';
+    }
+    function linkWidth(link) {
+      if (!selectedNode) return link.weight * 1.6;
+      return hlLinks.has(link) ? Math.max(link.weight * 3.5, 1.5) : 0.15;
+    }
+    function linkColor(link) {
+      if (!selectedNode) return 'rgba(150,185,255,0.32)';
+      return hlLinks.has(link) ? 'rgba(0,212,170,0.9)' : 'rgba(70,80,100,0.07)';
+    }
+    function linkParticles(link) {
+      return hlLinks.has(link) ? 3 : 0;
+    }
+
+    /* ── Build graph ──────────────────────────────────────────── */
+    var graph = ForceGraph3D({ controlType: 'orbit' })(container)
+      .backgroundColor('#0a1628')
+      .graphData(gData)
+      .nodeLabel(function (node) {
+        return '<div style="background:rgba(8,18,34,0.93);border:1px solid '
+          + node.color + ';border-radius:7px;padding:5px 11px;'
+          + 'font-family:system-ui,sans-serif;pointer-events:none;">'
+          + '<strong style="font-size:13px;color:' + node.color + '">' + node.id + '</strong>'
+          + '<br><span style="font-size:10.5px;color:#94a3b8">' + node.groupLabel + '</span>'
+          + '</div>';
+      })
+      .nodeColor(nodeColor)
+      .nodeVal(function (n) { return (n.val || 1) * 5; })
+      .nodeRelSize(4)
+      .nodeOpacity(0.92)
+      .linkWidth(linkWidth)
+      .linkColor(linkColor)
+      .linkOpacity(0.55)
+      .linkDirectionalParticles(linkParticles)
+      .linkDirectionalParticleWidth(2.5)
+      .linkDirectionalParticleColor(function () { return '#00d4aa'; })
+      .warmupTicks(120)   /* pre-simulate layout so nodes settle before visible */
+      .cooldownTicks(0)
+      .width(container.offsetWidth)
+      .height(container.offsetHeight)
+      .onNodeClick(function (node) {
+        if (selectedNode === node) {
+          /* Deselect */
+          selectedNode = null;
+          hlNodes.clear();
+          hlLinks.clear();
+          document.getElementById('gene-panel').style.display = 'none';
+        } else {
+          selectedNode = node;
+          hlNodes.clear();
+          hlLinks.clear();
+          hlNodes.add(node);
+          var neighbours = [];
+          graph.graphData().links.forEach(function (link) {
+            if (link.source === node || link.target === node) {
+              hlLinks.add(link);
+              var other = link.source === node ? link.target : link.source;
+              hlNodes.add(other);
+              neighbours.push({ node: other, weight: link.weight });
+            }
+          });
+          neighbours.sort(function (a, b) { return b.weight - a.weight; });
+          showPanel(node, neighbours);
+        }
+        /* Re-evaluate visual accessors */
+        graph
+          .nodeColor(nodeColor)
+          .linkWidth(linkWidth)
+          .linkColor(linkColor)
+          .linkDirectionalParticles(linkParticles);
+      });
+
+    /* ── Responsive resize ────────────────────────────────────── */
+    new ResizeObserver(function () {
+      graph.width(container.offsetWidth).height(container.offsetHeight);
+    }).observe(container);
+
+    /* ── Info panel ───────────────────────────────────────────── */
+    function showPanel(node, neighbours) {
+      document.getElementById('gene-panel-name').textContent  = node.id;
+      document.getElementById('gene-panel-name').style.color  = node.color;
+      document.getElementById('gene-panel-group').textContent = node.groupLabel;
+      document.getElementById('gene-panel-group').style.color = node.color;
+      document.getElementById('gene-panel-count').textContent =
+        neighbours.length + ' direct connection' + (neighbours.length !== 1 ? 's' : '');
+      document.getElementById('gene-panel-links').innerHTML = neighbours
+        .map(function (c) {
+          return '<span style="display:inline-block;margin-right:0.55rem;color:'
+            + c.node.color + ';font-weight:700;">' + c.node.id
+            + '<span style="font-size:0.7rem;font-weight:400;color:#94a3b8;margin-left:2px;">'
+            + c.weight.toFixed(2) + '</span></span>';
+        }).join('');
+      document.getElementById('gene-panel').style.display = 'block';
+    }
+
+    /* Clear button */
+    document.getElementById('gene-panel-clear').addEventListener('click', function () {
+      selectedNode = null;
+      hlNodes.clear();
+      hlLinks.clear();
+      document.getElementById('gene-panel').style.display = 'none';
+      graph
+        .nodeColor(nodeColor)
+        .linkWidth(linkWidth)
+        .linkColor(linkColor)
+        .linkDirectionalParticles(linkParticles);
+    });
+  }
+
+  /* ── GSAP scroll entrance ──────────────────────────────────── */
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.from('#gene-network-section', {
+      opacity: 0, y: 36, duration: 0.78, ease: 'power2.out',
+      scrollTrigger: { trigger: '#gene-network-section', start: 'top 82%', once: true }
+    });
+  }
+})();
+</script>
+
 <script src="assets/nav.js" defer></script>
 </body>
 </html>
