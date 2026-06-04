@@ -8,840 +8,728 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/style.css" />
   <style>
-    /* ── Variables ──────────────────────────────────────────────── */
-    :root {
-      --bg:       #0a1628;
-      --bg-deep:  #060d1a;
-      --bg-card:  rgba(255,255,255,0.035);
-      --teal:     #00d4aa;
-      --sky:      #38bdf8;
-      --text:     #dbeafe;
-      --muted:    #4d6a80;
-      --dim:      #1e3248;
-      --border:   rgba(0,212,170,0.14);
-      --bsub:     rgba(255,255,255,0.06);
-      --glow:     0 0 40px rgba(0,212,170,0.25);
-    }
+/* ══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════════ */
+:root {
+  --bg:          #0a1628;
+  --bg-deep:     #060d1a;
+  --bg-mid:      #0d1f38;
+  --teal:        #00d4aa;
+  --sky:         #38bdf8;
+  --text:        #dbeafe;
+  --muted:       #4a6580;
+  --dim:         #1a3050;
+  /* Glass */
+  --glass-bg:    rgba(255,255,255,0.055);
+  --glass-edge:  rgba(255,255,255,0.11);
+  --glass-shine: rgba(255,255,255,0.07);
+  --g-teal-bg:   rgba(0,212,170,0.07);
+  --g-teal-edge: rgba(0,212,170,0.22);
+  /* Glows */
+  --glow-t:  0 0 30px rgba(0,212,170,0.22);
+  --glow-ts: 0 0 40px rgba(0,212,170,0.30);
+  --glow-s:  0 0 30px rgba(56,189,248,0.18);
+}
 
-    /* ── Reset & base ───────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ══════════════════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
 
-    /* ── Nav overrides ──────────────────────────────────────────── */
-    #site-nav {
-      background: rgba(6,13,26,0.88) !important;
-      backdrop-filter: blur(16px) !important;
-      border-bottom: 1px solid rgba(0,212,170,0.1) !important;
-      box-shadow: none !important;
-    }
-    #site-nav a {
-      color: rgba(219,234,254,0.6) !important;
-      border-bottom: none !important;
-    }
-    #site-nav a:hover, #site-nav a.active {
-      color: var(--teal) !important;
-      border-bottom: none !important;
-    }
-    .nav-brand { color: #fff !important; }
-    .nav-brand span { color: var(--teal) !important; }
-    #nav-toggle span { background: var(--text) !important; }
+/* ══════════════════════════════════════════════════════════
+   NAV — glassmorphism dark
+══════════════════════════════════════════════════════════ */
+#site-nav {
+  background: rgba(6,13,26,0.72) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border-bottom: 1px solid rgba(0,212,170,0.1) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+#site-nav a { color: rgba(219,234,254,0.55) !important; border-bottom: none !important; }
+#site-nav a:hover, #site-nav a.active { color: var(--teal) !important; border-bottom: none !important; }
+.nav-brand { color: #fff !important; }
+.nav-brand span { color: var(--teal) !important; }
+#nav-toggle span { background: rgba(219,234,254,0.7) !important; }
+@media (max-width:768px) {
+  #nav-links {
+    background: rgba(6,13,26,0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(0,212,170,0.1) !important;
+  }
+  #nav-links a { color: rgba(219,234,254,0.7) !important; }
+  #nav-links a:hover { background: rgba(0,212,170,0.07) !important; }
+}
 
-    @media (max-width: 768px) {
-      #nav-links {
-        background: #060d1a !important;
-        border-bottom: 1px solid rgba(0,212,170,0.1) !important;
-        box-shadow: 0 12px 32px rgba(0,0,0,0.6) !important;
-      }
-      #nav-links a { color: rgba(219,234,254,0.75) !important; }
-      #nav-links a:hover { background: rgba(0,212,170,0.06) !important; }
-    }
+/* ══════════════════════════════════════════════════════════
+   GLASSMORPHISM UTILITIES
+══════════════════════════════════════════════════════════ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    0 4px 32px rgba(0,0,0,0.28),
+    inset 0 1px 0 var(--glass-shine),
+    inset 0 -1px 0 rgba(0,0,0,0.12);
+}
 
-    /* ── Shared section styles ──────────────────────────────────── */
-    .sec { padding: 7rem 2rem; position: relative; }
-    .sec-inner { max-width: 1040px; margin: 0 auto; }
+.glass-teal {
+  background: var(--g-teal-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--g-teal-edge);
+  box-shadow:
+    0 4px 32px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 0 40px rgba(0,212,170,0.05),
+    var(--glow-t);
+}
 
-    .sec-tag {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 0.85rem;
-    }
+/* ══════════════════════════════════════════════════════════
+   SHARED SECTION CHROME
+══════════════════════════════════════════════════════════ */
+.sec { padding: 7rem 2rem; position: relative; }
+.sec-inner { max-width: 1040px; margin: 0 auto; }
 
-    .sec-heading {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 1.1rem;
-    }
+.sec-tag {
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 0.8rem;
+}
 
-    .sec-desc {
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 500px;
-      line-height: 1.8;
-    }
+.sec-heading {
+  font-size: clamp(2rem,4vw,3.2rem); font-weight: 800;
+  letter-spacing: -0.035em; line-height: 1.08; color: #fff;
+  margin-bottom: 1rem;
+}
 
-    /* Animated section rule */
-    .sec-rule {
-      height: 1px;
-      background: linear-gradient(to right, var(--teal), rgba(56,189,248,0.3), transparent);
-      margin-bottom: 4rem;
-      transform-origin: left;
-    }
+.sec-desc {
+  font-size: 0.94rem; color: var(--muted);
+  max-width: 500px; line-height: 1.8;
+}
 
-    /* ── HERO ───────────────────────────────────────────────────── */
-    #hero {
-      position: relative;
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 2rem;
-      padding: 9rem 4rem 6rem;
-      overflow: hidden;
-    }
+/* Animated section rule */
+.sec-rule {
+  height: 1px;
+  background: linear-gradient(to right, var(--teal), rgba(56,189,248,0.35), transparent);
+  margin-bottom: 4rem;
+  transform-origin: left;
+}
 
-    /* Gradient orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb-a {
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 70%);
-      top: -15%; left: -8%;
-      animation: drift-a 16s ease-in-out infinite;
-    }
-    .orb-b {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%);
-      bottom: -10%; right: -5%;
-      animation: drift-b 20s ease-in-out infinite;
-    }
-    .orb-c {
-      width: 260px; height: 260px;
-      background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      animation: drift-c 12s ease-in-out infinite;
-    }
-    @keyframes drift-a {
-      0%,100% { transform: translate(0,0); }
-      40%      { transform: translate(30px,25px); }
-      70%      { transform: translate(-20px,40px); }
-    }
-    @keyframes drift-b {
-      0%,100% { transform: translate(0,0); }
-      35%      { transform: translate(-35px,-20px); }
-      65%      { transform: translate(20px,30px); }
-    }
-    @keyframes drift-c {
-      0%,100% { transform: translate(0,0); }
-      50%      { transform: translate(25px,-30px); }
-    }
+/* ══════════════════════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════════════════════ */
+.btn-glow {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.8rem 1.75rem; border-radius: 9px;
+  font-size: 0.875rem; font-weight: 700; letter-spacing: 0.01em;
+  text-decoration: none; background: var(--teal); color: #060d1a;
+  transition: box-shadow 0.25s, transform 0.2s, background 0.2s;
+}
+.btn-glow:hover {
+  background: #1fffc8; transform: translateY(-2px);
+  box-shadow: 0 0 32px rgba(0,212,170,0.5), 0 8px 20px rgba(0,0,0,0.3);
+}
 
-    /* Subtle grid overlay */
-    #hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,170,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,170,0.025) 1px, transparent 1px);
-      background-size: 70px 70px;
-      pointer-events: none;
-      z-index: 0;
-    }
+.btn-glass {
+  display: inline-flex; align-items: center;
+  padding: 0.8rem 1.75rem; border-radius: 9px;
+  font-size: 0.875rem; font-weight: 600;
+  text-decoration: none;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-edge); color: rgba(219,234,254,0.8);
+  transition: border-color 0.25s, color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+.btn-glass:hover {
+  border-color: rgba(0,212,170,0.35); color: var(--teal);
+  background: rgba(0,212,170,0.06);
+  box-shadow: var(--glow-t);
+}
 
-    .hero-left {
-      position: relative;
-      z-index: 2;
-    }
+/* ══════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════ */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 9rem 2rem 6rem; overflow: hidden;
+  background: radial-gradient(ellipse 80% 60% at 65% 30%, rgba(0,212,170,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 60% at 20% 70%, rgba(56,189,248,0.06) 0%, transparent 60%),
+              var(--bg);
+}
 
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--teal);
-      border: 1px solid rgba(0,212,170,0.22);
-      padding: 0.38rem 1rem;
-      border-radius: 100px;
-      background: rgba(0,212,170,0.06);
-      margin-bottom: 2rem;
-    }
+/* Particle mesh canvas */
+#mesh-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  opacity: 0.9;
+}
 
-    .hero-title {
-      font-size: clamp(2.8rem, 5.5vw, 5.8rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.0;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-    .hero-title .accent-line {
-      display: block;
-      background: linear-gradient(90deg, var(--teal), var(--sky));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+/* CSS grid overlay */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,170,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,170,0.028) 1px, transparent 1px);
+  background-size: 68px 68px;
+  z-index: 0; pointer-events: none;
+}
 
-    .hero-desc {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 480px;
-      line-height: 1.8;
-      margin: 1.75rem 0 2.5rem;
-    }
+/* Floating orbs */
+.h-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(110px); pointer-events: none; z-index: 0;
+}
+.h-orb-1 {
+  width: 650px; height: 650px;
+  background: radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 60%);
+  top: -20%; right: -12%;
+  animation: orb1 16s ease-in-out infinite;
+}
+.h-orb-2 {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 60%);
+  bottom: -15%; left: -8%;
+  animation: orb2 20s ease-in-out infinite;
+}
+.h-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,212,170,0.07) 0%, transparent 60%);
+  top: 40%; left: 42%;
+  animation: orb3 11s ease-in-out infinite;
+}
+@keyframes orb1 { 0%,100%{transform:translate(0,0)} 40%{transform:translate(-25px,20px)} 70%{transform:translate(18px,-28px)} }
+@keyframes orb2 { 0%,100%{transform:translate(0,0)} 35%{transform:translate(22px,-15px)} 65%{transform:translate(-14px,24px)} }
+@keyframes orb3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-18px)} }
 
-    .hero-cta {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-    }
+/* Hero content */
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 780px; width: 100%;
+}
 
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.78rem 1.65rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      text-decoration: none;
-      background: var(--teal);
-      color: var(--bg-deep);
-      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
-      letter-spacing: 0.01em;
-    }
-    .btn-primary:hover {
-      background: #1fffc8;
-      transform: translateY(-2px);
-      box-shadow: 0 0 28px rgba(0,212,170,0.45);
-    }
+.hero-eyebrow {
+  display: inline-flex; align-items: center;
+  padding: 0.38rem 1.1rem; border-radius: 100px; margin-bottom: 2rem;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+  background: rgba(0,212,170,0.08);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,212,170,0.2);
+  box-shadow: var(--glow-t);
+}
 
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.78rem 1.65rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid var(--bsub);
-      color: rgba(219,234,254,0.75);
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-    }
-    .btn-outline:hover {
-      border-color: rgba(0,212,170,0.3);
-      color: var(--teal);
-      background: rgba(0,212,170,0.05);
-    }
+.hero-title {
+  font-size: clamp(2.8rem,6vw,6rem);
+  font-weight: 900; letter-spacing: -0.04em; line-height: 1.0;
+  color: #fff; margin-bottom: 0;
+}
+.hero-title .t2 {
+  display: block; font-size: clamp(3.2rem,7vw,7rem);
+  line-height: 1.0;
+}
+.hero-title .t3 {
+  display: block; font-weight: 300; font-size: clamp(2rem,4vw,4rem);
+  line-height: 1.1; margin-top: 0.1em;
+  background: linear-gradient(90deg, var(--teal) 0%, var(--sky) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-    /* DNA canvas */
-    .hero-right {
-      position: relative;
-      z-index: 2;
-      height: 520px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #dna-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+/* Glassmorphism subtitle card */
+.hero-glass-card {
+  margin: 2rem 0 2.5rem;
+  padding: 1.2rem 1.5rem;
+  border-radius: 14px;
+  max-width: 540px;
+  font-size: 0.95rem; color: rgba(219,234,254,0.65); line-height: 1.8;
+}
 
-    /* Scroll cue */
-    .scroll-cue {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      z-index: 3;
-    }
-    .scroll-cue-text {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dim);
-    }
-    .scroll-cue-line {
-      width: 1px;
-      height: 44px;
-      background: linear-gradient(to bottom, var(--teal), transparent);
-      animation: cue-pulse 1.8s ease-in-out infinite;
-    }
-    @keyframes cue-pulse {
-      0%   { opacity:1; transform: scaleY(0); transform-origin: top; }
-      49%  { opacity:1; transform: scaleY(1); transform-origin: top; }
-      50%  { transform-origin: bottom; }
-      100% { opacity:0; transform: scaleY(0); transform-origin: bottom; }
-    }
+.hero-cta { display: flex; gap: 0.9rem; flex-wrap: wrap; }
 
-    /* ── STATS ──────────────────────────────────────────────────── */
-    #stats {
-      background: linear-gradient(180deg, #0d1f38 0%, var(--bg) 100%);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 5rem 2rem;
-    }
-    .stats-row {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1px 1fr 1px 1fr;
-      align-items: center;
-      gap: 0;
-    }
-    .stat-sep { background: var(--border); height: 80px; }
-    .stat-block { text-align: center; padding: 0 2.5rem; }
-    .stat-num {
-      font-size: clamp(3.5rem, 6vw, 5.5rem);
-      font-weight: 900;
-      letter-spacing: -0.045em;
-      line-height: 1;
-      color: var(--teal);
-      text-shadow: 0 0 50px rgba(0,212,170,0.3);
-      display: block;
-    }
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      margin-top: 0.6rem;
-      text-transform: uppercase;
-    }
+/* Scroll cue */
+.scroll-cue {
+  position: absolute; bottom: 2.75rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
+  z-index: 3;
+}
+.scroll-cue-label {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(0,212,170,0.4);
+}
+.scroll-cue-arrows {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.scroll-cue-arrows span {
+  display: block; width: 10px; height: 10px;
+  border-right: 1.5px solid rgba(0,212,170,0.5);
+  border-bottom: 1.5px solid rgba(0,212,170,0.5);
+  transform: rotate(45deg);
+  animation: arrow-cascade 1.6s ease-in-out infinite;
+}
+.scroll-cue-arrows span:nth-child(1) { animation-delay: 0s;    opacity: 0.3; }
+.scroll-cue-arrows span:nth-child(2) { animation-delay: 0.18s; opacity: 0.6; }
+.scroll-cue-arrows span:nth-child(3) { animation-delay: 0.36s; opacity: 1;   }
+@keyframes arrow-cascade {
+  0%,100% { opacity: 0.15; transform: rotate(45deg) translate(0,0); }
+  50%      { opacity: 1;    transform: rotate(45deg) translate(3px,3px); }
+}
 
-    /* ── NARRATIVE (pinned) ─────────────────────────────────────── */
-    #narrative-wrap { height: 400vh; position: relative; }
+/* ══════════════════════════════════════════════════════════
+   KEY STATS
+══════════════════════════════════════════════════════════ */
+#stats {
+  padding: 5.5rem 2rem;
+  background: linear-gradient(180deg, var(--bg-mid) 0%, var(--bg) 100%);
+  border-top: 1px solid rgba(0,212,170,0.1);
+  border-bottom: 1px solid rgba(0,212,170,0.08);
+}
+.stats-grid {
+  max-width: 1000px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.25rem;
+}
+.stat-card {
+  border-radius: 18px; padding: 2.25rem 1.75rem; text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.stat-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,170,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 48px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 50px rgba(0,212,170,0.07),
+    0 0 40px rgba(0,212,170,0.18) !important;
+}
+.stat-num {
+  display: block;
+  font-size: clamp(3.2rem,5.5vw,5rem);
+  font-weight: 900; letter-spacing: -0.045em; line-height: 1;
+  color: var(--teal);
+  text-shadow: 0 0 50px rgba(0,212,170,0.4), 0 0 100px rgba(0,212,170,0.2);
+  margin-bottom: 0.75rem;
+}
+.stat-label {
+  font-size: 0.76rem; color: var(--muted);
+  font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; line-height: 1.5;
+}
 
-    #narrative-inner {
-      height: 100vh;
-      background: var(--bg-deep);
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
-    #narrative-inner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px);
-      background-size: 70px 70px;
-    }
-    /* animated gradient accent sweeping through the background */
-    #narrative-inner::after {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 65%);
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      animation: drift-a 18s ease-in-out infinite;
-      pointer-events: none;
-    }
+/* ══════════════════════════════════════════════════════════
+   NARRATIVE — PINNED + SCRUB
+══════════════════════════════════════════════════════════ */
+#narrative-wrap { height: 400vh; position: relative; }
 
-    .narrative-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      width: 100%;
-      position: relative;
-      z-index: 1;
-    }
+#narrative-inner {
+  height: 100vh;
+  background: var(--bg-deep);
+  display: flex; align-items: center;
+  overflow: hidden; position: relative;
+}
+#narrative-inner::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px);
+  background-size: 68px 68px; pointer-events: none;
+}
 
-    .narrative-left { position: relative; }
+/* Parallax orbs inside narrative */
+.n-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); pointer-events: none; z-index: 0;
+  will-change: transform;
+}
+.n-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,212,170,0.1) 0%, transparent 60%);
+  top: -20%; left: -5%;
+}
+.n-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 60%);
+  bottom: -15%; right: -5%;
+}
 
-    /* All panels stacked, shown/hidden via timeline */
-    .n-panel {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      opacity: 0;
-    }
-    .n-panel:first-child { opacity: 1; position: relative; }
+.narrative-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; max-width: 1040px;
+  margin: 0 auto; padding: 0 2rem;
+  width: 100%; position: relative; z-index: 1;
+}
 
-    .n-step {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 1.25rem;
-    }
-    .n-title {
-      font-size: clamp(1.6rem, 2.8vw, 2.4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      color: #fff;
-      margin-bottom: 1rem;
-    }
-    .n-body {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.85;
-      max-width: 400px;
-    }
+/* Left: panels stacked */
+.narrative-left { position: relative; min-height: 300px; }
 
-    /* progress dots */
-    .n-dots {
-      display: flex;
-      gap: 0.45rem;
-      margin-top: 2.5rem;
-    }
-    .n-dot {
-      height: 4px;
-      border-radius: 2px;
-      background: var(--dim);
-      transition: width 0.4s, background 0.4s;
-      width: 18px;
-    }
-    .n-dot.on { width: 32px; background: var(--teal); }
+.n-panel {
+  position: absolute; top: 0; left: 0; right: 0;
+  opacity: 0; will-change: opacity, transform;
+  border-radius: 18px; padding: 2rem 2rem 1.75rem;
+}
+.n-panel:first-child { opacity: 1; position: relative; }
 
-    /* Right side big visuals */
-    .narrative-right { position: relative; height: 260px; }
+.n-step {
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 1.25rem;
+}
+.n-title {
+  font-size: clamp(1.5rem,2.6vw,2.2rem); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.15; color: #fff;
+  margin-bottom: 1rem;
+}
+.n-body {
+  font-size: 0.875rem; color: var(--muted);
+  line-height: 1.85; max-width: 380px;
+}
 
-    .n-vis {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      opacity: 0;
-    }
-    .n-vis:first-child { opacity: 1; }
+/* Progress dots */
+.n-dots { display: flex; gap: 0.45rem; margin-top: 2.25rem; }
+.n-dot {
+  height: 3px; border-radius: 2px;
+  background: var(--dim); width: 20px;
+  transition: width 0.4s, background 0.4s, box-shadow 0.4s;
+}
+.n-dot.on { width: 36px; background: var(--teal); box-shadow: var(--glow-t); }
 
-    .n-big {
-      font-size: clamp(4.5rem, 8vw, 8rem);
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      line-height: 1;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-    .n-big em { color: var(--teal); font-style: normal; }
-    .n-big-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
+/* Right: big stat visuals */
+.narrative-right { position: relative; }
+.n-vis-wrap {
+  border-radius: 20px; padding: 2.5rem;
+  position: relative; overflow: hidden;
+  min-height: 220px; display: flex; align-items: center;
+}
+.n-vis-wrap::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 100% 80% at 50% 100%, rgba(0,212,170,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.n-vis { position: absolute; inset: 0; padding: 2.5rem; opacity: 0; display: flex; flex-direction: column; justify-content: center; }
+.n-vis:first-child { opacity: 1; }
+.n-big { font-size: clamp(4rem,7vw,7rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1; color: #fff; margin-bottom: 0.5rem; }
+.n-big em { color: var(--teal); font-style: normal; text-shadow: 0 0 40px rgba(0,212,170,0.4); }
+.n-big-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 
-    /* ── OVERVIEW CARDS ─────────────────────────────────────────── */
-    .card-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 1.25rem;
-      margin-top: 3.5rem;
-    }
+/* ══════════════════════════════════════════════════════════
+   OVERVIEW CARDS
+══════════════════════════════════════════════════════════ */
+.card-row-3 {
+  display: grid; grid-template-columns: repeat(auto-fit,minmax(265px,1fr));
+  gap: 1.25rem; margin-top: 3.5rem;
+}
+.dcard {
+  border-radius: 16px; padding: 1.75rem;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.dcard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,212,170,0.28) !important;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12), var(--glow-t) !important;
+}
+.dcard-icon { font-size: 1.3rem; margin-bottom: 1rem; }
+.dcard-title { font-size: 0.95rem; font-weight: 700; color: #e2f4f0; margin-bottom: 0.55rem; letter-spacing: -0.01em; }
+.dcard-text  { font-size: 0.81rem; color: var(--muted); line-height: 1.8; }
 
-    .dcard {
-      background: var(--bg-card);
-      border: 1px solid var(--bsub);
-      border-radius: 14px;
-      padding: 1.75rem;
-      transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
-    }
-    .dcard:hover {
-      border-color: var(--border);
-      background: rgba(0,212,170,0.04);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-    }
-    .dcard-icon { font-size: 1.3rem; margin-bottom: 1rem; }
-    .dcard-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #e2f4f0;
-      margin-bottom: 0.55rem;
-      letter-spacing: -0.01em;
-    }
-    .dcard-text { font-size: 0.82rem; color: var(--muted); line-height: 1.8; }
+/* ══════════════════════════════════════════════════════════
+   TIMELINE
+══════════════════════════════════════════════════════════ */
+#timeline { background: var(--bg-deep); }
 
-    /* ── TIMELINE ────────────────────────────────────────────────── */
-    #timeline { background: var(--bg-deep); }
+.tl-outer {
+  position: relative; padding-left: 2.25rem;
+  margin-top: 4rem;
+}
 
-    .tl-wrap {
-      margin-top: 4rem;
-      position: relative;
-      padding-left: 2rem;
-    }
-    /* Vertical spine */
-    .tl-wrap::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--teal), rgba(0,212,170,0.05));
-    }
+/* The glowing spine */
+.tl-spine-wrap {
+  position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
+}
+.tl-spine-track {
+  position: absolute; inset: 0;
+  background: rgba(0,212,170,0.1); border-radius: 2px;
+}
+#tl-fill {
+  position: absolute; top: 0; left: 0; right: 0; height: 0%;
+  background: linear-gradient(to bottom, var(--teal) 0%, var(--sky) 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(0,212,170,0.6), 0 0 24px rgba(0,212,170,0.3);
+  will-change: height;
+}
 
-    .tl-item {
-      position: relative;
-      padding: 0 0 3.5rem 2.5rem;
-    }
-    .tl-item:last-child { padding-bottom: 0; }
+/* Items */
+.tl-items { display: flex; flex-direction: column; gap: 1.2rem; }
 
-    /* Circle node */
-    .tl-item::before {
-      content: '';
-      position: absolute;
-      left: -5px;
-      top: 6px;
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      background: var(--bg-deep);
-      border: 2px solid var(--teal);
-      box-shadow: 0 0 12px rgba(0,212,170,0.35);
-      transition: background 0.3s;
-    }
-    .tl-item.done::before { background: var(--teal); }
-    .tl-item.active-item::before {
-      background: var(--sky);
-      border-color: var(--sky);
-      box-shadow: 0 0 16px rgba(56,189,248,0.5);
-    }
+.tl-item {
+  position: relative; border-radius: 14px; padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.tl-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(0,212,170,0.28) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), var(--glow-t) !important;
+}
 
-    .tl-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
-    .tl-date {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--teal);
-    }
-    .tl-badge {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      padding: 0.18rem 0.6rem;
-      border-radius: 100px;
-      background: rgba(0,212,170,0.12);
-      color: var(--teal);
-      text-transform: uppercase;
-    }
-    .tl-badge.in-progress {
-      background: rgba(56,189,248,0.12);
-      color: var(--sky);
-    }
+/* Node dot */
+.tl-dot {
+  position: absolute; left: -2.27rem; top: 1.55rem;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--bg-deep); border: 2px solid rgba(0,212,170,0.3);
+  z-index: 2; transition: border-color 0.3s, box-shadow 0.3s;
+}
+.tl-item.done .tl-dot {
+  background: var(--teal); border-color: var(--teal);
+  box-shadow: 0 0 12px rgba(0,212,170,0.6);
+}
+.tl-item.in-prog .tl-dot {
+  background: var(--sky); border-color: var(--sky);
+  box-shadow: 0 0 16px rgba(56,189,248,0.7);
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%,100% { box-shadow: 0 0 6px rgba(56,189,248,0.5); }
+  50%      { box-shadow: 0 0 22px rgba(56,189,248,0.9), 0 0 36px rgba(56,189,248,0.3); }
+}
 
-    .tl-title {
-      font-size: 1.0rem;
-      font-weight: 700;
-      color: #e2f4f0;
-      letter-spacing: -0.015em;
-      margin-bottom: 0.4rem;
-    }
-    .tl-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.75; }
+.tl-meta { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.45rem; }
+.tl-date { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
+.tl-badge {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em;
+  padding: 0.2rem 0.6rem; border-radius: 100px;
+  background: rgba(0,212,170,0.1); color: var(--teal); text-transform: uppercase;
+}
+.tl-badge.prog { background: rgba(56,189,248,0.1); color: var(--sky); }
 
-    /* ── DATA SOURCES ────────────────────────────────────────────── */
-    .ds-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.5rem;
-      margin-top: 3.5rem;
-    }
+.tl-title { font-size: 0.95rem; font-weight: 700; color: #e2f4f0; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+.tl-desc  { font-size: 0.8rem; color: var(--muted); line-height: 1.75; }
 
-    .ds-card {
-      background: var(--bg-card);
-      border: 1px solid var(--bsub);
-      border-radius: 14px;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.25s, box-shadow 0.25s;
-    }
-    .ds-card:hover {
-      border-color: var(--border);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-    }
-    .ds-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-    }
-    .ds-card.teal::before { background: linear-gradient(to right, var(--teal), var(--sky)); }
-    .ds-card.amber::before { background: linear-gradient(to right, #d97706, #fbbf24); }
+/* ══════════════════════════════════════════════════════════
+   DATA SOURCES
+══════════════════════════════════════════════════════════ */
+.ds-grid {
+  display: grid; grid-template-columns: repeat(auto-fit,minmax(340px,1fr));
+  gap: 1.5rem; margin-top: 3.5rem;
+}
+.ds-card {
+  border-radius: 16px; padding: 2rem;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.ds-card:hover { transform: translateY(-4px); }
+.ds-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.ds-card.teal::before { background: linear-gradient(to right, var(--teal), var(--sky)); box-shadow: 0 0 10px rgba(0,212,170,0.5); }
+.ds-card.amber::before { background: linear-gradient(to right, #d97706, #fbbf24); }
 
-    .ds-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-    }
-    .ds-name { font-size: 1.05rem; font-weight: 800; color: #e2f4f0; margin-bottom: 0.2rem; }
-    .ds-sub  { font-size: 0.76rem; color: var(--muted); }
+.ds-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+.ds-name { font-size: 1.05rem; font-weight: 800; color: #e2f4f0; margin-bottom: 0.2rem; }
+.ds-sub  { font-size: 0.75rem; color: var(--muted); }
+.s-pill  { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.05em; padding: 0.28rem 0.72rem; border-radius: 100px; }
+.s-active   { background: rgba(16,185,129,0.12); color: #34d399; }
+.s-progress { background: rgba(251,191,36,0.12);  color: #fbbf24; }
 
-    .status-pill {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 0.28rem 0.7rem;
-      border-radius: 100px;
-    }
-    .s-active   { background: rgba(16,185,129,0.12); color: #34d399; }
-    .s-progress { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+.ds-stats { display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.ds-val { display: block; font-size: 1.6rem; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+.ds-key { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
-    .ds-stats {
-      display: flex;
-      gap: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    .ds-val {
-      display: block;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.03em;
-    }
-    .ds-key {
-      font-size: 0.66rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+.ds-list { font-size: 0.78rem; color: var(--muted); line-height: 2; padding-left: 1rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; }
 
-    .ds-list {
-      font-size: 0.79rem;
-      color: var(--muted);
-      line-height: 2;
-      padding-left: 1rem;
-      border-top: 1px solid var(--bsub);
-      padding-top: 1rem;
-    }
+/* ══════════════════════════════════════════════════════════
+   HIGHLIGHTS
+══════════════════════════════════════════════════════════ */
+.hl-grid {
+  display: grid; grid-template-columns: repeat(auto-fit,minmax(195px,1fr));
+  gap: 1.1rem; margin: 3.5rem 0 3rem;
+}
+.hl-card {
+  border-radius: 12px; padding: 1.75rem 1.5rem; text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.hl-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0,212,170,0.28) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), var(--glow-t) !important;
+}
+.hl-val  { font-size: 2rem; font-weight: 800; color: var(--teal); letter-spacing: -0.03em; margin-bottom: 0.45rem; }
+.hl-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.65; }
 
-    /* ── HIGHLIGHTS ──────────────────────────────────────────────── */
-    .hl-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 3.5rem 0 3rem;
-    }
-    .hl-card {
-      background: var(--bg-card);
-      border: 1px solid var(--bsub);
-      border-radius: 12px;
-      padding: 1.75rem 1.5rem;
-      text-align: center;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-    .hl-card:hover {
-      border-color: var(--border);
-      transform: translateY(-3px);
-    }
-    .hl-val {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--teal);
-      letter-spacing: -0.03em;
-      margin-bottom: 0.45rem;
-    }
-    .hl-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.65; }
+/* ══════════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════════ */
+#page-footer {
+  padding: 2.5rem 2rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  background: var(--bg-deep);
+}
+.footer-inner {
+  max-width: 1040px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 1rem;
+  font-size: 0.79rem; color: var(--dim);
+}
+.footer-inner a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-inner a:hover { color: var(--teal); }
 
-    /* ── FOOTER ──────────────────────────────────────────────────── */
-    #footer {
-      padding: 2.5rem 2rem;
-      border-top: 1px solid var(--bsub);
-    }
-    .footer-inner {
-      max-width: 1040px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.79rem;
-      color: var(--dim);
-    }
-    .footer-inner a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-inner a:hover { color: var(--teal); }
-
-    /* ── Responsive ──────────────────────────────────────────────── */
-    @media (max-width: 860px) {
-      #hero {
-        grid-template-columns: 1fr;
-        padding: 8rem 2rem 5rem;
-        text-align: center;
-      }
-      .hero-cta { justify-content: center; }
-      .hero-right { display: none; }
-      .narrative-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .narrative-right { display: none; }
-      .stats-row { grid-template-columns: 1fr; gap: 2rem; }
-      .stat-sep { display: none; }
-    }
-    @media (max-width: 560px) {
-      .sec { padding: 5rem 1.5rem; }
-      #hero { padding: 8rem 1.5rem 5rem; }
-      .tl-wrap { padding-left: 1.5rem; }
-      .tl-item { padding-left: 1.75rem; }
-    }
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+@media (max-width:860px) {
+  .narrative-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .narrative-right { display: none; }
+  #narrative-wrap { height: 360vh; }
+  .stats-grid { grid-template-columns: 1fr; gap: 1rem; }
+}
+@media (max-width:560px) {
+  .sec { padding: 5rem 1.5rem; }
+  #hero { padding: 8rem 1.5rem 5.5rem; }
+  .hero-title .t2 { font-size: clamp(2.6rem,10vw,4rem); }
+  .tl-outer { padding-left: 1.75rem; }
+}
   </style>
 </head>
 <body>
 
 <header id="site-nav"></header>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- HERO                                                          -->
-<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════ -->
 <section id="hero">
-  <div class="orb orb-a"></div>
-  <div class="orb orb-b"></div>
-  <div class="orb orb-c"></div>
+  <canvas id="mesh-canvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="h-orb h-orb-1"></div>
+  <div class="h-orb h-orb-2"></div>
+  <div class="h-orb h-orb-3"></div>
 
-  <div class="hero-left">
-    <div class="hero-eyebrow" id="h-eyebrow">
+  <div class="hero-inner">
+    <div class="hero-eyebrow" id="h-eye">
       TCGA-STAD &nbsp;·&nbsp; Bulk RNA-seq &nbsp;·&nbsp; scRNA-seq in progress
     </div>
 
     <h1 class="hero-title" id="h-title">
-      Decoding<br/>Gastric Cancer,
-      <span class="accent-line">One Cell at a Time</span>
+      Decoding
+      <span class="t2">Gastric Cancer,</span>
+      <span class="t3">One Cell at a Time</span>
     </h1>
 
-    <p class="hero-desc" id="h-desc">
+    <div class="hero-glass-card glass" id="h-glass">
       A multi-modal transcriptomic study integrating TCGA-STAD bulk RNA-seq
       (N=375) with CZ CELLxGENE single-cell data to map the molecular
       landscape of stomach adenocarcinoma.
-    </p>
+    </div>
 
     <div class="hero-cta" id="h-cta">
-      <a href="results.html" class="btn-primary">Explore Results &nbsp;→</a>
-      <a href="methods.html" class="btn-outline">View Methods</a>
+      <a href="results.html" class="btn-glow">Explore Results &nbsp;→</a>
+      <a href="methods.html" class="btn-glass">View Methods</a>
     </div>
-  </div>
-
-  <div class="hero-right" id="h-canvas-wrap">
-    <canvas id="dna-canvas"></canvas>
   </div>
 
   <div class="scroll-cue" id="h-cue">
-    <span class="scroll-cue-text">scroll to explore</span>
-    <div class="scroll-cue-line"></div>
+    <span class="scroll-cue-label">scroll to explore</span>
+    <div class="scroll-cue-arrows">
+      <span></span><span></span><span></span>
+    </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- KEY STATS                                                     -->
-<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     KEY STATS
+════════════════════════════════════════════════════════ -->
 <section id="stats">
-  <div class="stats-row">
-    <div class="stat-block">
+  <div class="stats-grid">
+    <div class="stat-card glass-teal js-card">
       <span class="stat-num" data-count="375">375</span>
       <span class="stat-label">patients analyzed</span>
     </div>
-    <div class="stat-sep"></div>
-    <div class="stat-block">
+    <div class="stat-card glass-teal js-card">
       <span class="stat-num" data-count="20000" data-suffix="+">20,000+</span>
       <span class="stat-label">genes profiled</span>
     </div>
-    <div class="stat-sep"></div>
-    <div class="stat-block">
+    <div class="stat-card glass-teal js-card">
       <span class="stat-num" data-count="1247">1,247</span>
       <span class="stat-label">differentially expressed genes</span>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- NARRATIVE — PINNED + SCRUB                                    -->
-<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     NARRATIVE — PINNED + SCRUB
+════════════════════════════════════════════════════════ -->
 <div id="narrative-wrap">
   <div id="narrative-inner">
-    <div class="narrative-grid">
+    <div class="n-orb n-orb-1" id="n-orb-1"></div>
+    <div class="n-orb n-orb-2" id="n-orb-2"></div>
 
-      <!-- Left: rotating text panels -->
+    <div class="narrative-grid">
+      <!-- Left: cycling glass panels -->
       <div class="narrative-left">
-        <div class="n-panel" id="np-0">
+
+        <div class="n-panel glass" id="np-0">
           <div class="n-step">01 / 04 &nbsp;— The Cohort</div>
           <h2 class="n-title">375 patients.<br/>One disease.<br/>Whole transcriptome.</h2>
           <p class="n-body">
             TCGA-STAD bulk RNA-seq: 375 primary tumor samples plus 30 matched
-            adjacent normals, harmonized to GRCh38, with comprehensive clinical
-            annotation including stage, grade, overall survival, and molecular
-            subtype (EBV, MSI, CIN, GS).
+            adjacent normals, harmonized to GRCh38. Comprehensive clinical
+            annotation includes AJCC stage, grade, overall survival, and
+            molecular subtype (EBV, MSI, CIN, GS).
           </p>
         </div>
 
-        <div class="n-panel" id="np-1">
+        <div class="n-panel glass" id="np-1">
           <div class="n-step">02 / 04 &nbsp;— Differential Expression</div>
           <h2 class="n-title">1,247 genes<br/>rewritten by<br/>the tumor.</h2>
           <p class="n-body">
             DESeq2 Wald test (FDR &lt; 0.05, |log₂FC| &gt; 1.5) identified 782
             upregulated and 465 downregulated genes. Cell-cycle drivers
             <em>MKI67</em>, <em>TOP2A</em>, and <em>PCNA</em> dominate the
-            upregulated landscape; tight-junction gene <em>CLDN18</em> is
-            among the most consistently silenced.
+            upregulated landscape.
           </p>
         </div>
 
-        <div class="n-panel" id="np-2">
+        <div class="n-panel glass" id="np-2">
           <div class="n-step">03 / 04 &nbsp;— Survival Signatures</div>
-          <h2 class="n-title">MKI67 predicts<br/>outcome with<br/>HR = 1.74.</h2>
+          <h2 class="n-title">MKI67 predicts<br/>outcome.<br/>HR = 1.74.</h2>
           <p class="n-body">
-            Kaplan-Meier stratification and multivariate Cox modeling confirm
-            MKI67-high patients face significantly worse overall survival
-            (HR = 1.74, 95% CI 1.42–2.13, p &lt; 0.001), independent of AJCC
-            stage, age, and molecular subtype. GSEA revealed 14 enriched
-            Hallmark gene sets — E2F and MYC targets top the list.
+            Kaplan-Meier and multivariate Cox modeling confirm MKI67-high
+            patients face significantly worse overall survival
+            (HR = 1.74, 95% CI 1.42–2.13, p &lt; 0.001). GSEA revealed
+            14 enriched Hallmark gene sets — E2F and MYC targets lead.
           </p>
         </div>
 
-        <div class="n-panel" id="np-3">
+        <div class="n-panel glass" id="np-3">
           <div class="n-step">04 / 04 &nbsp;— The Road Ahead</div>
-          <h2 class="n-title">Single-cell<br/>resolution is<br/>coming.</h2>
+          <h2 class="n-title">Single-cell<br/>resolution<br/>is coming.</h2>
           <p class="n-body">
             CZ CELLxGENE scRNA-seq data acquisition is underway. Seurat v5
-            clustering, SingleR annotation against the Human Cell Atlas, and
-            CIBERSORT deconvolution will resolve the tumor microenvironment
-            at single-cell resolution — validating and extending bulk findings.
+            clustering, SingleR annotation, and CIBERSORT deconvolution will
+            resolve the tumor microenvironment at single-cell resolution —
+            extending and validating bulk findings.
           </p>
         </div>
 
@@ -853,33 +741,34 @@
         </div>
       </div>
 
-      <!-- Right: large changing visual -->
+      <!-- Right: large changing stat -->
       <div class="narrative-right">
-        <div class="n-vis" id="nv-0">
-          <div class="n-big"><em>375</em></div>
-          <div class="n-big-label">TCGA-STAD patients</div>
-        </div>
-        <div class="n-vis" id="nv-1">
-          <div class="n-big">1,<em>247</em></div>
-          <div class="n-big-label">DE genes identified</div>
-        </div>
-        <div class="n-vis" id="nv-2">
-          <div class="n-big">HR&nbsp;<em>1.74</em></div>
-          <div class="n-big-label">hazard ratio — MKI67</div>
-        </div>
-        <div class="n-vis" id="nv-3">
-          <div class="n-big"><em>→</em></div>
-          <div class="n-big-label">scRNA-seq next</div>
+        <div class="n-vis-wrap glass-teal">
+          <div class="n-vis" id="nv-0">
+            <div class="n-big"><em>375</em></div>
+            <div class="n-big-label">TCGA-STAD patients</div>
+          </div>
+          <div class="n-vis" id="nv-1">
+            <div class="n-big">1,<em>247</em></div>
+            <div class="n-big-label">DE genes identified</div>
+          </div>
+          <div class="n-vis" id="nv-2">
+            <div class="n-big">HR&nbsp;<em>1.74</em></div>
+            <div class="n-big-label">hazard ratio — MKI67</div>
+          </div>
+          <div class="n-vis" id="nv-3">
+            <div class="n-big"><em>→</em></div>
+            <div class="n-big-label">scRNA-seq next</div>
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- OVERVIEW CARDS                                                -->
-<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     OVERVIEW
+════════════════════════════════════════════════════════ -->
 <section class="sec" id="overview">
   <div class="sec-inner">
     <div class="sec-rule js-rule"></div>
@@ -890,8 +779,8 @@
       patients still lack actionable molecular targets.
     </p>
 
-    <div class="card-grid-3">
-      <div class="dcard js-card">
+    <div class="card-row-3">
+      <div class="dcard glass js-card">
         <div class="dcard-icon">🎯</div>
         <div class="dcard-title">Clinical Motivation</div>
         <p class="dcard-text">
@@ -900,157 +789,141 @@
           profiling a clinical necessity.
         </p>
       </div>
-      <div class="dcard js-card">
+      <div class="dcard glass js-card">
         <div class="dcard-icon">🧬</div>
         <div class="dcard-title">Multi-Resolution Design</div>
         <p class="dcard-text">
-          Bulk RNA-seq from TCGA-STAD provides population-level DE and survival
-          associations; upcoming scRNA-seq from CZ CELLxGENE will resolve
-          cell-type-specific expression programs.
+          Bulk RNA-seq from TCGA-STAD delivers population-level DE and
+          survival associations; upcoming scRNA-seq from CZ CELLxGENE will
+          resolve cell-type-specific expression programs.
         </p>
       </div>
-      <div class="dcard js-card">
+      <div class="dcard glass js-card">
         <div class="dcard-icon">📊</div>
         <div class="dcard-title">Analytical Scope</div>
         <p class="dcard-text">
-          DESeq2 differential expression, Kaplan-Meier survival modeling, GSEA
-          against Hallmark and KEGG gene sets, and cell-type deconvolution —
-          fully reproducible and version-controlled.
+          DESeq2, Kaplan-Meier survival modeling, GSEA against Hallmark
+          and KEGG gene sets, and cell-type deconvolution — fully
+          reproducible and version-controlled.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- TIMELINE                                                      -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-<section class="sec" id="timeline">
+<!-- ════════════════════════════════════════════════════════
+     TIMELINE
+════════════════════════════════════════════════════════ -->
+<section class="sec" id="timeline" style="background:var(--bg-deep);">
   <div class="sec-inner">
     <div class="sec-rule js-rule"></div>
     <p class="sec-tag js-tag">Project Timeline</p>
     <h2 class="sec-heading js-slide">Milestones</h2>
-    <p class="sec-desc js-fade">A reproducible pipeline built in stages.</p>
+    <p class="sec-desc js-fade">A reproducible pipeline built in deliberate stages.</p>
 
-    <div class="tl-wrap">
-
-      <div class="tl-item done js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">Nov 2024</span>
-          <span class="tl-badge">Complete</span>
-        </div>
-        <div class="tl-title">Data Acquisition</div>
-        <p class="tl-desc">
-          Downloaded TCGA-STAD cohort (N=375) via GDC Data Portal using
-          TCGAbiolinks. HTSeq-Counts, GRCh38/hg38 reference. Included 30
-          matched adjacent normal samples for contrast analysis.
-        </p>
+    <div class="tl-outer">
+      <div class="tl-spine-wrap">
+        <div class="tl-spine-track"></div>
+        <div id="tl-fill"></div>
       </div>
+      <div class="tl-items">
 
-      <div class="tl-item done js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">Dec 2024</span>
-          <span class="tl-badge">Complete</span>
+        <div class="tl-item done glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">Nov 2024</span>
+            <span class="tl-badge">Complete</span>
+          </div>
+          <div class="tl-title">Data Acquisition</div>
+          <p class="tl-desc">Downloaded TCGA-STAD cohort (N=375) via GDC Data Portal using
+          TCGAbiolinks. HTSeq-Counts, GRCh38/hg38. Included 30 matched adjacent normals.</p>
         </div>
-        <div class="tl-title">QC &amp; Preprocessing</div>
-        <p class="tl-desc">
-          Library QC with MultiQC and RSeQC. Low-expressed genes filtered;
-          18,342 of 60,483 features retained. DESeq2 median-of-ratios
-          normalization. Batch effects evaluated via ComBat-seq.
-        </p>
-      </div>
 
-      <div class="tl-item done js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">Jan 2025</span>
-          <span class="tl-badge">Complete</span>
+        <div class="tl-item done glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">Dec 2024</span>
+            <span class="tl-badge">Complete</span>
+          </div>
+          <div class="tl-title">QC &amp; Preprocessing</div>
+          <p class="tl-desc">Library QC with MultiQC and RSeQC. 18,342 of 60,483 features retained.
+          DESeq2 median-of-ratios normalization. ComBat-seq batch correction evaluated.</p>
         </div>
-        <div class="tl-title">Differential Expression</div>
-        <p class="tl-desc">
-          DESeq2 Wald test: 1,247 DEGs at FDR &lt; 0.05, |log₂FC| &gt; 1.5.
-          Top upregulated: MKI67, TOP2A, PCNA. Top downregulated: CLDN18,
-          CDH1. Volcano and MA plots generated with EnhancedVolcano.
-        </p>
-      </div>
 
-      <div class="tl-item done js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">Feb 2025</span>
-          <span class="tl-badge">Complete</span>
+        <div class="tl-item done glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">Jan 2025</span>
+            <span class="tl-badge">Complete</span>
+          </div>
+          <div class="tl-title">Differential Expression</div>
+          <p class="tl-desc">DESeq2 Wald test: 1,247 DEGs at FDR &lt; 0.05, |log₂FC| &gt; 1.5.
+          Top upregulated: MKI67, TOP2A, PCNA. Top downregulated: CLDN18, CDH1.</p>
         </div>
-        <div class="tl-title">Survival Analysis</div>
-        <p class="tl-desc">
-          Kaplan-Meier estimator and log-rank testing for 50+ candidate genes.
-          Multivariate Cox PH modeling adjusted for stage, age, and TCGA
-          molecular subtype. MKI67: HR 1.74 (p &lt; 0.001).
-        </p>
-      </div>
 
-      <div class="tl-item done js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">Mar 2025</span>
-          <span class="tl-badge">Complete</span>
+        <div class="tl-item done glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">Feb 2025</span>
+            <span class="tl-badge">Complete</span>
+          </div>
+          <div class="tl-title">Survival Analysis</div>
+          <p class="tl-desc">Kaplan-Meier and log-rank testing for 50+ candidate genes. Multivariate
+          Cox PH adjusted for stage, age, subtype. MKI67: HR 1.74 (p &lt; 0.001).</p>
         </div>
-        <div class="tl-title">Pathway Enrichment (GSEA)</div>
-        <p class="tl-desc">
-          fgsea with Wald-statistic ranking against MSigDB Hallmark (H) and
-          KEGG (C2). 14 enriched gene sets at FDR &lt; 0.25. Top: E2F Targets
-          (NES +2.41), MYC Targets (NES +2.28), G2M Checkpoint (NES +2.19).
-        </p>
-      </div>
 
-      <div class="tl-item active-item js-tl">
-        <div class="tl-meta">
-          <span class="tl-date">In Progress</span>
-          <span class="tl-badge in-progress">Active</span>
+        <div class="tl-item done glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">Mar 2025</span>
+            <span class="tl-badge">Complete</span>
+          </div>
+          <div class="tl-title">Pathway Enrichment (GSEA)</div>
+          <p class="tl-desc">fgsea against MSigDB Hallmark and KEGG. 14 enriched sets (FDR &lt; 0.25).
+          Top: E2F Targets (NES +2.41), MYC Targets (NES +2.28), G2M Checkpoint (NES +2.19).</p>
         </div>
-        <div class="tl-title">scRNA-seq Integration</div>
-        <p class="tl-desc">
-          CZ CELLxGENE gastric cancer dataset acquisition underway. Seurat v5
-          QC, clustering, and SingleR annotation planned. CIBERSORT and MuSiC
-          deconvolution to resolve TME cell-type fractions across TCGA cohort.
-        </p>
-      </div>
 
+        <div class="tl-item in-prog glass js-tl">
+          <div class="tl-dot"></div>
+          <div class="tl-meta">
+            <span class="tl-date">In Progress</span>
+            <span class="tl-badge prog">Active</span>
+          </div>
+          <div class="tl-title">scRNA-seq Integration</div>
+          <p class="tl-desc">CZ CELLxGENE gastric cancer data acquisition underway. Seurat v5 QC,
+          clustering, SingleR annotation. CIBERSORT + MuSiC deconvolution to map TME fractions.</p>
+        </div>
+
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- DATA SOURCES                                                  -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-<section class="sec" id="data-sources" style="background:var(--bg-deep);">
+<!-- ════════════════════════════════════════════════════════
+     DATA SOURCES
+════════════════════════════════════════════════════════ -->
+<section class="sec" id="data-sources">
   <div class="sec-inner">
     <div class="sec-rule js-rule"></div>
     <p class="sec-tag js-tag">Data Sources</p>
     <h2 class="sec-heading js-slide">Datasets Used<br/>in This Study</h2>
     <p class="sec-desc js-fade">
-      All datasets are publicly available and accessed through institutional
-      repositories under applicable data use agreements.
+      All datasets are publicly available and accessed under applicable data use agreements.
     </p>
 
     <div class="ds-grid">
-      <div class="ds-card teal js-card">
+      <div class="ds-card teal glass js-card">
         <div class="ds-head">
           <div>
             <div class="ds-name">TCGA-STAD</div>
             <div class="ds-sub">The Cancer Genome Atlas — Stomach Adenocarcinoma</div>
           </div>
-          <span class="status-pill s-active">● Active</span>
+          <span class="s-pill s-active">● Active</span>
         </div>
         <div class="ds-stats">
-          <div>
-            <span class="ds-val" data-count="375">375</span>
-            <span class="ds-key">Patients</span>
-          </div>
-          <div>
-            <span class="ds-val">~20K</span>
-            <span class="ds-key">Genes</span>
-          </div>
-          <div>
-            <span class="ds-val">HTSeq</span>
-            <span class="ds-key">Counts</span>
-          </div>
+          <div><span class="ds-val" data-count="375">375</span><span class="ds-key">Patients</span></div>
+          <div><span class="ds-val">~20K</span><span class="ds-key">Genes</span></div>
+          <div><span class="ds-val">HTSeq</span><span class="ds-key">Counts</span></div>
         </div>
         <ul class="ds-list">
           <li>GDC Data Portal (NCI), harmonized GRCh38</li>
@@ -1060,23 +933,17 @@
         </ul>
       </div>
 
-      <div class="ds-card amber js-card">
+      <div class="ds-card amber glass js-card">
         <div class="ds-head">
           <div>
             <div class="ds-name">CZ CELLxGENE</div>
             <div class="ds-sub">Chan Zuckerberg Initiative — Single-Cell Census</div>
           </div>
-          <span class="status-pill s-progress">⏳ In Progress</span>
+          <span class="s-pill s-progress">⏳ In Progress</span>
         </div>
         <div class="ds-stats">
-          <div>
-            <span class="ds-val">~50K</span>
-            <span class="ds-key">Est. cells</span>
-          </div>
-          <div>
-            <span class="ds-val">10x</span>
-            <span class="ds-key">Platform</span>
-          </div>
+          <div><span class="ds-val">~50K</span><span class="ds-key">Est. cells</span></div>
+          <div><span class="ds-val">10x</span><span class="ds-key">Platform</span></div>
         </div>
         <ul class="ds-list">
           <li>CellxGene Discover: gastric cancer datasets</li>
@@ -1089,159 +956,150 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- ANALYSIS HIGHLIGHTS                                           -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-<section class="sec" id="highlights">
+<!-- ════════════════════════════════════════════════════════
+     HIGHLIGHTS + CTA
+════════════════════════════════════════════════════════ -->
+<section class="sec" id="highlights" style="background:var(--bg-deep);">
   <div class="sec-inner">
     <div class="sec-rule js-rule"></div>
     <p class="sec-tag js-tag">Analysis Highlights</p>
     <h2 class="sec-heading js-slide">Key Findings</h2>
 
     <div class="hl-grid">
-      <div class="hl-card js-card">
+      <div class="hl-card glass js-card">
         <div class="hl-val" data-count="1247">1,247</div>
         <div class="hl-desc">Differentially expressed genes<br/>(|log₂FC| &gt; 1.5, FDR &lt; 0.05)</div>
       </div>
-      <div class="hl-card js-card">
+      <div class="hl-card glass js-card">
         <div class="hl-val">p &lt; 0.001</div>
         <div class="hl-desc">MKI67 high vs. low survival<br/>stratification (log-rank test)</div>
       </div>
-      <div class="hl-card js-card">
+      <div class="hl-card glass js-card">
         <div class="hl-val" data-count="14">14</div>
         <div class="hl-desc">Enriched Hallmark gene sets<br/>(GSEA, FDR &lt; 0.25)</div>
       </div>
-      <div class="hl-card js-card">
+      <div class="hl-card glass js-card">
         <div class="hl-val">E2F/MYC</div>
         <div class="hl-desc">Top upstream regulators<br/>in tumor vs. normal contrast</div>
       </div>
     </div>
 
     <div style="text-align:center;">
-      <a href="results.html" class="btn-primary">Explore Full Results &nbsp;→</a>
+      <a href="results.html" class="btn-glow">Explore Full Results &nbsp;→</a>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- FOOTER                                                        -->
-<!-- ══════════════════════════════════════════════════════════════ -->
-<footer id="footer">
+<!-- ════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════ -->
+<footer id="page-footer">
   <div class="footer-inner">
     <div>
       <span style="color:#7ab3c0;font-weight:600;">Research Portfolio — Your Name</span>
-      <span style="margin:0 0.5rem;color:var(--dim);">·</span>
+      <span style="margin:0 0.5rem;">·</span>
       <span>TCGA-STAD Transcriptomic Analysis</span>
     </div>
     <div style="display:flex;gap:1.25rem;align-items:center;">
       <a href="https://github.com/fangchiliu/stomach-cancer" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <span style="color:var(--dim);">·</span>
+      <span>·</span>
       <a href="about.html">Contact</a>
     </div>
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════════════════════════ -->
-<!-- SCRIPTS                                                       -->
-<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-/* ── DNA Helix canvas ─────────────────────────────────────────── */
+/* ── Particle mesh canvas ─────────────────────────────────────── */
 (function () {
-  const canvas = document.getElementById('dna-canvas');
+  const canvas = document.getElementById('mesh-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let raf, t = 0, W = 0, H = 0;
+  let raf, W = 0, H = 0, particles = [];
 
   function resize() {
     W = canvas.width  = canvas.offsetWidth;
     H = canvas.height = canvas.offsetHeight;
+    // Recreate particles on resize
+    const count = Math.max(30, Math.min(80, Math.floor(W * H / 14000)));
+    particles = Array.from({ length: count }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.38,
+      vy: (Math.random() - 0.5) * 0.38,
+      r:  Math.random() * 1.4 + 0.4,
+    }));
   }
 
-  function draw() {
+  function frame() {
     ctx.clearRect(0, 0, W, H);
+    const maxD = 135;
 
-    const cx        = W * 0.5;
-    const amp       = Math.min(W * 0.22, 90);
-    const waveLen   = Math.min(H * 0.2, 180);
-    const freq      = (Math.PI * 2) / waveLen;
-    const dotStep   = 4;
-    const rungEvery = Math.round(waveLen * 0.5);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
 
-    for (let y = 0; y <= H; y += dotStep) {
-      const phase = y * freq - t;
-      const s     = Math.sin(phase);
-      const x1    = cx + amp * s;
-      const x2    = cx - amp * s;
-      const d1    = (s + 1) * 0.5;       // 0..1 depth
-      const d2    = 1 - d1;
-
-      // dot radius scales with depth
-      const r1 = 1.2 + d1 * 2.2;
-      const r2 = 1.2 + d2 * 2.2;
-      const a1 = 0.08 + d1 * 0.55;
-      const a2 = 0.08 + d2 * 0.55;
-
+      // Node dot
       ctx.beginPath();
-      ctx.arc(x1, y, r1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0,212,170,${a1.toFixed(2)})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,212,170,0.45)';
       ctx.fill();
 
-      ctx.beginPath();
-      ctx.arc(x2, y, r2, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(56,189,248,${a2.toFixed(2)})`;
-      ctx.fill();
-
-      // base-pair rungs
-      if (y % rungEvery < dotStep) {
-        const ra = (Math.max(a1, a2) * 0.25).toFixed(2);
-        ctx.beginPath();
-        ctx.moveTo(x1, y);
-        ctx.lineTo(x2, y);
-        ctx.strokeStyle = `rgba(0,212,170,${ra})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
+      // Connections
+      for (let j = i + 1; j < particles.length; j++) {
+        const q  = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < maxD) {
+          const a = ((1 - d / maxD) * 0.22).toFixed(3);
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(0,212,170,${a})`;
+          ctx.lineWidth = 0.55;
+          ctx.stroke();
+        }
       }
     }
-
-    t += 0.016;
-    raf = requestAnimationFrame(draw);
+    raf = requestAnimationFrame(frame);
   }
 
   resize();
   new ResizeObserver(resize).observe(canvas);
-  draw();
-
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) cancelAnimationFrame(raf);
-    else { raf = requestAnimationFrame(draw); }
+    else { raf = requestAnimationFrame(frame); }
   });
+  frame();
 })();
 
-/* ── GSAP Animations ──────────────────────────────────────────── */
+/* ── GSAP animations ──────────────────────────────────────────── */
 (function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  /* 1. Hero entrance timeline */
+  /* ── 1. Hero entrance ─────────────────────────────────────── */
   gsap.timeline({ defaults: { ease: 'power3.out' } })
-    .from('#h-eyebrow',     { opacity: 0, y: 18,  duration: 0.65 })
-    .from('#h-title',       { opacity: 0, y: 52,  duration: 0.9  }, '-=0.35')
-    .from('#h-desc',        { opacity: 0, y: 22,  duration: 0.65 }, '-=0.5')
-    .from('#h-cta',         { opacity: 0, y: 16,  duration: 0.55 }, '-=0.4')
-    .from('#h-canvas-wrap', { opacity: 0, x: 30,  duration: 0.8  }, '-=0.7')
-    .from('#h-cue',         { opacity: 0,          duration: 0.6  }, '-=0.1');
+    .from('#h-eye',   { opacity: 0, y: 16,  duration: 0.65 })
+    .from('#h-title', { opacity: 0, y: 55,  duration: 0.95 }, '-=0.3')
+    .from('#h-glass', { opacity: 0, y: 22,  duration: 0.65 }, '-=0.55')
+    .from('#h-cta',   { opacity: 0, y: 16,  duration: 0.55 }, '-=0.4')
+    .from('#h-cue',   { opacity: 0,          duration: 0.6  }, '-=0.1');
 
-  /* 2. Section rules draw left → right */
+  /* ── 2. Section rules draw left → right ─────────────────── */
   gsap.utils.toArray('.js-rule').forEach(el => {
     gsap.from(el, {
-      scaleX: 0, transformOrigin: 'left center', duration: 1.2, ease: 'power2.out',
+      scaleX: 0, transformOrigin: 'left center', duration: 1.3, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 88%', once: true }
     });
   });
 
-  /* 3. Section tags fade */
+  /* ── 3. Section tags ─────────────────────────────────────── */
   gsap.utils.toArray('.js-tag').forEach(el => {
     gsap.from(el, {
       opacity: 0, y: 10, duration: 0.4, ease: 'power2.out',
@@ -1249,37 +1107,37 @@
     });
   });
 
-  /* 4. Section headings slide from left */
+  /* ── 4. Headings slide from left ─────────────────────────── */
   gsap.utils.toArray('.js-slide').forEach(el => {
     gsap.from(el, {
       opacity: 0, x: -55, duration: 0.85, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 84%', once: true }
+      scrollTrigger: { trigger: el, start: 'top 83%', once: true }
     });
   });
 
-  /* 5. Paragraphs fade up */
+  /* ── 5. Paragraphs fade up ───────────────────────────────── */
   gsap.utils.toArray('.js-fade').forEach(el => {
     gsap.from(el, {
-      opacity: 0, y: 16, duration: 0.55, ease: 'power2.out',
+      opacity: 0, y: 18, duration: 0.6, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 86%', once: true }
     });
   });
 
-  /* 6. Cards stagger in from bottom — grouped by parent */
-  const cardGroups = new Map();
+  /* ── 6. Cards stagger — grouped by parent ────────────────── */
+  const cardMap = new Map();
   gsap.utils.toArray('.js-card').forEach(el => {
     const p = el.parentElement;
-    if (!cardGroups.has(p)) cardGroups.set(p, []);
-    cardGroups.get(p).push(el);
+    if (!cardMap.has(p)) cardMap.set(p, []);
+    cardMap.get(p).push(el);
   });
-  cardGroups.forEach((cards, parent) => {
+  cardMap.forEach((cards, parent) => {
     gsap.from(cards, {
-      opacity: 0, y: 44, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+      opacity: 0, y: 48, duration: 0.72, stagger: 0.11, ease: 'power2.out',
       scrollTrigger: { trigger: parent, start: 'top 82%', once: true }
     });
   });
 
-  /* 7. Count-up numbers */
+  /* ── 7. Count-up numbers ─────────────────────────────────── */
   gsap.utils.toArray('[data-count]').forEach(el => {
     const end    = parseInt(el.dataset.count, 10);
     const suffix = el.dataset.suffix || '';
@@ -1288,7 +1146,7 @@
       trigger: el, start: 'top 88%', once: true,
       onEnter() {
         gsap.to(proxy, {
-          val: end, duration: 2, ease: 'power2.out',
+          val: end, duration: 2.2, ease: 'power2.out',
           onUpdate() {
             const n = Math.round(proxy.val);
             el.textContent = (n >= 1000 ? n.toLocaleString() : n) + suffix;
@@ -1298,47 +1156,27 @@
     });
   });
 
-  /* 8. Stats section entrance */
-  gsap.utils.toArray('.stat-block').forEach((el, i) => {
-    gsap.from(el, {
-      opacity: 0, y: 30, duration: 0.7, delay: i * 0.12, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 86%', once: true }
-    });
-  });
-
-  /* 9. Timeline items — stagger in */
-  gsap.utils.toArray('.js-tl').forEach((el, i) => {
-    gsap.from(el, {
-      opacity: 0, x: 30, duration: 0.65, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 86%', once: true }
-    });
-  });
-
-  /* 10. Pinned narrative with scrub ────────────────────────────── */
+  /* ── 8. Narrative — pinned + scrub ───────────────────────── */
   const panels  = gsap.utils.toArray('.n-panel');
   const visuals = gsap.utils.toArray('.n-vis');
   const dots    = gsap.utils.toArray('.n-dot');
   const N       = panels.length;
 
-  // Set initial hidden state for panels 1-3 and visuals 1-3
+  // Set initial hidden states (panels 1-3, visuals 1-3 all start invisible)
   gsap.set(panels.slice(1),  { opacity: 0, y: 40, position: 'absolute', top: 0 });
   gsap.set(visuals.slice(1), { opacity: 0, y: 30 });
 
-  // Build the scrub timeline
+  // Build the scrub timeline — each panel gets a hold + transition
   const narrativeTl = gsap.timeline();
-
   for (let i = 0; i < N - 1; i++) {
-    // Hold current panel
-    narrativeTl.to({}, { duration: 1 });
-    // Cross-fade to next panel (ease:none so scrub feels linear)
     narrativeTl
-      .to(panels[i],   { opacity: 0, y: -35, duration: 0.5, ease: 'none' })
-      .to(panels[i+1], { opacity: 1, y: 0,   duration: 0.5, ease: 'none' }, '<')
-      .to(visuals[i],  { opacity: 0, y: -25, duration: 0.4, ease: 'none' }, '<')
-      .to(visuals[i+1],{ opacity: 1, y: 0,   duration: 0.4, ease: 'none' }, '<0.1');
+      .to({},         { duration: 1 })                                // hold
+      .to(panels[i],  { opacity: 0, y: -32, duration: 0.5, ease: 'none' })
+      .to(panels[i+1],{ opacity: 1, y: 0,   duration: 0.5, ease: 'none' }, '<')
+      .to(visuals[i], { opacity: 0, y: -22, duration: 0.4, ease: 'none' }, '<')
+      .to(visuals[i+1],{opacity: 1, y: 0,   duration: 0.4, ease: 'none' }, '<0.08');
   }
-  // Final hold
-  narrativeTl.to({}, { duration: 1 });
+  narrativeTl.to({}, { duration: 1 }); // final hold
 
   ScrollTrigger.create({
     trigger: '#narrative-wrap',
@@ -1348,10 +1186,38 @@
     scrub: 1.5,
     animation: narrativeTl,
     onUpdate(self) {
-      // Sync progress dots
       const idx = Math.min(Math.floor(self.progress * N), N - 1);
       dots.forEach((d, i) => d.classList.toggle('on', i === idx));
     }
+  });
+
+  // Parallax orbs within the narrative (move at different rates as wrapper scrolls)
+  gsap.to('#n-orb-1', {
+    y: '-30%', ease: 'none',
+    scrollTrigger: { trigger: '#narrative-wrap', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+  gsap.to('#n-orb-2', {
+    y: '-15%', ease: 'none',
+    scrollTrigger: { trigger: '#narrative-wrap', start: 'top bottom', end: 'bottom top', scrub: true }
+  });
+
+  /* ── 9. Timeline spine draws itself on scroll ────────────── */
+  gsap.to('#tl-fill', {
+    height: '100%', ease: 'none',
+    scrollTrigger: {
+      trigger: '.tl-outer',
+      start: 'top 65%',
+      end: 'bottom 80%',
+      scrub: 1,
+    }
+  });
+
+  /* ── 10. Timeline items stagger in ──────────────────────── */
+  gsap.utils.toArray('.js-tl').forEach((el, i) => {
+    gsap.from(el, {
+      opacity: 0, x: 35, duration: 0.7, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 86%', once: true }
+    });
   });
 
 })();
