@@ -559,7 +559,7 @@
       .cameraPosition({ z: 500 })
       .width(container.offsetWidth || 800)
       .height(container.offsetHeight || 580)
-      .onEngineStop(function () { graph.zoomToFit(400, 60); })
+      .onEngineStop(function () { setTimeout(function () { graph.zoomToFit(400, 50); }, 0); })
       .onNodeClick(function (node) {
         if (selectedNode === node) {
           /* Deselect */
