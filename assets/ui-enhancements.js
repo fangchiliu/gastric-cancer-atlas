@@ -12,6 +12,36 @@
   ─────────────────────────────────────────────────────────── */
   if (window.matchMedia('(pointer: fine)').matches) {
 
+    /* Leading cursor dot — hides system cursor, follows mouse with slight lag */
+    document.documentElement.classList.add('has-cursor-trail');
+
+    var lead    = document.createElement('div');
+    lead.className = 'cursor-lead';
+    document.body.appendChild(lead);
+
+    var mx = 0, my = 0, lx = 0, ly = 0, leadVisible = false;
+
+    document.addEventListener('mousemove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (!leadVisible) {
+        leadVisible = true;
+        lx = mx; ly = my;           // snap on first move
+        lead.style.opacity = '1';
+      }
+    });
+    document.addEventListener('mouseleave', function () { lead.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function () {
+      if (leadVisible) lead.style.opacity = '1';
+    });
+
+    (function tick() {
+      lx += (mx - lx) * 0.35;
+      ly += (my - ly) * 0.35;
+      lead.style.left = lx + 'px';
+      lead.style.top  = ly + 'px';
+      requestAnimationFrame(tick);
+    })();
+
     var lastX = -9999, lastY = -9999;
 
     function spawnParticles(cx, cy) {

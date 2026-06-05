@@ -3,6 +3,27 @@
    Applied to all pages via <link> in <head>.
 ════════════════════════════════════════════════════════════ */
 
+/* ── Leading cursor dot ────────────────────────────────────── */
+.has-cursor-trail,
+.has-cursor-trail * {
+  cursor: none !important;
+}
+
+.cursor-lead {
+  position: fixed;
+  top: 0; left: 0;
+  width: 9px; height: 9px;
+  background: #00d4aa;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+  opacity: 0;
+  box-shadow: 0 0 8px rgba(0,212,170,0.95), 0 0 18px rgba(0,212,170,0.5);
+  transition: opacity 0.2s ease;
+}
+
 /* ── Particle trail ────────────────────────────────────────── */
 @keyframes particle-fade {
   0%   { opacity: 0.85; transform: translateY(0px)  scale(1);    }
