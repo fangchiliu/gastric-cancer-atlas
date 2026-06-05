@@ -1134,14 +1134,14 @@
     .then(function(r){ return r.json(); })
     .then(function(d){
       allGenes = d;
-      resize();
       buildSideLists();
-      draw();
+      /* rAF ensures flex layout has settled before measuring offsetWidth/Height */
+      requestAnimationFrame(function(){ resize(); });
     });
 
   /* ── Coordinate helpers ────────────────────────────────────── */
-  function plotW(){ return canvas.width  - PAD.l - PAD.r; }
-  function plotH(){ return canvas.height - PAD.t - PAD.b; }
+  function plotW(){ return canvas.width/(window.devicePixelRatio||1)  - PAD.l - PAD.r; }
+  function plotH(){ return canvas.height/(window.devicePixelRatio||1) - PAD.t - PAD.b; }
 
   function xRange(){ return { min:-5.5, max:5.5 }; }
   function yRange(){
