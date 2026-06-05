@@ -1356,39 +1356,6 @@
   });
 
 })();
-
-/* ── Hero typewriter ─────────────────────────────────────────── */
-(function () {
-  var t3 = document.querySelector('.hero-title .t3');
-  if (!t3) return;
-
-  var fullText = t3.textContent.trim();
-
-  /* Replace content with an empty text node + blinking cursor */
-  t3.textContent = '';
-  var textNode = document.createTextNode('');
-  var cur = document.createElement('span');
-  cur.className  = 'type-cursor';
-  cur.textContent = '|';
-  t3.appendChild(textNode);
-  t3.appendChild(cur);
-
-  /* Start after hero title has faded in (~1.5 s into the GSAP timeline) */
-  setTimeout(function () {
-    var i = 0;
-    var timer = setInterval(function () {
-      textNode.textContent = fullText.slice(0, ++i);
-      if (i >= fullText.length) {
-        clearInterval(timer);
-        /* Stop continuous blink; do 3 final blinks then hide */
-        cur.style.animation = 'none';
-        cur.offsetWidth;                                  /* force reflow */
-        cur.style.animation = 'type-blink 0.65s step-end 3';
-        setTimeout(function () { cur.style.opacity = '0'; }, 3 * 650 + 80);
-      }
-    }, 58);
-  }, 1500);
-})();
 </script>
 <script src="assets/ui-enhancements.js"></script>
 <script src="assets/nav.js" defer></script>
