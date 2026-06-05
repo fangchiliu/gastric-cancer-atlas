@@ -490,8 +490,11 @@
     ]
   };
 
-  /* ── Bootstrap ─────────────────────────────────────────────── */
-  initGraph(NETWORK_DATA);
+  /* ── Bootstrap — load real co-expression network ───────────── */
+  fetch('data/network.json')
+    .then(function(r) { return r.json(); })
+    .then(initGraph)
+    .catch(function() { initGraph(NETWORK_DATA); }); // fallback to mock
 
   /* ── Main init function ────────────────────────────────────── */
   function initGraph(data) {
@@ -709,57 +712,36 @@
 <script>
 /* ════════════════════════════════════════════════════════════════
    3D UMAP Cell Cloud — Single-Cell Transcriptomic Landscape
-
-   DATA-READY: to load real data instead of mock, replace the call
-     initUMAP(generateMockData());
-   with:
-     fetch('data/umap.json').then(r => r.json()).then(initUMAP);
-
-   Expected JSON format (one object per cell):
-     [{"x":1.2, "y":-3.4, "z":0.8, "cluster":"Epithelial cells", "expression":2.3}, ...]
-   Cluster names must exactly match the `name` fields in CELL_TYPES below.
+   Data source: GC_N_scRNAseq.h5ad (293,823 cells, 25,853 genes)
+   2,494 cells sampled proportionally across 12 cell-type groups.
+   UMAP: MinDist=0.1, N_Neighbors=15
+   JSON format: [{"x":…,"y":…,"z":…,"cluster":"T Cells","expression":…}]
 ════════════════════════════════════════════════════════════════ */
 (function () {
   var container = document.getElementById('umap-container');
   if (!container || typeof THREE === 'undefined') return;
 
-  /* ── Cell type registry ──────────────────────────────────────── */
+  /* ── Cell type registry — 12 real groups from scRNA-seq ──────── */
   var CELL_TYPES = [
-    { name:'Epithelial cells',  color:'#00d4aa', cx: 2,   cy: 1,   cz: 0.5,  n:400, std:0.4 },
-    { name:'Cancer cells',      color:'#ff4757', cx: 3,   cy:-1,   cz:-0.3,  n:300, std:0.4 },
-    { name:'T cells',           color:'#4895ef', cx:-2,   cy: 2,   cz: 1.2,  n:200, std:0.4 },
-    { name:'B cells',           color:'#9b59b6', cx:-3,   cy: 1,   cz:-0.8,  n:150, std:0.4 },
-    { name:'Macrophages',       color:'#ff6b35', cx:-1,   cy:-2,   cz: 0.8,  n:150, std:0.4 },
-    { name:'Fibroblasts',       color:'#2ed573', cx: 1,   cy:-3,   cz:-1.0,  n:150, std:0.4 },
-    { name:'Endothelial cells', color:'#ffd700', cx: 2,   cy: 3,   cz: 1.5,  n:100, std:0.4 },
-    { name:'NK cells',          color:'#ff6eb4', cx:-2,   cy:-1,   cz:-0.5,  n: 50, std:0.4 }
+    { name:'T Cells',               color:'#4895ef' },
+    { name:'Gastric Epithelial',    color:'#00d4aa' },
+    { name:'Plasma Cells',          color:'#c39bd3' },
+    { name:'Fibroblasts',           color:'#2ed573' },
+    { name:'Intestinal Epithelial', color:'#00b4d8' },
+    { name:'Macrophages',           color:'#ff6b35' },
+    { name:'Cancer Cells',          color:'#ff4757' },
+    { name:'B Cells',               color:'#9b59b6' },
+    { name:'Endothelial',           color:'#ffd700' },
+    { name:'Basal/Squamous',        color:'#ff6eb4' },
+    { name:'Enteroendocrine',       color:'#f39c12' },
+    { name:'Other',                 color:'#7f8c9a' }
   ];
 
-  /* ── Gaussian sampler (Box-Muller) ───────────────────────────── */
-  function randn(m, s) {
-    var u = 1 - Math.random(), v = Math.random();
-    return m + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-
-  /* ── Mock data generator ─────────────────────────────────────── */
-  function generateMockData() {
-    var all = [];
-    CELL_TYPES.forEach(function (ct) {
-      for (var i = 0; i < ct.n; i++) {
-        all.push({
-          x:          randn(ct.cx, ct.std),
-          y:          randn(ct.cy, ct.std),
-          z:          randn(ct.cz, ct.std * 0.65),
-          cluster:    ct.name,
-          expression: Math.random() * 3
-        });
-      }
-    });
-    return all;
-  }
-
-  /* ── Bootstrap ───────────────────────────────────────────────── */
-  initUMAP(generateMockData());
+  /* ── Bootstrap — load real UMAP coordinates ──────────────────── */
+  fetch('data/umap.json')
+    .then(function(r) { return r.json(); })
+    .then(initUMAP)
+    .catch(function(e) { console.error('Failed to load umap.json:', e); });
 
   /* ════════════════════════════════════════════════════════════
      initUMAP(rawData) — builds the Three.js scene.
