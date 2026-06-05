@@ -544,8 +544,8 @@
           + '</div>';
       })
       .nodeColor(nodeColor)
-      .nodeVal(function (n) { return (n.val || 1) * 5; })
-      .nodeRelSize(4)
+      .nodeVal(function (n) { return (n.val || 1) * 10; })
+      .nodeRelSize(6)
       .nodeOpacity(0.92)
       .linkWidth(linkWidth)
       .linkColor(linkColor)
@@ -553,10 +553,11 @@
       .linkDirectionalParticles(linkParticles)
       .linkDirectionalParticleWidth(2.5)
       .linkDirectionalParticleColor(function () { return '#00d4aa'; })
-      .warmupTicks(120)   /* pre-simulate layout so nodes settle before visible */
+      .warmupTicks(180)
       .cooldownTicks(0)
-      .width(container.offsetWidth)
-      .height(container.offsetHeight)
+      .width(container.offsetWidth || 800)
+      .height(container.offsetHeight || 580)
+      .onEngineStop(function () { graph.zoomToFit(400, 60); })
       .onNodeClick(function (node) {
         if (selectedNode === node) {
           /* Deselect */
@@ -798,7 +799,7 @@
 
       var mat = new THREE.PointsMaterial({
         color:          new THREE.Color(ct.color),
-        size:           0.18,
+        size:           0.32,
         map:            makeGlowTex(ct.color),
         transparent:    true,
         opacity:        0.88,
@@ -850,7 +851,7 @@
        Minimal OrbitControls — inline, no extra imports needed.
        Left-drag → rotate   Right-drag → pan   Wheel → zoom
     ══════════════════════════════════════════════════════════ */
-    var sph = { theta: 0.3, phi: Math.PI * 0.45, r: 18 };
+    var sph = { theta: 0.3, phi: Math.PI * 0.45, r: 24 };
     var tgt = new THREE.Vector3(0, 0, 0);
     var dragging = false, panning = false;
     var lm = { x: 0, y: 0 };
@@ -968,7 +969,7 @@
     }).observe(container);
 
     /* ── Render loop (paused when section not in viewport) ──────── */
-    var inView = false;
+    var inView = true; /* start rendering immediately; IO updates this */
     new IntersectionObserver(function (en) {
       inView = en[0].isIntersecting;
     }, { threshold: 0.05 }).observe(container);
