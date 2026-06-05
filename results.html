@@ -621,6 +621,77 @@
         .linkColor(linkColor)
         .linkDirectionalParticles(linkParticles);
     });
+
+    /* ── Click-to-activate overlay ──────────────────────────────
+       The overlay sits on top of the canvas. While visible it
+       intercepts pointer events (including wheel), so the page
+       scrolls normally. Clicking it hides it, giving full 3D
+       control to force-graph-3d (which calls preventDefault on
+       wheel, enabling zoom). The ✕ Exit button restores the
+       overlay and resets graph state.
+    ─────────────────────────────────────────────────────────── */
+    container.style.position = 'relative';
+
+    var overlay = document.createElement('div');
+    overlay.style.cssText =
+      'position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;' +
+      'align-items:center;justify-content:center;' +
+      'background:rgba(10,22,40,0.52);' +
+      'backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);' +
+      'cursor:pointer;border-radius:14px;transition:opacity 0.2s;';
+    overlay.innerHTML =
+      '<div style="text-align:center;pointer-events:none;">' +
+        '<div style="font-size:2rem;margin-bottom:0.6rem;opacity:0.6;">⬡</div>' +
+        '<div style="font-size:0.95rem;font-weight:700;color:#fff;' +
+                    'letter-spacing:0.01em;margin-bottom:0.45rem;font-family:system-ui,sans-serif;">' +
+          'Click to interact' +
+        '</div>' +
+        '<div style="font-size:0.75rem;color:rgba(0,212,170,0.7);font-family:system-ui,sans-serif;' +
+                    'letter-spacing:0.02em;">' +
+          'Drag to rotate &nbsp;·&nbsp; Scroll to zoom' +
+        '</div>' +
+      '</div>';
+    container.appendChild(overlay);
+
+    var exitBtn = document.createElement('button');
+    exitBtn.textContent = '✕ Exit';
+    exitBtn.style.cssText =
+      'position:absolute;top:10px;right:10px;z-index:21;display:none;' +
+      'background:rgba(10,22,40,0.82);border:1px solid rgba(0,212,170,0.28);' +
+      'color:rgba(219,234,254,0.72);border-radius:7px;padding:4px 11px;' +
+      'font-size:0.73rem;font-weight:600;cursor:pointer;' +
+      'letter-spacing:0.04em;font-family:system-ui,sans-serif;' +
+      'backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);' +
+      'transition:border-color 0.2s,color 0.2s;';
+    exitBtn.addEventListener('mouseover', function () {
+      exitBtn.style.borderColor = 'rgba(0,212,170,0.6)';
+      exitBtn.style.color = '#00d4aa';
+    });
+    exitBtn.addEventListener('mouseout', function () {
+      exitBtn.style.borderColor = 'rgba(0,212,170,0.28)';
+      exitBtn.style.color = 'rgba(219,234,254,0.72)';
+    });
+    container.appendChild(exitBtn);
+
+    overlay.addEventListener('click', function () {
+      overlay.style.display  = 'none';
+      exitBtn.style.display  = 'block';
+    });
+
+    exitBtn.addEventListener('click', function () {
+      /* Reset graph state when exiting interaction mode */
+      selectedNode = null;
+      hlNodes.clear();
+      hlLinks.clear();
+      document.getElementById('gene-panel').style.display = 'none';
+      graph
+        .nodeColor(nodeColor)
+        .linkWidth(linkWidth)
+        .linkColor(linkColor)
+        .linkDirectionalParticles(linkParticles);
+      overlay.style.display = 'flex';
+      exitBtn.style.display = 'none';
+    });
   }
 
   /* ── GSAP scroll entrance ──────────────────────────────────── */
