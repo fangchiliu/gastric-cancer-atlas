@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      location.replace('index.html');
+    }
+  </script>
   <title>Results — STAD Transcriptomic Analysis</title>
   <meta name="description" content="Differential expression, survival analysis, pathway enrichment, and cell-type deconvolution results for TCGA-STAD gastric adenocarcinoma." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
