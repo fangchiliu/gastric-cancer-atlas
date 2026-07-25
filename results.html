@@ -29,8 +29,8 @@
     </h1>
     <p style="color:#94a3b8; font-size:0.95rem; max-width:560px; line-height:1.65;">
       Bulk RNA-seq analyses are complete; scRNA-seq integration is actively in progress.
-      Figures shown below are representative placeholders — final rendered outputs will
-      replace these panels upon analysis completion.
+      Figures marked with real data below are rendered directly from the completed
+      INHBA analysis; remaining panels are representative placeholders pending final rendering.
     </p>
   </div>
 </div>
@@ -56,12 +56,26 @@
       <div class="result-section-body">
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
 
-          <!-- Volcano plot placeholder -->
-          <div class="chart-placeholder">
-            <div class="chart-icon">🌋</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Volcano Plot</div>
-            <p>DESeq2 Wald test: −log₁₀(p<sub>adj</sub>) vs. log₂ fold-change (tumor / normal).
-               Top hits labeled: <em>MKI67</em>, <em>CDH1</em>, <em>CLDN18</em>, <em>TP53</em>.</p>
+          <!-- Volcano plot — real data -->
+          <div class="figure-card">
+            <img src="real_data/plots/TCGA_volcano_INHBA_modern.jpg" alt="Volcano plot showing INHBA is significantly upregulated in TCGA-STAD tumor vs. normal tissue" loading="lazy" />
+            <div class="figure-card-body">
+              <div class="figure-card-title">Volcano Plot — INHBA Highlighted</div>
+              <p>DESeq2 Wald test: −log₁₀(p<sub>adj</sub>) vs. log₂ fold-change (tumor / normal), TCGA-STAD.
+                 <em>INHBA</em> (log₂FC ≈ 3.5, −log₁₀ p<sub>adj</sub> ≈ 52) is among the most significantly
+                 upregulated genes in the cohort.</p>
+            </div>
+          </div>
+
+          <!-- Tumor vs normal expression — real data -->
+          <div class="figure-card">
+            <img src="real_data/plots/INHBA_tumor_vs_normal_both_cohorts.jpg" alt="INHBA expression is upregulated in gastric cancer across TCGA-STAD and GSE66229 cohorts" loading="lazy" />
+            <div class="figure-card-body">
+              <div class="figure-card-title">INHBA Expression — Two Independent Cohorts</div>
+              <p>Tumor vs. adjacent normal INHBA expression in TCGA-STAD (RNA-seq) and GSE66229 (ACRG
+                 microarray). Wilcoxon rank-sum test, p &lt; 0.0001 in both cohorts, confirming the
+                 upregulation is not cohort- or platform-specific.</p>
+            </div>
           </div>
 
           <!-- Heatmap placeholder -->
@@ -77,11 +91,13 @@
         <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
           <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
           <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
-            The most significantly upregulated genes in tumor tissue include cell-cycle regulators
-            (<em>MKI67</em>, <em>PCNA</em>, <em>TOP2A</em>) and epithelial–mesenchymal transition (EMT)
-            markers (<em>VIM</em>, <em>FN1</em>), while tight-junction and cell-adhesion genes
-            (<em>CLDN18</em>, <em>CDH1</em>) show consistent downregulation — consistent with
-            known STAD biology and prior TCGA analyses (Cancer Genome Atlas Research Network, 2014).
+            <em>INHBA</em> (activin A subunit) is one of the most significantly upregulated genes in
+            gastric tumor tissue (log₂FC ≈ 3.5, −log₁₀ p<sub>adj</sub> ≈ 52, DESeq2), and this
+            upregulation replicates independently in the GSE66229 ACRG microarray cohort (Wilcoxon
+            rank-sum p &lt; 0.0001), confirming the signal is not an artifact of sequencing platform
+            or cohort composition. As a TGF-β superfamily ligand implicated in stromal remodeling,
+            INHBA's strong and reproducible upregulation nominates it as a candidate driver of
+            gastric tumor progression rather than a passenger transcriptional change.
           </p>
         </div>
       </div>
@@ -99,16 +115,19 @@
           <div style="font-weight:700; font-size:0.95rem;">Overall Survival Stratification by Gene Expression</div>
           <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Median-split groups · Log-rank test · Cox PH adjusted for stage, age, subtype</div>
         </div>
-        <span class="finding-chip">MKI67: HR 1.74, p &lt; 0.001</span>
+        <span class="finding-chip">INHBA: p = 0.023, log-rank</span>
       </div>
       <div class="result-section-body">
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:1rem;">
 
-          <div class="chart-placeholder">
-            <div class="chart-icon">📈</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Kaplan-Meier: MKI67</div>
-            <p>OS probability over time (months) for MKI67-high (n≈188) vs. MKI67-low (n≈187)
-               patients. Shaded 95% CI ribbons. Log-rank p &lt; 0.001.</p>
+          <!-- Kaplan-Meier: INHBA — real data -->
+          <div class="figure-card">
+            <img src="real_data/plots/KM_INHBA_high_vs_low_5yr.jpg" alt="Kaplan-Meier curve: high INHBA expression predicts worse 5-year survival in gastric cancer" loading="lazy" />
+            <div class="figure-card-body">
+              <div class="figure-card-title">Kaplan-Meier: INHBA</div>
+              <p>5-year overall survival, TCGA-STAD, median-split groups (n=192 low, n=191 high).
+                 High <em>INHBA</em> expression predicts worse survival, log-rank p = 0.023.</p>
+            </div>
           </div>
 
           <div class="chart-placeholder">
@@ -130,11 +149,15 @@
         <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
           <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
           <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
-            Elevated <em>MKI67</em> expression (proliferation index surrogate) is independently
-            associated with poor overall survival in multivariate Cox modeling (HR = 1.74, 95% CI
-            1.42–2.13, p &lt; 0.001), retaining significance after adjustment for AJCC pathological
-            stage, patient age, and molecular subtype. EBV-positive and MSI-high subgroups
-            show notably improved survival relative to chromosomally unstable (CIN) cases.
+            Patients with high <em>INHBA</em> expression (median-split, n=191) show significantly
+            worse 5-year overall survival than the INHBA-low group (n=192; log-rank p = 0.023),
+            with the survival curves separating early and the high-expression group's median
+            survival reached by ~2 years, roughly a year before the low-expression group's. This
+            positions INHBA as a candidate prognostic biomarker; multivariate Cox modeling adjusted
+            for AJCC stage, age, and molecular subtype is the next step to confirm independence
+            from known clinical covariates. The pathway co-expression analysis below (Module 3)
+            offers a candidate mechanism: INHBA marks an invasive, stromal phenotype anti-correlated
+            with tumor proliferation programs.
           </p>
         </div>
       </div>
@@ -149,26 +172,32 @@
     <div class="result-section">
       <div class="result-section-header">
         <div>
-          <div style="font-weight:700; font-size:0.95rem;">Gene Set Enrichment Analysis — Hallmark &amp; KEGG</div>
-          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">fgsea · Wald-statistic ranked · FDR &lt; 0.25 · MSigDB v2024.1</div>
+          <div style="font-weight:700; font-size:0.95rem;">INHBA Co-Expression — Hallmark GSEA</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">TCGA-STAD · genes ranked by Spearman correlation with INHBA · fgsea, BH-adjusted</div>
         </div>
-        <span class="finding-chip">14 significant sets</span>
+        <span class="finding-chip">43 significant sets (FDR &lt; 0.05)</span>
       </div>
       <div class="result-section-body">
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
 
-          <div class="chart-placeholder">
-            <div class="chart-icon">📊</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">GSEA Dot Plot</div>
-            <p>Top 14 enriched Hallmark gene sets ranked by NES. Point size: −log₁₀(FDR).
-               Color: positive (red) or negative (blue) enrichment score.</p>
+          <!-- GSEA dot plot: INHBA co-expression — real data -->
+          <div class="figure-card">
+            <img src="real_data/plots/INHBA_coexpression_pathways.jpg" alt="Dot plot of Hallmark pathways INHBA is co-regulated with in gastric cancer, ranked by normalized enrichment score" loading="lazy" />
+            <div class="figure-card-body">
+              <div class="figure-card-title">Pathways Co-Regulated with INHBA</div>
+              <p>Hallmark GSEA on genes ranked by Spearman correlation with <em>INHBA</em> <strong>among
+                 tumor samples</strong> (not a tumor-vs-normal contrast), TCGA-STAD. Epithelial-mesenchymal
+                 transition, TNFα/NF-κB signaling, and inflammatory response show the strongest
+                 co-enrichment (dot size: gene set size; color: NES).</p>
+            </div>
           </div>
 
           <div class="chart-placeholder">
             <div class="chart-icon">〰️</div>
             <div style="font-weight:600; font-size:0.875rem; color:#475569;">Enrichment Plot: E2F Targets</div>
-            <p>Running enrichment score curve for HALLMARK_E2F_TARGETS (NES = 2.41,
-               FDR &lt; 0.001). Leading-edge genes highlighted.</p>
+            <p>Running enrichment score curve for HALLMARK_E2F_TARGETS (NES = −2.62,
+               p<sub>adj</sub> &lt; 0.0001) — the strongest negatively-correlated set: high-INHBA
+               tumors show lower E2F-target (cell-cycle) activity. Leading-edge genes highlighted.</p>
           </div>
 
         </div>
@@ -181,44 +210,62 @@
                 <th style="text-align:left; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Gene Set</th>
                 <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">NES</th>
                 <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">FDR</th>
-                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Direction</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Correlation</th>
               </tr>
             </thead>
             <tbody>
               <tr style="border-bottom:1px solid #f1f5f9;">
-                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_E2F_TARGETS</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+2.41</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.001</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid #f1f5f9;">
-                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_MYC_TARGETS_V1</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+2.28</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.001</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid #f1f5f9;">
-                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_G2M_CHECKPOINT</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+2.19</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">0.002</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid #f1f5f9;">
                 <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+1.87</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">0.018</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+3.76</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
                 <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_TNFA_SIGNALING_VIA_NFKB</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+3.27</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_INFLAMMATORY_RESPONSE</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+3.12</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_HYPOXIA</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+3.01</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_ANGIOGENESIS</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">+2.66</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">UP</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_E2F_TARGETS</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−2.62</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#ede9fe;color:#5b21b6;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">DOWN</span></td>
               </tr>
               <tr style="border-bottom:1px solid #f1f5f9;">
                 <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_OXIDATIVE_PHOSPHORYLATION</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−1.73</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">0.041</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−2.39</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#ede9fe;color:#5b21b6;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">DOWN</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_G2M_CHECKPOINT</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−2.35</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
                 <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#ede9fe;color:#5b21b6;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">DOWN</span></td>
               </tr>
               <tr>
-                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_ALLOGRAFT_REJECTION</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−1.61</td>
-                <td style="text-align:right; padding:0.55rem 0.75rem;">0.093</td>
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">HALLMARK_MYC_TARGETS_V1</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#6366f1; font-weight:600;">−2.16</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">&lt; 0.0001</td>
                 <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#ede9fe;color:#5b21b6;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">DOWN</span></td>
               </tr>
             </tbody>
@@ -227,12 +274,27 @@
 
         <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
           <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            Ranking all 20,000+ genes by their correlation with <em>INHBA</em> <strong>across tumor
+            samples</strong> (a co-expression axis, not the tumor-vs-normal axis in Module 1) and
+            running Hallmark GSEA yields 43 significant gene sets (FDR &lt; 0.05). INHBA is most
+            positively co-regulated with epithelial–mesenchymal transition (NES = 3.76), TNFα
+            signaling via NF-κB, inflammatory response, and hypoxia — an invasive, inflamed,
+            hypoxic, stromal signature. It is most negatively correlated with proliferative and
+            metabolic programs — E2F targets (NES = −2.62), oxidative phosphorylation, G2M
+            checkpoint, and MYC targets.
+          </p>
           <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
-            Tumor samples show strong, concordant upregulation of proliferative transcriptional
-            programs (E2F targets, MYC targets, G2M checkpoint) and epithelial–mesenchymal
-            transition gene sets, alongside downregulation of oxidative phosphorylation and
-            immune-related pathways in a subset of patients. These patterns suggest metabolic
-            reprogramming and immune evasion as co-occurring hallmarks of STAD progression.
+            This split is expected, not contradictory. Tumors broadly occupy either a highly
+            proliferative state (MYC/E2F-driven cell cycle, OxPhos-fueled biosynthesis) or a
+            migratory, invasive state — the "grow or go" trade-off — and INHBA marks the latter.
+            It's also mechanistically consistent with activin/TGF-β–SMAD2/3 signaling, which is
+            classically cytostatic (inducing p21/p15, repressing MYC) while driving EMT and stromal
+            remodeling. Bulk-tissue composition likely reinforces the signal too: INHBA-high tumors
+            tend to be more stroma- and immune-infiltrated, diluting the epithelial
+            proliferation/OxPhos signal at lower tumor purity. Together, INHBA tags an invasive,
+            hypoxic, stromal phenotype anti-correlated with tumor-cell proliferation — plausibly
+            the same phenotype driving the worse survival seen in the Kaplan-Meier analysis above.
           </p>
         </div>
       </div>
@@ -279,27 +341,42 @@
 
   <!-- ── 3D UMAP Cell Cloud ────────────────────────────────── -->
   <section id="umap-section" style="margin-bottom:3rem;">
-    <span class="section-eyebrow">scRNA-seq Preview</span>
+    <span class="section-eyebrow">Kumar et al. · 147,181 Cells · 25 Cell Types</span>
     <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Single-Cell Transcriptomic Landscape</h2>
-    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-      3D UMAP projection — scroll to explore cell populations
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1rem; line-height:1.6;">
+      3D UMAP projection of gastric cancer scRNA-seq data. Colors reflect biological compartment hierarchy —
+      click legend entries to isolate populations, switch views to explore immune vs. epithelial vs. stromal structure.
     </p>
+
+    <!-- Color-by controls -->
+    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+      <span style="font-size:0.78rem; color:#4d6a80; font-weight:600; letter-spacing:0.04em;">COLOR BY</span>
+      <button data-umap-mode="celltype"    style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.5);background:rgba(0,212,170,0.18);color:#00d4aa;cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;">Cell Type</button>
+      <button data-umap-mode="compartment" style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.2);background:rgba(0,212,170,0.05);color:#64748b;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.15s;">Compartment</button>
+    </div>
 
     <button id="umap-toggle" style="display:inline-flex;align-items:center;gap:0.4rem;background:#0d9488;color:#fff;font-weight:600;font-size:0.875rem;padding:0.65rem 1.4rem;border-radius:8px;border:none;cursor:pointer;margin-bottom:0.75rem;transition:background 0.15s,color 0.15s,box-shadow 0.15s;font-family:inherit;">▶&nbsp;Enable 3D Interaction</button>
 
     <!-- Outer wrapper: position:relative anchors the legend and tooltip inside the frame -->
     <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(0,212,170,0.18); box-shadow:0 4px 32px rgba(0,0,0,0.18);">
-      <div id="umap-container" style="width:100%; height:560px; background:#0a1628; display:block;"></div>
+      <div id="umap-container" style="width:100%; height:580px; background:#0a1628; display:block;">
+        <!-- Loading spinner — removed by JS after data loads -->
+        <div id="umap-loading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:#4d6a80;font-size:0.82rem;font-family:system-ui,sans-serif;">
+          <div style="width:36px;height:36px;border:3px solid rgba(0,212,170,0.18);border-top-color:#00d4aa;border-radius:50%;animation:umap-spin 0.8s linear infinite;"></div>
+          Loading 30,000 cells…
+        </div>
+        <style>@keyframes umap-spin{to{transform:rotate(360deg)}}</style>
+      </div>
 
-      <!-- Floating legend — top-right, clickable to toggle clusters -->
-      <div id="umap-legend" style="position:absolute; top:14px; right:14px; background:rgba(8,18,34,0.88); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:10px 14px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); min-width:148px; user-select:none;"></div>
+      <!-- Floating legend — scrollable to handle 25 cell types -->
+      <div id="umap-legend" style="position:absolute;top:14px;right:14px;background:rgba(6,13,26,0.92);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);min-width:190px;max-height:calc(100% - 28px);overflow-y:auto;user-select:none;scrollbar-width:thin;scrollbar-color:rgba(0,212,170,0.25) transparent;"></div>
 
       <!-- Hover tooltip -->
-      <div id="umap-tooltip" style="display:none; position:absolute; background:rgba(8,18,34,0.92); border:1px solid rgba(0,212,170,0.3); border-radius:7px; padding:5px 11px; font-size:12px; color:#fff; pointer-events:none; z-index:10; white-space:nowrap;"></div>
+      <div id="umap-tooltip" style="display:none;position:absolute;background:rgba(6,13,26,0.93);border:1px solid rgba(0,212,170,0.3);border-radius:7px;padding:5px 11px;font-size:12px;color:#fff;pointer-events:none;z-index:10;white-space:nowrap;"></div>
     </div>
 
     <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.6rem; line-height:1.5;">
-      Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Click legend to toggle cell types
+      Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Click legend items to toggle populations
     </p>
   </section>
 
@@ -708,72 +785,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════════════
-   3D UMAP Cell Cloud — Single-Cell Transcriptomic Landscape
-
-   DATA-READY: to load real data instead of mock, replace the call
-     initUMAP(generateMockData());
-   with:
-     fetch('data/umap.json').then(r => r.json()).then(initUMAP);
-
-   Expected JSON format (one object per cell):
-     [{"x":1.2, "y":-3.4, "z":0.8, "cluster":"Epithelial cells", "expression":2.3}, ...]
-   Cluster names must exactly match the `name` fields in CELL_TYPES below.
+   3D UMAP — Real scRNA-seq Data (Kumar et al.)
+   Loads 30k downsampled cells from data/umap_real.json
+   Color modes: Cell Type (compartment-anchored) | Compartment
 ════════════════════════════════════════════════════════════════ */
 (function () {
   var container = document.getElementById('umap-container');
   if (!container || typeof THREE === 'undefined') return;
 
-  /* ── Cell type registry ──────────────────────────────────────── */
-  var CELL_TYPES = [
-    { name:'Epithelial cells',  color:'#00d4aa', cx: 2,   cy: 1,   cz: 0.5,  n:400, std:0.4 },
-    { name:'Cancer cells',      color:'#ff4757', cx: 3,   cy:-1,   cz:-0.3,  n:300, std:0.4 },
-    { name:'T cells',           color:'#4895ef', cx:-2,   cy: 2,   cz: 1.2,  n:200, std:0.4 },
-    { name:'B cells',           color:'#9b59b6', cx:-3,   cy: 1,   cz:-0.8,  n:150, std:0.4 },
-    { name:'Macrophages',       color:'#ff6b35', cx:-1,   cy:-2,   cz: 0.8,  n:150, std:0.4 },
-    { name:'Fibroblasts',       color:'#2ed573', cx: 1,   cy:-3,   cz:-1.0,  n:150, std:0.4 },
-    { name:'Endothelial cells', color:'#ffd700', cx: 2,   cy: 3,   cz: 1.5,  n:100, std:0.4 },
-    { name:'NK cells',          color:'#ff6eb4', cx:-2,   cy:-1,   cz:-0.5,  n: 50, std:0.4 }
-  ];
-
-  /* ── Gaussian sampler (Box-Muller) ───────────────────────────── */
-  function randn(m, s) {
-    var u = 1 - Math.random(), v = Math.random();
-    return m + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-
-  /* ── Mock data generator ─────────────────────────────────────── */
-  function generateMockData() {
-    var all = [];
-    CELL_TYPES.forEach(function (ct) {
-      for (var i = 0; i < ct.n; i++) {
-        all.push({
-          x:          randn(ct.cx, ct.std),
-          y:          randn(ct.cy, ct.std),
-          z:          randn(ct.cz, ct.std * 0.65),
-          cluster:    ct.name,
-          expression: Math.random() * 3
-        });
-      }
+  /* ── Fetch real data ─────────────────────────────────────────── */
+  fetch('data/umap_real.json')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var loadEl = document.getElementById('umap-loading');
+      if (loadEl) loadEl.style.display = 'none';
+      initUMAP(data);
+    })
+    .catch(function () {
+      var loadEl = document.getElementById('umap-loading');
+      if (loadEl) loadEl.innerHTML =
+        '<div style="color:#ef4444;font-family:system-ui,sans-serif;">Failed to load cell data.</div>';
     });
-    return all;
-  }
-
-  /* ── Bootstrap ───────────────────────────────────────────────── */
-  initUMAP(generateMockData());
 
   /* ════════════════════════════════════════════════════════════
-     initUMAP(rawData) — builds the Three.js scene.
-     rawData: array of {x,y,z,cluster,expression} objects.
+     initUMAP(data)
+     data: { types, compartments, cells, total }
+       types:       [{name, color, compartment, count}, ...]  (sorted by count desc)
+       compartments:[{name, color}, ...]
+       cells:       [[x, y, z, typeIdx], ...]  (30k downsampled)
   ════════════════════════════════════════════════════════════ */
-  function initUMAP(rawData) {
-    var W = container.offsetWidth || 800;
-    var H = container.offsetHeight || 560;
+  function initUMAP(data) {
+    var types        = data.types;
+    var compartments = data.compartments;
+    var cells        = data.cells;
+
+    var W = container.offsetWidth  || 800;
+    var H = container.offsetHeight || 580;
 
     /* ── Scene ─────────────────────────────────────────────────── */
-    var scene    = new THREE.Scene();
+    var scene  = new THREE.Scene();
     scene.background = new THREE.Color(0x0a1628);
-    var camera   = new THREE.PerspectiveCamera(55, W / H, 0.1, 500);
-    camera.position.set(0, 0, 18);
+    var camera = new THREE.PerspectiveCamera(52, W / H, 0.1, 600);
 
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(W, H);
@@ -781,94 +833,185 @@
     renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
 
-    /* ── Radial glow sprite texture per cluster color ──────────── */
+    /* ── Glow sprite texture (cached per hex color) ────────────── */
+    var glowCache = {};
     function makeGlowTex(hex) {
+      if (glowCache[hex]) return glowCache[hex];
       var r = parseInt(hex.slice(1,3),16);
       var g = parseInt(hex.slice(3,5),16);
       var b = parseInt(hex.slice(5,7),16);
       var rgba = function (a) { return 'rgba('+r+','+g+','+b+','+a+')'; };
       var cv = document.createElement('canvas');
       cv.width = cv.height = 64;
-      var cx = cv.getContext('2d');
-      var grd = cx.createRadialGradient(32,32,0, 32,32,32);
+      var cx2 = cv.getContext('2d');
+      var grd = cx2.createRadialGradient(32,32,0, 32,32,32);
       grd.addColorStop(0,    rgba(1));
-      grd.addColorStop(0.3,  rgba(0.8));
-      grd.addColorStop(0.65, rgba(0.22));
+      grd.addColorStop(0.32, rgba(0.82));
+      grd.addColorStop(0.68, rgba(0.18));
       grd.addColorStop(1,    rgba(0));
-      cx.fillStyle = grd;
-      cx.fillRect(0, 0, 64, 64);
-      return new THREE.CanvasTexture(cv);
+      cx2.fillStyle = grd;
+      cx2.fillRect(0, 0, 64, 64);
+      var tex = new THREE.CanvasTexture(cv);
+      glowCache[hex] = tex;
+      return tex;
     }
 
-    /* ── Build one Points mesh per cluster ─────────────────────── */
-    var clusters = [];
-    CELL_TYPES.forEach(function (ct) {
-      var cpts = rawData.filter(function (d) { return d.cluster === ct.name; });
-      if (!cpts.length) return;
+    /* ── Compartment color lookup ────────────────────────────────  */
+    var compColorMap = {};
+    compartments.forEach(function (c) { compColorMap[c.name] = c.color; });
 
-      var pos = new Float32Array(cpts.length * 3);
-      cpts.forEach(function (d, i) {
-        pos[i*3] = d.x; pos[i*3+1] = d.y; pos[i*3+2] = d.z;
+    /* ── Group cells by typeIdx ──────────────────────────────────── */
+    var byType = types.map(function () { return []; });
+    cells.forEach(function (c) { byType[c[3]].push(c); });
+
+    /* ── Build one Points mesh per cell type ─────────────────────  */
+    var clusters = [];
+    types.forEach(function (ct, typeIdx) {
+      var pts = byType[typeIdx];
+      if (!pts.length) return;
+
+      var pos = new Float32Array(pts.length * 3);
+      pts.forEach(function (c, i) {
+        pos[i*3] = c[0]; pos[i*3+1] = c[1]; pos[i*3+2] = c[2];
       });
 
       var geo = new THREE.BufferGeometry();
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
       var mat = new THREE.PointsMaterial({
-        color:          new THREE.Color(ct.color),
-        size:           0.32,
-        map:            makeGlowTex(ct.color),
-        transparent:    true,
-        opacity:        0.88,
-        depthWrite:     false,
-        blending:       THREE.AdditiveBlending,
+        color:           new THREE.Color(ct.color),
+        size:            0.44,
+        map:             makeGlowTex(ct.color),
+        transparent:     true,
+        opacity:         0.86,
+        depthWrite:      false,
+        blending:        THREE.AdditiveBlending,
         sizeAttenuation: true
       });
 
       var mesh = new THREE.Points(geo, mat);
       scene.add(mesh);
-      clusters.push({ mesh: mesh, ct: ct, on: true });
+      clusters.push({ mesh: mesh, ct: ct, typeIdx: typeIdx, on: true });
     });
 
-    /* ── Legend ────────────────────────────────────────────────── */
-    var legendEl = document.getElementById('umap-legend');
-    if (legendEl) {
-      legendEl.innerHTML =
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;'
-        + 'color:#64748b;margin-bottom:8px;font-family:system-ui,sans-serif;">Cell Types</div>';
+    /* ── Color-by mode ───────────────────────────────────────────── */
+    var colorMode = 'celltype';
 
+    function applyColorMode(mode) {
+      colorMode = mode;
       clusters.forEach(function (cl) {
+        var hex = mode === 'compartment'
+          ? (compColorMap[cl.ct.compartment] || '#888888')
+          : cl.ct.color;
+        cl.mesh.material.color.set(hex);
+        cl.mesh.material.map = makeGlowTex(hex);
+        cl.mesh.material.needsUpdate = true;
+      });
+      buildLegend(mode);
+    }
+
+    /* ── Legend ──────────────────────────────────────────────────── */
+    function buildLegend(mode) {
+      var legendEl = document.getElementById('umap-legend');
+      if (!legendEl) return;
+      legendEl.innerHTML = '';
+
+      var header = document.createElement('div');
+      header.style.cssText =
+        'font-size:9.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;'
+        + 'color:#4d6a80;margin-bottom:8px;font-family:system-ui,sans-serif;';
+      header.textContent = mode === 'compartment' ? 'Compartment' : 'Cell Type';
+      legendEl.appendChild(header);
+
+      var items = mode === 'compartment'
+        ? compartments.map(function (c) { return { label: c.name, color: c.color, count: null, cl: null }; })
+        : clusters.map(function (cl) {
+            return {
+              label: cl.ct.name,
+              color: colorMode === 'compartment'
+                ? (compColorMap[cl.ct.compartment] || '#888')
+                : cl.ct.color,
+              count: cl.ct.count,
+              cl:    cl
+            };
+          });
+
+      items.forEach(function (item) {
         var row = document.createElement('div');
         row.style.cssText =
-          'display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;'
-          + 'border-radius:5px;transition:opacity 0.2s;font-size:12px;'
-          + 'font-family:system-ui,sans-serif;color:rgba(255,255,255,0.82);'
+          'display:flex;align-items:center;gap:6px;padding:2px 2px;'
+          + (item.cl ? 'cursor:pointer;' : '')
+          + 'border-radius:4px;transition:opacity 0.18s;font-size:11px;'
+          + 'font-family:system-ui,sans-serif;color:rgba(255,255,255,0.8);'
           + 'font-weight:500;margin-bottom:1px;';
-        var dot = '<span style="width:9px;height:9px;border-radius:50%;background:'
-          + cl.ct.color + ';box-shadow:0 0 5px ' + cl.ct.color
-          + ';flex-shrink:0;display:inline-block;transition:box-shadow 0.2s;"></span>';
-        row.innerHTML = dot + cl.ct.name;
 
-        row.addEventListener('click', function () {
-          cl.on = !cl.on;
-          cl.mesh.visible = cl.on;
-          row.style.opacity = cl.on ? '1' : '0.3';
-        });
+        var dot = document.createElement('span');
+        dot.style.cssText =
+          'width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block;'
+          + 'background:' + item.color + ';box-shadow:0 0 4px ' + item.color + ';'
+          + 'transition:box-shadow 0.18s;';
+
+        var label = document.createElement('span');
+        label.textContent = item.label;
+        label.style.flex = '1';
+        label.style.overflow = 'hidden';
+        label.style.textOverflow = 'ellipsis';
+        label.style.whiteSpace = 'nowrap';
+
+        row.appendChild(dot);
+        row.appendChild(label);
+
+        if (item.count !== null) {
+          var cnt = document.createElement('span');
+          cnt.textContent = item.count >= 1000
+            ? (item.count / 1000).toFixed(0) + 'k'
+            : item.count;
+          cnt.style.cssText =
+            'font-size:9px;color:#4d6a80;font-weight:400;flex-shrink:0;';
+          row.appendChild(cnt);
+        }
+
+        if (item.cl) {
+          row.addEventListener('click', function () {
+            item.cl.on = !item.cl.on;
+            item.cl.mesh.visible = item.cl.on;
+            row.style.opacity = item.cl.on ? '1' : '0.28';
+          });
+        }
         row.addEventListener('mouseenter', function () {
-          row.querySelector('span').style.boxShadow = '0 0 10px ' + cl.ct.color;
+          dot.style.boxShadow = '0 0 9px ' + item.color;
+          if (item.cl) row.style.background = 'rgba(255,255,255,0.04)';
         });
         row.addEventListener('mouseleave', function () {
-          row.querySelector('span').style.boxShadow = '0 0 5px ' + cl.ct.color;
+          dot.style.boxShadow = '0 0 4px ' + item.color;
+          row.style.background = '';
         });
+
         legendEl.appendChild(row);
       });
     }
 
+    /* ── Color-by button handlers ────────────────────────────────── */
+    document.querySelectorAll('[data-umap-mode]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('[data-umap-mode]').forEach(function (b) {
+          b.style.background   = 'rgba(0,212,170,0.05)';
+          b.style.borderColor  = 'rgba(0,212,170,0.2)';
+          b.style.color        = '#64748b';
+          b.style.fontWeight   = '500';
+        });
+        btn.style.background  = 'rgba(0,212,170,0.18)';
+        btn.style.borderColor = 'rgba(0,212,170,0.5)';
+        btn.style.color       = '#00d4aa';
+        btn.style.fontWeight  = '600';
+        applyColorMode(btn.dataset.umapMode);
+      });
+    });
+
     /* ══════════════════════════════════════════════════════════
-       Minimal OrbitControls — inline, no extra imports needed.
-       Left-drag → rotate   Right-drag → pan   Wheel → zoom
+       Orbit controls — Left-drag: rotate  Right-drag: pan  Wheel: zoom
     ══════════════════════════════════════════════════════════ */
-    var sph = { theta: 0.3, phi: Math.PI * 0.45, r: 18 };
+    var sph = { theta: 0.35, phi: Math.PI * 0.43, r: 30 };
     var tgt = new THREE.Vector3(0, 0, 0);
     var dragging = false, panning = false;
     var lm = { x: 0, y: 0 };
@@ -896,7 +1039,7 @@
       if (dragging) {
         sph.theta -= dx * 0.006;
         sph.phi   -= dy * 0.006;
-        sph.phi = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
+        sph.phi    = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
         updateCam();
       }
       if (panning) {
@@ -912,47 +1055,50 @@
       doRaycast(e);
     });
 
-    cvs.addEventListener('mouseup',    function () { dragging = false; panning = false; });
-    cvs.addEventListener('mouseleave', function () { dragging = false; panning = false; });
+    cvs.addEventListener('mouseup',     function () { dragging = false; panning = false; });
+    cvs.addEventListener('mouseleave',  function () { dragging = false; panning = false; });
     cvs.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     cvs.addEventListener('wheel', function (e) {
       e.preventDefault();
-      sph.r = Math.max(4, Math.min(55, sph.r * (1 + e.deltaY * 0.001)));
+      sph.r = Math.max(7, Math.min(80, sph.r * (1 + e.deltaY * 0.001)));
       updateCam();
     }, { passive: false });
 
-    /* Touch orbit */
     cvs.addEventListener('touchstart', function (e) {
       e.preventDefault();
-      if (e.touches.length === 1) { dragging = true; lm = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }
+      if (e.touches.length === 1) {
+        dragging = true;
+        lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
     }, { passive: false });
     cvs.addEventListener('touchmove', function (e) {
       e.preventDefault();
       if (dragging && e.touches.length === 1) {
         var dx = e.touches[0].clientX - lm.x, dy = e.touches[0].clientY - lm.y;
-        sph.theta -= dx * 0.006; sph.phi -= dy * 0.006;
-        sph.phi = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
-        updateCam(); lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        sph.theta -= dx * 0.006;
+        sph.phi   -= dy * 0.006;
+        sph.phi    = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
+        updateCam();
+        lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }
     }, { passive: false });
     cvs.addEventListener('touchend', function () { dragging = false; });
 
-    /* Auto-rotate pauses on mouse-enter, resumes 1.5s after leave */
     container.addEventListener('mouseenter', function () { autoRotate = false; });
     container.addEventListener('mouseleave', function () {
       dragging = false; panning = false;
       setTimeout(function () { autoRotate = true; }, 1500);
     });
 
-    /* ── Raycasting + tooltip ───────────────────────────────────── */
-    var rc  = new THREE.Raycaster();
-    rc.params.Points = { threshold: 0.22 };
+    /* ── Raycasting + tooltip ─────────────────────────────────────  */
+    var rc   = new THREE.Raycaster();
+    rc.params.Points = { threshold: 0.45 };
     var ttEl = document.getElementById('umap-tooltip');
 
     function doRaycast(e) {
       if (!ttEl) return;
       var rect = cvs.getBoundingClientRect();
-      var mx = new THREE.Vector2(
+      var mx   = new THREE.Vector2(
         ((e.clientX - rect.left) / rect.width)  *  2 - 1,
         -((e.clientY - rect.top)  / rect.height) *  2 + 1
       );
@@ -962,22 +1108,29 @@
       clusters.forEach(function (cl) {
         if (!cl.on) return;
         var ix = rc.intersectObject(cl.mesh);
-        if (ix.length && ix[0].distance < best) { best = ix[0].distance; hit = cl.ct; }
+        if (ix.length && ix[0].distance < best) { best = ix[0].distance; hit = cl; }
       });
 
       if (hit) {
         var outerRect = container.parentElement.getBoundingClientRect();
-        ttEl.style.display  = 'block';
-        ttEl.style.left     = (e.clientX - outerRect.left + 12) + 'px';
-        ttEl.style.top      = (e.clientY - outerRect.top  - 38) + 'px';
-        ttEl.innerHTML =
-          '<span style="color:' + hit.color + ';font-weight:700;">' + hit.name + '</span>';
+        var dotColor = colorMode === 'compartment'
+          ? (compColorMap[hit.ct.compartment] || '#888')
+          : hit.ct.color;
+        ttEl.style.display = 'block';
+        ttEl.style.left    = (e.clientX - outerRect.left + 12) + 'px';
+        ttEl.style.top     = (e.clientY - outerRect.top  - 44) + 'px';
+        ttEl.innerHTML     =
+          '<span style="color:' + dotColor + ';font-weight:700;">' + hit.ct.name + '</span>'
+          + '<span style="color:#4d6a80;font-size:10px;margin-left:6px;">'
+          + hit.ct.compartment + '</span>'
+          + '<span style="color:#334155;font-size:10px;margin-left:6px;">'
+          + hit.ct.count.toLocaleString() + ' cells</span>';
       } else {
         ttEl.style.display = 'none';
       }
     }
 
-    /* ── Responsive resize ──────────────────────────────────────── */
+    /* ── Responsive resize ────────────────────────────────────────  */
     new ResizeObserver(function () {
       var w = container.offsetWidth, h = container.offsetHeight;
       camera.aspect = w / h;
@@ -985,13 +1138,15 @@
       renderer.setSize(w, h);
     }).observe(container);
 
-    /* ── Render loop (paused when section not in viewport) ──────── */
-    var inView = true; /* start rendering immediately; IO updates this */
+    /* ── Render loop (paused when off-screen) ─────────────────────  */
+    var inView = true;
     new IntersectionObserver(function (en) {
       inView = en[0].isIntersecting;
     }, { threshold: 0.05 }).observe(container);
 
     updateCam();
+    buildLegend('celltype');
+
     (function loop() {
       requestAnimationFrame(loop);
       if (!inView) return;
@@ -999,14 +1154,10 @@
       renderer.render(scene, camera);
     })();
 
-    /* ── Interaction toggle (UMAP) ──────────────────────────────
-       Transparent overlay on the canvas prevents scroll capture.
-       External button, Esc, and dblclick drive active state.
-    ─────────────────────────────────────────────────────────── */
+    /* ── Interaction toggle ──────────────────────────────────────── */
     var umapOverlay = document.createElement('div');
-    umapOverlay.style.cssText =
-      'position:absolute;inset:0;z-index:20;cursor:default;';
-    container.style.position = 'relative';
+    umapOverlay.style.cssText = 'position:absolute;inset:0;z-index:20;cursor:default;';
+    container.style.position  = 'relative';
     container.appendChild(umapOverlay);
 
     var umapBtn    = document.getElementById('umap-toggle');
@@ -1017,7 +1168,7 @@
       umapOverlay.style.display = 'none';
       autoRotate = false;
       if (umapBtn) {
-        umapBtn.textContent = '✕  Exit 3D Mode (or press Esc)';
+        umapBtn.textContent     = '✕  Exit 3D Mode (or press Esc)';
         umapBtn.style.background = '#0f172a';
         umapBtn.style.color      = '#0d9488';
         umapBtn.style.border     = '1.5px solid #0d9488';
@@ -1030,7 +1181,7 @@
       umapOverlay.style.display = 'block';
       autoRotate = true;
       if (umapBtn) {
-        umapBtn.textContent = '▶ Enable 3D Interaction';
+        umapBtn.textContent     = '▶ Enable 3D Interaction';
         umapBtn.style.background = '#0d9488';
         umapBtn.style.color      = '#fff';
         umapBtn.style.border     = 'none';

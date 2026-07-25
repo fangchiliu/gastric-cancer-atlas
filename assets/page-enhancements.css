@@ -103,6 +103,50 @@ hr.divider {
   transform: scale(1.15);
 }
 
+/* ── Figure cards: real rendered result images ──────────── */
+.figure-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  will-change: transform;
+}
+.figure-card:hover {
+  transform: scale(1.025) translateY(-3px);
+  border-color: rgba(13,148,136,0.35);
+  box-shadow:
+    0 12px 32px rgba(0,0,0,0.1),
+    0 0 0 1px rgba(13,148,136,0.15);
+}
+.figure-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+.figure-card-body {
+  padding: 1rem 1.25rem;
+}
+.figure-card-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #475569;
+  margin-bottom: 0.4rem;
+}
+.figure-card-body p {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
 /* ── Result sections: teal left accent on hover ──────────── */
 .result-section {
   border-left: 3px solid transparent !important;
