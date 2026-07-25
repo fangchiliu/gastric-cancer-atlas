@@ -39,8 +39,15 @@
   animation: particle-fade 600ms ease-out forwards;
 }
 
-/* ── Navbar scroll behavior ────────────────────────────────── */
-#site-nav {
+/* ── Navbar scroll behavior ──────────────────────────────────
+   Scoped to `.dark-nav` (index.html only): that page's body is dark
+   navy from top to bottom, so a transparent nav-at-top state still
+   sits over a dark backdrop. Other pages have a white body below a
+   short dark hero banner that the sticky nav does NOT overlap at
+   scroll 0, so they keep the plain light/readable nav from style.css
+   at every scroll position instead of going transparent.
+──────────────────────────────────────────────────────────────── */
+#site-nav.dark-nav {
   transition:
     background      0.3s ease,
     border-color    0.3s ease,
@@ -48,7 +55,7 @@
 }
 
 /* At top — fully transparent */
-#site-nav.nav-at-top {
+#site-nav.dark-nav.nav-at-top {
   background:              transparent !important;
   backdrop-filter:         none        !important;
   -webkit-backdrop-filter: none        !important;
@@ -57,7 +64,7 @@
 }
 
 /* Scrolled — frosted dark glass with teal glow */
-#site-nav.nav-scrolled {
+#site-nav.dark-nav.nav-scrolled {
   background:              rgba(10,22,40,0.85)             !important;
   backdrop-filter:         blur(12px) saturate(160%)       !important;
   -webkit-backdrop-filter: blur(12px) saturate(160%)       !important;
@@ -68,37 +75,37 @@
 }
 
 /* Link + brand colors — readable over dark in both states */
-#site-nav.nav-at-top  a,
-#site-nav.nav-scrolled a {
+#site-nav.dark-nav.nav-at-top  a,
+#site-nav.dark-nav.nav-scrolled a {
   color: rgba(219,234,254,0.72) !important;
 }
-#site-nav.nav-at-top  a:hover,
-#site-nav.nav-at-top  a.active,
-#site-nav.nav-scrolled a:hover,
-#site-nav.nav-scrolled a.active {
+#site-nav.dark-nav.nav-at-top  a:hover,
+#site-nav.dark-nav.nav-at-top  a.active,
+#site-nav.dark-nav.nav-scrolled a:hover,
+#site-nav.dark-nav.nav-scrolled a.active {
   color: #0d9488 !important;
 }
-#site-nav.nav-at-top  .nav-brand,
-#site-nav.nav-scrolled .nav-brand { color: #fff !important; }
-#site-nav.nav-at-top  .nav-brand span,
-#site-nav.nav-scrolled .nav-brand span { color: #0d9488 !important; }
-#site-nav.nav-at-top  #nav-toggle span,
-#site-nav.nav-scrolled #nav-toggle span { background: rgba(219,234,254,0.78) !important; }
+#site-nav.dark-nav.nav-at-top  .nav-brand,
+#site-nav.dark-nav.nav-scrolled .nav-brand { color: #fff !important; }
+#site-nav.dark-nav.nav-at-top  .nav-brand span,
+#site-nav.dark-nav.nav-scrolled .nav-brand span { color: #0d9488 !important; }
+#site-nav.dark-nav.nav-at-top  #nav-toggle span,
+#site-nav.dark-nav.nav-scrolled #nav-toggle span { background: rgba(219,234,254,0.78) !important; }
 
 /* Mobile hamburger panel — always dark so links are readable */
 @media (max-width: 768px) {
-  #site-nav.nav-at-top  #nav-links,
-  #site-nav.nav-scrolled #nav-links {
+  #site-nav.dark-nav.nav-at-top  #nav-links,
+  #site-nav.dark-nav.nav-scrolled #nav-links {
     background:    rgba(6,13,26,0.97) !important;
     border-bottom: 1px solid rgba(0,212,170,0.1) !important;
     box-shadow:    0 8px 24px rgba(0,0,0,0.5) !important;
   }
-  #site-nav.nav-at-top  #nav-links a,
-  #site-nav.nav-scrolled #nav-links a {
+  #site-nav.dark-nav.nav-at-top  #nav-links a,
+  #site-nav.dark-nav.nav-scrolled #nav-links a {
     color: rgba(219,234,254,0.82) !important;
   }
-  #site-nav.nav-at-top  #nav-links a:hover,
-  #site-nav.nav-scrolled #nav-links a:hover {
+  #site-nav.dark-nav.nav-at-top  #nav-links a:hover,
+  #site-nav.dark-nav.nav-scrolled #nav-links a:hover {
     background: rgba(0,212,170,0.07) !important;
   }
 }

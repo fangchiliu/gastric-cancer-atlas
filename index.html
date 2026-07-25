@@ -341,7 +341,7 @@
     }
 
     /* ── NARRATIVE (pinned) ─────────────────────────────────────── */
-    #narrative-wrap { height: 400vh; position: relative; }
+    #narrative-wrap { height: 550vh; position: relative; }
 
     #narrative-inner {
       height: 100vh;
@@ -727,7 +727,7 @@
 </head>
 <body>
 
-<header id="site-nav"></header>
+<header id="site-nav" class="dark-nav"></header>
 
 <!-- ══════════════════════════════════════════════════════════════ -->
 <!-- HERO                                                          -->
@@ -1335,7 +1335,7 @@
 
   for (let i = 0; i < N - 1; i++) {
     // Hold current panel
-    narrativeTl.to({}, { duration: 1 });
+    narrativeTl.to({}, { duration: 3 });
     // Cross-fade to next panel (ease:none so scrub feels linear)
     narrativeTl
       .to(panels[i],   { opacity: 0, y: -35, duration: 0.5, ease: 'none' })
@@ -1344,7 +1344,13 @@
       .to(visuals[i+1],{ opacity: 1, y: 0,   duration: 0.4, ease: 'none' }, '<0.1');
   }
   // Final hold
-  narrativeTl.to({}, { duration: 1 });
+  narrativeTl.to({}, { duration: 3 });
+
+  // Suppress horizontal/diagonal trackpad swipes while the narrative pin is active
+  const narrativeWrap = document.querySelector('#narrative-wrap');
+  function blockDiagonalSwipe(e) {
+    if (Math.abs(e.deltaX) > 0.4 * Math.abs(e.deltaY)) e.preventDefault();
+  }
 
   ScrollTrigger.create({
     trigger: '#narrative-wrap',
@@ -1353,6 +1359,10 @@
     pin: '#narrative-inner',
     scrub: 1.5,
     animation: narrativeTl,
+    onEnter()      { narrativeWrap.addEventListener('wheel', blockDiagonalSwipe, { passive: false }); },
+    onLeave()      { narrativeWrap.removeEventListener('wheel', blockDiagonalSwipe); },
+    onEnterBack()  { narrativeWrap.addEventListener('wheel', blockDiagonalSwipe, { passive: false }); },
+    onLeaveBack()  { narrativeWrap.removeEventListener('wheel', blockDiagonalSwipe); },
     onUpdate(self) {
       // Sync progress dots
       const idx = Math.min(Math.floor(self.progress * N), N - 1);
