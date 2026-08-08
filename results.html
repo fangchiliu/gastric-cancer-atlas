@@ -58,7 +58,9 @@
 
           <!-- Volcano plot — real data -->
           <div class="figure-card">
-            <img src="real_data/plots/TCGA_volcano_INHBA_modern.jpg" alt="Volcano plot showing INHBA is significantly upregulated in TCGA-STAD tumor vs. normal tissue" loading="lazy" />
+            <div class="figure-img">
+              <img src="real_data/plots/TCGA_volcano_INHBA_modern.jpg" alt="Volcano plot showing INHBA is significantly upregulated in TCGA-STAD tumor vs. normal tissue" loading="lazy" />
+            </div>
             <div class="figure-card-body">
               <div class="figure-card-title">Volcano Plot — INHBA Highlighted</div>
               <p>DESeq2 Wald test: −log₁₀(p<sub>adj</sub>) vs. log₂ fold-change (tumor / normal), TCGA-STAD.
@@ -69,7 +71,9 @@
 
           <!-- Tumor vs normal expression — real data -->
           <div class="figure-card">
-            <img src="real_data/plots/INHBA_tumor_vs_normal_both_cohorts.jpg" alt="INHBA expression is upregulated in gastric cancer across TCGA-STAD and GSE66229 cohorts" loading="lazy" />
+            <div class="figure-img">
+              <img src="real_data/plots/INHBA_tumor_vs_normal_both_cohorts.jpg" alt="INHBA expression is upregulated in gastric cancer across TCGA-STAD and GSE66229 cohorts" loading="lazy" />
+            </div>
             <div class="figure-card-body">
               <div class="figure-card-title">INHBA Expression — Two Independent Cohorts</div>
               <p>Tumor vs. adjacent normal INHBA expression in TCGA-STAD (RNA-seq) and GSE66229 (ACRG
@@ -122,7 +126,9 @@
 
           <!-- Kaplan-Meier: INHBA — real data -->
           <div class="figure-card">
-            <img src="real_data/plots/KM_INHBA_high_vs_low_5yr.jpg" alt="Kaplan-Meier curve: high INHBA expression predicts worse 5-year survival in gastric cancer" loading="lazy" />
+            <div class="figure-img">
+              <img src="real_data/plots/KM_INHBA_high_vs_low_5yr.jpg" alt="Kaplan-Meier curve: high INHBA expression predicts worse 5-year survival in gastric cancer" loading="lazy" />
+            </div>
             <div class="figure-card-body">
               <div class="figure-card-title">Kaplan-Meier: INHBA</div>
               <p>5-year overall survival, TCGA-STAD, median-split groups (n=192 low, n=191 high).
@@ -182,7 +188,9 @@
 
           <!-- GSEA dot plot: INHBA co-expression — real data -->
           <div class="figure-card">
-            <img src="real_data/plots/INHBA_coexpression_pathways.jpg" alt="Dot plot of Hallmark pathways INHBA is co-regulated with in gastric cancer, ranked by normalized enrichment score" loading="lazy" />
+            <div class="figure-img">
+              <img src="real_data/plots/INHBA_coexpression_pathways.jpg" alt="Dot plot of Hallmark pathways INHBA is co-regulated with in gastric cancer, ranked by normalized enrichment score" loading="lazy" />
+            </div>
             <div class="figure-card-body">
               <div class="figure-card-title">Pathways Co-Regulated with INHBA</div>
               <p>Hallmark GSEA on genes ranked by Spearman correlation with <em>INHBA</em> <strong>among
@@ -441,6 +449,13 @@
   </section>
 
 </main>
+
+<!-- ── Lightbox — click any figure image to enlarge ────────────── -->
+<div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
+  <button class="lightbox-close" aria-label="Close">✕</button>
+  <img class="lightbox-img" src="" alt="" />
+  <div class="lightbox-caption"></div>
+</div>
 
 <!-- ── Footer ─────────────────────────────────────────────────── -->
 <footer style="padding:2rem 1.5rem;">
@@ -1209,6 +1224,47 @@
       scrollTrigger: { trigger: '#umap-section', start: 'top 82%', once: true }
     });
   }
+})();
+</script>
+
+<!-- Lightbox: click any figure image to enlarge -->
+<script>
+(function () {
+  var overlay   = document.getElementById('lightbox-overlay');
+  var imgEl     = overlay.querySelector('.lightbox-img');
+  var captionEl = overlay.querySelector('.lightbox-caption');
+  var closeBtn  = overlay.querySelector('.lightbox-close');
+
+  function openLightbox(src, alt, caption) {
+    imgEl.src = src;
+    imgEl.alt = alt || '';
+    captionEl.textContent = caption || '';
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.figure-img img').forEach(function (img) {
+    img.addEventListener('click', function () {
+      var card  = img.closest('.figure-card');
+      var title = card && card.querySelector('.figure-card-title');
+      openLightbox(img.src, img.alt, title ? title.textContent : '');
+    });
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === imgEl) closeLightbox();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeLightbox();
+  });
 })();
 </script>
 
