@@ -200,12 +200,19 @@
             </div>
           </div>
 
-          <div class="chart-placeholder">
-            <div class="chart-icon">〰️</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Enrichment Plot: E2F Targets</div>
-            <p>Running enrichment score curve for HALLMARK_E2F_TARGETS (NES = −2.62,
-               p<sub>adj</sub> &lt; 0.0001) — the strongest negatively-correlated set: high-INHBA
-               tumors show lower E2F-target (cell-cycle) activity. Leading-edge genes highlighted.</p>
+          <!-- GSEA enrichment curve: EMT (tumor vs normal) — real data -->
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/GSEA_EMT_enrichment_curve.jpg" alt="GSEA running enrichment curve showing the Hallmark epithelial-mesenchymal transition gene set is significantly activated in TCGA-STAD gastric tumors versus adjacent normal tissue" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Enrichment Plot: EMT (Tumor vs. Normal)</div>
+              <p>Running enrichment curve for HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION, with genes
+                 ranked by sign(log₂FC) × −log₁₀(p) from the tumor-vs-adjacent-normal DESeq2 contrast
+                 (NES = 1.88, FDR = 1.55 × 10⁻⁷, 200 genes). The early positive peak at the
+                 tumor-enriched end confirms EMT is significantly <strong>activated</strong> in gastric
+                 tumors — the program <em>INHBA</em> most strongly co-varies with.</p>
+            </div>
           </div>
 
         </div>
@@ -283,14 +290,21 @@
         <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
           <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
           <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
-            Ranking all 20,000+ genes by their correlation with <em>INHBA</em> <strong>across tumor
-            samples</strong> (a co-expression axis, not the tumor-vs-normal axis in Module 1) and
-            running Hallmark GSEA yields 43 significant gene sets (FDR &lt; 0.05). INHBA is most
-            positively co-regulated with epithelial–mesenchymal transition (NES = 3.76), TNFα
-            signaling via NF-κB, inflammatory response, and hypoxia — an invasive, inflamed,
-            hypoxic, stromal signature. It is most negatively correlated with proliferative and
-            metabolic programs — E2F targets (NES = −2.62), oxidative phosphorylation, G2M
-            checkpoint, and MYC targets.
+            <strong>Epithelial–mesenchymal transition (EMT) is the through-line of this analysis,
+            and it converges on INHBA from two independent directions.</strong> First, ranking genes
+            by the tumor-vs-adjacent-normal contrast (Module 1's axis) shows the Hallmark EMT program
+            is significantly <em>activated in gastric tumors</em> (GSEA NES = 1.88, FDR = 1.55 × 10⁻⁷;
+            curve at right). Second, ranking genes by their correlation with <em>INHBA</em> within
+            tumors shows EMT is also the program INHBA <em>most strongly co-varies with</em>
+            (NES = 3.76). A canonical EMT ligand is thus both up in tumors and the single best marker
+            of the invasive transcriptional state.
+          </p>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            The full INHBA co-expression scan (43 significant sets, FDR &lt; 0.05) fills in the
+            surrounding phenotype: alongside EMT, INHBA is positively co-regulated with TNFα signaling
+            via NF-κB, inflammatory response, and hypoxia — an invasive, inflamed, hypoxic, stromal
+            signature — and most negatively correlated with proliferative and metabolic programs:
+            E2F targets (NES = −2.62), oxidative phosphorylation, G2M checkpoint, and MYC targets.
           </p>
           <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
             This split is expected, not contradictory. Tumors broadly occupy either a highly
