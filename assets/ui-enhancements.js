@@ -27,6 +27,9 @@
     }
 
     function pointerOverNoTrailArea() {
+      /* elementFromPoint throws on non-finite coordinates, which is the state
+         the tick loop starts in before the first mousemove has been seen. */
+      if (!isFinite(mx) || !isFinite(my)) return false;
       var el = document.elementFromPoint(mx, my);
       return isNoTrailTarget(el);
     }

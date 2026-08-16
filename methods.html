@@ -208,22 +208,23 @@
           <h3 style="font-size:0.95rem; font-weight:700; color:#0d9488; margin:0;">
             scRNA-seq Integration &amp; Deconvolution
           </h3>
-          <span class="coming-soon-badge">In Progress</span>
         </div>
         <p style="font-size:0.85rem; color:#475569; margin-bottom:0.75rem; line-height:1.7;">
-          Single-cell RNA-seq data from CZ CELLxGENE gastric cancer datasets will be
-          processed using Seurat v5 (QC, normalization, clustering) and annotated with
-          SingleR against the Human Cell Atlas reference. The resulting cell-type reference
-          signatures will be used with CIBERSORT and MuSiC to deconvolve bulk tumor samples
-          and estimate immune and stromal cell infiltration fractions across the TCGA cohort.
-          Pseudo-bulk aggregation will enable cross-modal validation of bulk DEG results.
+          Single-cell RNA-seq data from the Kumar et al. 2022 gastric atlas (CZ CELLxGENE)
+          was processed with Seurat v5 — QC, log-normalization, and Harmony batch correction
+          on donor — across 147,181 cells from 36 samples and 27 donors. Cell-type labels are
+          the authors' published annotations, carried through unchanged rather than re-derived.
+          Per-cell-type <em>INHBA</em> positivity was compared between tumour and normal with
+          Fisher exact tests (BH-adjusted), and sample-level cell-type proportions with
+          Wilcoxon rank-sum tests. Deconvolution of the TCGA bulk cohort against this
+          reference is the next step and has not been run.
         </p>
         <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
           <span class="tool-tag">Seurat v5</span>
-          <span class="tool-tag">SingleR</span>
-          <span class="tool-tag">CIBERSORT</span>
-          <span class="tool-tag">MuSiC</span>
-          <span class="tool-tag">HCA reference</span>
+          <span class="tool-tag">Harmony</span>
+          <span class="tool-tag">Fisher exact</span>
+          <span class="tool-tag">Wilcoxon</span>
+          <span class="tool-tag">CZ CELLxGENE</span>
         </div>
       </div>
     </div>
