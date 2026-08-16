@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    /* A real refresh resets the interactive-map loading animations on the
+       Results page; moving between pages does not. No redirect here — this
+       is already the homepage. */
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      try {
+        sessionStorage.removeItem('stad:loaderPlayed:gene');
+        sessionStorage.removeItem('stad:loaderPlayed:umap');
+      } catch (e) { /* storage blocked — loaders just play every visit */ }
+    }
+  </script>
   <title>Transcriptomic Landscape of Gastric Adenocarcinoma</title>
   <meta name="description" content="A multi-modal RNA-seq analysis of gastric adenocarcinoma integrating TCGA-STAD bulk transcriptomics and CZ CELLxGENE single-cell data." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -341,7 +352,7 @@
     }
 
     /* ── NARRATIVE (pinned) ─────────────────────────────────────── */
-    #narrative-wrap { height: 550vh; position: relative; }
+    #narrative-wrap { height: 400vh; position: relative; }
 
     #narrative-inner {
       height: 100vh;
@@ -385,7 +396,9 @@
       z-index: 1;
     }
 
-    .narrative-left { position: relative; }
+    /* min-height reserves room for the tallest panel so the stacked
+       (absolutely-positioned) panels never overflow onto the progress dots */
+    .narrative-left { position: relative; min-height: 440px; }
 
     /* All panels stacked, shown/hidden via timeline */
     .n-panel {
@@ -394,6 +407,9 @@
       opacity: 0;
     }
     .n-panel:first-child { opacity: 1; position: relative; }
+
+    /* dots pinned to the bottom of the reserved column height */
+    .narrative-left .n-dots { position: absolute; bottom: 0; left: 0; }
 
     .n-step {
       font-size: 0.65rem;
@@ -813,25 +829,26 @@
 
         <div class="n-panel" id="np-1">
           <div class="n-step">02 / 04 &nbsp;— Differential Expression</div>
-          <h2 class="n-title">1,247 genes<br/>rewritten by<br/>the tumor.</h2>
+          <h2 class="n-title">1,247 genes<br/>shift — and<br/><em>INHBA</em> leads.</h2>
           <p class="n-body">
             DESeq2 Wald test (FDR &lt; 0.05, |log₂FC| &gt; 1.5) identified 782
-            upregulated and 465 downregulated genes. Cell-cycle drivers
-            <em>MKI67</em>, <em>TOP2A</em>, and <em>PCNA</em> dominate the
-            upregulated landscape; tight-junction gene <em>CLDN18</em> is
-            among the most consistently silenced.
+            upregulated and 465 downregulated genes. <em>INHBA</em> — a TGF-β
+            superfamily ligand — is among the most strongly upregulated
+            (log₂FC ≈ 3.5), and the rise replicates in an independent cohort
+            (GSE66229, p &lt; 0.0001).
           </p>
         </div>
 
         <div class="n-panel" id="np-2">
-          <div class="n-step">03 / 04 &nbsp;— Survival Signatures</div>
-          <h2 class="n-title">MKI67 predicts<br/>outcome with<br/>HR = 1.74.</h2>
+          <div class="n-step">03 / 04 &nbsp;— Survival &amp; Pathways</div>
+          <h2 class="n-title">High <em>INHBA</em><br/>marks worse<br/>outcomes &amp; EMT.</h2>
           <p class="n-body">
-            Kaplan-Meier stratification and multivariate Cox modeling confirm
-            MKI67-high patients face significantly worse overall survival
-            (HR = 1.74, 95% CI 1.42–2.13, p &lt; 0.001), independent of AJCC
-            stage, age, and molecular subtype. GSEA revealed 14 enriched
-            Hallmark gene sets — E2F and MYC targets top the list.
+            High-<em>INHBA</em> patients face significantly worse 5-year overall
+            survival (Kaplan-Meier, log-rank p = 0.023). Ranking genes by their
+            correlation with <em>INHBA</em>, epithelial–mesenchymal transition is
+            the top co-enriched Hallmark program (NES 3.76) — and EMT is
+            independently activated in tumors (NES 1.88), nominating INHBA as a
+            driver of invasion and stromal remodeling.
           </p>
         </div>
 
@@ -865,8 +882,8 @@
           <div class="n-big-label">DE genes identified</div>
         </div>
         <div class="n-vis" id="nv-2">
-          <div class="n-big">HR&nbsp;<em>1.74</em></div>
-          <div class="n-big-label">hazard ratio — MKI67</div>
+          <div class="n-big">NES&nbsp;<em>3.76</em></div>
+          <div class="n-big-label">EMT enrichment · top INHBA program</div>
         </div>
         <div class="n-vis" id="nv-3">
           <div class="n-big"><em>→</em></div>
@@ -968,9 +985,10 @@
         </div>
         <div class="tl-title">Differential Expression</div>
         <p class="tl-desc">
-          DESeq2 Wald test: 1,247 DEGs at FDR &lt; 0.05, |log₂FC| &gt; 1.5.
-          Top upregulated: MKI67, TOP2A, PCNA. Top downregulated: CLDN18,
-          CDH1. Volcano and MA plots generated with EnhancedVolcano.
+          DESeq2 Wald test: 1,247 DEGs at FDR &lt; 0.05, |log₂FC| &gt; 1.5
+          (782 up, 465 down). INHBA is among the most strongly upregulated
+          (log₂FC ≈ 3.5) and replicates in the GSE66229 cohort. Volcano and
+          expression plots generated in R.
         </p>
       </div>
 
@@ -981,9 +999,10 @@
         </div>
         <div class="tl-title">Survival Analysis</div>
         <p class="tl-desc">
-          Kaplan-Meier estimator and log-rank testing for 50+ candidate genes.
-          Multivariate Cox PH modeling adjusted for stage, age, and TCGA
-          molecular subtype. MKI67: HR 1.74 (p &lt; 0.001).
+          Kaplan-Meier estimator and log-rank testing across candidate genes.
+          High INHBA → significantly worse 5-year overall survival (log-rank
+          p = 0.023; n=192 low, n=191 high). Multivariate Cox PH (stage, age,
+          subtype) planned to confirm independence.
         </p>
       </div>
 
@@ -994,9 +1013,10 @@
         </div>
         <div class="tl-title">Pathway Enrichment (GSEA)</div>
         <p class="tl-desc">
-          fgsea with Wald-statistic ranking against MSigDB Hallmark (H) and
-          KEGG (C2). 14 enriched gene sets at FDR &lt; 0.25. Top: E2F Targets
-          (NES +2.41), MYC Targets (NES +2.28), G2M Checkpoint (NES +2.19).
+          GSEA against MSigDB Hallmark. EMT is significantly activated in tumors
+          (NES 1.88, FDR 1.6×10⁻⁷). Ranking genes by INHBA correlation, 43 sets
+          are significant (FDR &lt; 0.05) — EMT the strongest (NES 3.76),
+          alongside TNFα/NF-κB, inflammatory response, and hypoxia.
         </p>
       </div>
 
@@ -1105,16 +1125,16 @@
         <div class="hl-desc">Differentially expressed genes<br/>(|log₂FC| &gt; 1.5, FDR &lt; 0.05)</div>
       </div>
       <div class="hl-card js-card">
-        <div class="hl-val">p &lt; 0.001</div>
-        <div class="hl-desc">MKI67 high vs. low survival<br/>stratification (log-rank test)</div>
+        <div class="hl-val">p = 0.023</div>
+        <div class="hl-desc">High INHBA → worse 5-yr survival<br/>(log-rank test)</div>
       </div>
       <div class="hl-card js-card">
-        <div class="hl-val" data-count="14">14</div>
-        <div class="hl-desc">Enriched Hallmark gene sets<br/>(GSEA, FDR &lt; 0.25)</div>
+        <div class="hl-val" data-count="43">43</div>
+        <div class="hl-desc">Significant Hallmark sets<br/>(INHBA co-expression, FDR &lt; 0.05)</div>
       </div>
       <div class="hl-card js-card">
-        <div class="hl-val">E2F/MYC</div>
-        <div class="hl-desc">Top upstream regulators<br/>in tumor vs. normal contrast</div>
+        <div class="hl-val">EMT</div>
+        <div class="hl-desc">Top program INHBA marks<br/>&amp; activated in tumors</div>
       </div>
     </div>
 
@@ -1326,30 +1346,31 @@
   const dots    = gsap.utils.toArray('.n-dot');
   const N       = panels.length;
 
-  // Set initial hidden state for panels 1-3 and visuals 1-3
+  // Panels/visuals are stacked; only one is shown at a time. Rather than
+  // scrubbing a crossfade (which leaves you resting on a half-faded overlap
+  // whenever you stop mid-transition), the pin divides its scroll range into
+  // N equal zones and each zone owns one panel. Crossing a zone boundary
+  // fires a quick, self-completing crossfade — so scrolling always gets an
+  // immediate, smooth response and the section always settles on a single
+  // clean panel. No frozen 6:1 holds, no messy overlaps.
   gsap.set(panels.slice(1),  { opacity: 0, y: 40, position: 'absolute', top: 0 });
   gsap.set(visuals.slice(1), { opacity: 0, y: 30 });
 
-  // Build the scrub timeline
-  const narrativeTl = gsap.timeline();
-
-  for (let i = 0; i < N - 1; i++) {
-    // Hold current panel
-    narrativeTl.to({}, { duration: 3 });
-    // Cross-fade to next panel (ease:none so scrub feels linear)
-    narrativeTl
-      .to(panels[i],   { opacity: 0, y: -35, duration: 0.5, ease: 'none' })
-      .to(panels[i+1], { opacity: 1, y: 0,   duration: 0.5, ease: 'none' }, '<')
-      .to(visuals[i],  { opacity: 0, y: -25, duration: 0.4, ease: 'none' }, '<')
-      .to(visuals[i+1],{ opacity: 1, y: 0,   duration: 0.4, ease: 'none' }, '<0.1');
-  }
-  // Final hold
-  narrativeTl.to({}, { duration: 3 });
-
-  // Suppress horizontal/diagonal trackpad swipes while the narrative pin is active
   const narrativeWrap = document.querySelector('#narrative-wrap');
   function blockDiagonalSwipe(e) {
     if (Math.abs(e.deltaX) > 0.4 * Math.abs(e.deltaY)) e.preventDefault();
+  }
+
+  let current = 0;
+  function showPanel(idx) {
+    if (idx === current) return;
+    const dir = idx > current ? 1 : -1;   // scrolling down vs. back up
+    gsap.to(panels[current],  { opacity: 0, y: -34 * dir, duration: 0.45, ease: 'power2.in',  overwrite: true });
+    gsap.to(visuals[current], { opacity: 0, y: -24 * dir, duration: 0.4,  ease: 'power2.in',  overwrite: true });
+    gsap.fromTo(panels[idx],  { y: 34 * dir }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out', overwrite: true });
+    gsap.fromTo(visuals[idx], { y: 24 * dir }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out', overwrite: true });
+    dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+    current = idx;
   }
 
   ScrollTrigger.create({
@@ -1357,16 +1378,13 @@
     start: 'top top',
     end: 'bottom bottom',
     pin: '#narrative-inner',
-    scrub: 1.5,
-    animation: narrativeTl,
     onEnter()      { narrativeWrap.addEventListener('wheel', blockDiagonalSwipe, { passive: false }); },
     onLeave()      { narrativeWrap.removeEventListener('wheel', blockDiagonalSwipe); },
     onEnterBack()  { narrativeWrap.addEventListener('wheel', blockDiagonalSwipe, { passive: false }); },
     onLeaveBack()  { narrativeWrap.removeEventListener('wheel', blockDiagonalSwipe); },
     onUpdate(self) {
-      // Sync progress dots
-      const idx = Math.min(Math.floor(self.progress * N), N - 1);
-      dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+      const idx = Math.min(N - 1, Math.floor(self.progress * N));
+      showPanel(idx);
     }
   });
 

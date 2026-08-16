@@ -7,6 +7,7 @@
     { href: 'index.html',   label: 'Overview' },
     { href: 'methods.html', label: 'Methods' },
     { href: 'results.html', label: 'Results' },
+    { href: 'discussion.html', label: 'Discussion' },
     { href: 'https://github.com/fangchiliu/stomach-cancer/tree/main', label: 'Code', external: true },
     { href: 'about.html',   label: 'About' },
   ];

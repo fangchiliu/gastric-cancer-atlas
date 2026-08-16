@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
+    /* A real refresh resets the interactive-map loading animations on the
+       Results page; moving between pages does not. */
     if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      try {
+        sessionStorage.removeItem('stad:loaderPlayed:gene');
+        sessionStorage.removeItem('stad:loaderPlayed:umap');
+      } catch (e) { /* storage blocked — loaders just play every visit */ }
       location.replace('index.html');
     }
   </script>

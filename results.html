@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
+    /* A real refresh resets the interactive-map loading animations so they
+       play again on the next visit; moving between pages does not. Must run
+       before the redirect below, which leaves this page immediately. */
     if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      try {
+        sessionStorage.removeItem('stad:loaderPlayed:gene');
+        sessionStorage.removeItem('stad:loaderPlayed:umap');
+      } catch (e) { /* storage blocked — loaders just play every visit */ }
       location.replace('index.html');
     }
   </script>
@@ -28,9 +35,9 @@
       Results &amp; Findings
     </h1>
     <p style="color:#94a3b8; font-size:0.95rem; max-width:560px; line-height:1.65;">
-      Bulk RNA-seq analyses are complete; scRNA-seq integration is actively in progress.
-      Figures marked with real data below are rendered directly from the completed
-      INHBA analysis; remaining panels are representative placeholders pending final rendering.
+      Bulk RNA-seq and single-cell analyses are complete. Every figure below is rendered
+      directly from the underlying data — differential expression and survival from
+      TCGA-STAD, cell-type resolution from the Kumar et al. gastric single-cell atlas.
     </p>
   </div>
 </div>
@@ -82,14 +89,6 @@
             </div>
           </div>
 
-          <!-- Heatmap placeholder -->
-          <div class="chart-placeholder">
-            <div class="chart-icon">🔥</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Expression Heatmap</div>
-            <p>Top 50 DE genes (by adjusted p-value) across tumor and normal samples.
-               Rows: z-scored log₂(normalized counts). Columns: sample clustering by molecular subtype.</p>
-          </div>
-
         </div>
 
         <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
@@ -122,10 +121,10 @@
         <span class="finding-chip">INHBA: p = 0.023, log-rank</span>
       </div>
       <div class="result-section-body">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:1rem;">
+        <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:stretch;">
 
           <!-- Kaplan-Meier: INHBA — real data -->
-          <div class="figure-card">
+          <div class="figure-card" style="flex:0 1 360px;">
             <div class="figure-img">
               <img src="real_data/plots/KM_INHBA_high_vs_low_5yr.jpg" alt="Kaplan-Meier curve: high INHBA expression predicts worse 5-year survival in gastric cancer" loading="lazy" />
             </div>
@@ -136,35 +135,21 @@
             </div>
           </div>
 
-          <div class="chart-placeholder">
-            <div class="chart-icon">📈</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Kaplan-Meier: CDH1</div>
-            <p>OS probability for CDH1-high vs. CDH1-low groups. CDH1 loss is associated with
-               diffuse-type STAD and worse prognosis (HR 1.31, p = 0.032).</p>
+          <div style="flex:1 1 320px; padding:1.25rem 1.5rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+            <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+            <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+              Patients with high <em>INHBA</em> expression (median-split, n=191) show significantly
+              worse 5-year overall survival than the INHBA-low group (n=192; log-rank p = 0.023),
+              with the survival curves separating early and the high-expression group's median
+              survival reached by ~2 years, roughly a year before the low-expression group's. This
+              positions INHBA as a candidate prognostic biomarker; multivariate Cox modeling adjusted
+              for AJCC stage, age, and molecular subtype is the next step to confirm independence
+              from known clinical covariates. The pathway co-expression analysis below (Module 3)
+              offers a candidate mechanism: INHBA marks an invasive, stromal phenotype anti-correlated
+              with tumor proliferation programs.
+            </p>
           </div>
 
-          <div class="chart-placeholder">
-            <div class="chart-icon">🌲</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Forest Plot — Cox PH</div>
-            <p>Multivariate hazard ratios for top 10 prognostic genes. Adjusted for AJCC stage,
-               age at diagnosis, sex, and TCGA molecular subtype.</p>
-          </div>
-
-        </div>
-
-        <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
-          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
-          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
-            Patients with high <em>INHBA</em> expression (median-split, n=191) show significantly
-            worse 5-year overall survival than the INHBA-low group (n=192; log-rank p = 0.023),
-            with the survival curves separating early and the high-expression group's median
-            survival reached by ~2 years, roughly a year before the low-expression group's. This
-            positions INHBA as a candidate prognostic biomarker; multivariate Cox modeling adjusted
-            for AJCC stage, age, and molecular subtype is the next step to confirm independence
-            from known clinical covariates. The pathway co-expression analysis below (Module 3)
-            offers a candidate mechanism: INHBA marks an invasive, stromal phenotype anti-correlated
-            with tumor proliferation programs.
-          </p>
         </div>
       </div>
     </div>
@@ -328,7 +313,7 @@
     <span class="section-eyebrow">Interactive Visualization</span>
     <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Gene Regulatory Network — Gastric Cancer</h2>
     <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.25rem; line-height:1.6;">
-      Click any gene to explore its connections &nbsp;·&nbsp; Drag to rotate &nbsp;·&nbsp; Scroll to zoom
+      Click any gene to explore its connections &nbsp;·&nbsp; Drag to rotate
     </p>
 
     <!-- Legend -->
@@ -340,10 +325,18 @@
       <span style="display:flex;align-items:center;gap:0.38rem;"><span style="width:9px;height:9px;border-radius:50%;background:#00d4aa;box-shadow:0 0 5px #00d4aa;flex-shrink:0;display:inline-block;"></span>Proliferation markers</span>
     </div>
 
-    <button id="gene-net-toggle" style="display:inline-flex;align-items:center;gap:0.4rem;background:#0d9488;color:#fff;font-weight:600;font-size:0.875rem;padding:0.65rem 1.4rem;border-radius:8px;border:none;cursor:pointer;margin-bottom:0.75rem;transition:background 0.15s,color 0.15s,box-shadow 0.15s;font-family:inherit;">▶&nbsp;Enable 3D Interaction</button>
-
     <!-- 3D graph container — overflow:hidden clips WebGL canvas to rounded corners -->
-    <div id="gene-graph-3d" style="width:100%;height:580px;background:#0a1628;border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,170,0.18);box-shadow:0 4px 32px rgba(0,0,0,0.18);"></div>
+    <div id="gene-graph-frame" style="position:relative;width:100%;height:720px;background:#0a1628;border-radius:14px;overflow:hidden;border:1px solid rgba(0,212,170,0.18);box-shadow:0 4px 32px rgba(0,0,0,0.18);">
+      <div id="gene-graph-3d" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;background:#0a1628;"></div>
+      <div id="gene-loading" style="position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;background:#0a1628;color:#7ea3b8;font-size:0.82rem;font-family:system-ui,sans-serif;pointer-events:none;">
+        <div style="width:36px;height:36px;border:3px solid rgba(13,148,136,0.2);border-top-color:#5eead4;border-radius:50%;animation:viz-spin 0.8s linear infinite;"></div>
+        <div id="gene-loading-label" style="font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9bb8c8;font-size:0.72rem;">Loading gene network</div>
+        <div id="gene-loading-percent" style="font-size:1.1rem;font-weight:800;color:#5eead4;">0%</div>
+        <div style="width:min(220px,60%);height:4px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;">
+          <div id="gene-loading-bar" style="width:0%;height:100%;background:#5eead4;border-radius:inherit;transition:width 0.18s ease;"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- Info panel — appears below graph when a node is clicked -->
     <div id="gene-panel" style="display:none;margin-top:0.85rem;padding:1.1rem 1.4rem;background:#f8fafc;border:1px solid rgba(13,148,136,0.18);border-left:3px solid #0d9488;border-radius:10px;">
@@ -373,90 +366,383 @@
     <!-- Color-by controls -->
     <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
       <span style="font-size:0.78rem; color:#4d6a80; font-weight:600; letter-spacing:0.04em;">COLOR BY</span>
-      <button data-umap-mode="celltype"    style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.5);background:rgba(0,212,170,0.18);color:#00d4aa;cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;">Cell Type</button>
-      <button data-umap-mode="compartment" style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.2);background:rgba(0,212,170,0.05);color:#64748b;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.15s;">Compartment</button>
+      <button data-umap-mode="celltype"    style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(13,148,136,0.72);background:rgba(13,148,136,0.2);color:#5eead4;cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;">Cell Type</button>
+      <button data-umap-mode="compartment" style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(77,106,128,0.32);background:rgba(77,106,128,0.08);color:#64748b;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.15s;">Compartment</button>
     </div>
 
-    <button id="umap-toggle" style="display:inline-flex;align-items:center;gap:0.4rem;background:#0d9488;color:#fff;font-weight:600;font-size:0.875rem;padding:0.65rem 1.4rem;border-radius:8px;border:none;cursor:pointer;margin-bottom:0.75rem;transition:background 0.15s,color 0.15s,box-shadow 0.15s;font-family:inherit;">▶&nbsp;Enable 3D Interaction</button>
-
     <!-- Outer wrapper: position:relative anchors the legend and tooltip inside the frame -->
-    <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(0,212,170,0.18); box-shadow:0 4px 32px rgba(0,0,0,0.18);">
-      <div id="umap-container" style="width:100%; height:580px; background:#0a1628; display:block;">
+    <div class="umap-frame" style="position:relative; display:grid; grid-template-columns:minmax(0,1fr) 270px; border-radius:14px; overflow:hidden; border:1px solid rgba(13,148,136,0.26); box-shadow:0 4px 32px rgba(0,0,0,0.18); background:#0a1628;">
+      <div id="umap-container" style="position:relative;width:100%; height:580px; background:#0a1628; display:block;">
         <!-- Loading spinner — removed by JS after data loads -->
-        <div id="umap-loading" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:#4d6a80;font-size:0.82rem;font-family:system-ui,sans-serif;">
-          <div style="width:36px;height:36px;border:3px solid rgba(0,212,170,0.18);border-top-color:#00d4aa;border-radius:50%;animation:umap-spin 0.8s linear infinite;"></div>
-          Loading 30,000 cells…
+        <div id="umap-loading" style="position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;background:#0a1628;color:#7ea3b8;font-size:0.82rem;font-family:system-ui,sans-serif;">
+          <div style="width:36px;height:36px;border:3px solid rgba(13,148,136,0.2);border-top-color:#5eead4;border-radius:50%;animation:viz-spin 0.8s linear infinite;"></div>
+          <div style="font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9bb8c8;font-size:0.72rem;">Loading single-cell atlas</div>
+          <div id="umap-loading-percent" style="font-size:1.1rem;font-weight:800;color:#5eead4;">0%</div>
+          <div style="width:min(220px,60%);height:4px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;">
+            <div id="umap-loading-bar" style="width:0%;height:100%;background:#5eead4;border-radius:inherit;transition:width 0.18s ease;"></div>
+          </div>
+          <div id="umap-loading-label" style="font-size:0.76rem;color:#5d7c90;">Fetching cell coordinates</div>
         </div>
-        <style>@keyframes umap-spin{to{transform:rotate(360deg)}}</style>
+        <style>
+          @keyframes viz-spin{to{transform:rotate(360deg)}}
+          @media (max-width: 820px) {
+            .umap-frame { grid-template-columns: 1fr !important; }
+            #umap-container { height: 440px !important; }
+            #umap-legend { margin: 0 14px 14px !important; max-height: 220px !important; }
+          }
+        </style>
       </div>
 
       <!-- Floating legend — scrollable to handle 25 cell types -->
-      <div id="umap-legend" style="position:absolute;top:14px;right:14px;background:rgba(6,13,26,0.92);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);min-width:190px;max-height:calc(100% - 28px);overflow-y:auto;user-select:none;scrollbar-width:thin;scrollbar-color:rgba(0,212,170,0.25) transparent;"></div>
+      <div id="umap-legend" style="align-self:stretch;margin:14px 14px 14px 0;background:rgba(6,13,26,0.92);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 13px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);min-width:0;max-height:552px;overflow-y:auto;user-select:none;scrollbar-width:thin;scrollbar-color:rgba(94,234,212,0.32) transparent;"></div>
 
       <!-- Hover tooltip -->
-      <div id="umap-tooltip" style="display:none;position:absolute;background:rgba(6,13,26,0.93);border:1px solid rgba(0,212,170,0.3);border-radius:7px;padding:5px 11px;font-size:12px;color:#fff;pointer-events:none;z-index:10;white-space:nowrap;"></div>
+      <div id="umap-tooltip" style="display:none;position:absolute;background:rgba(6,13,26,0.93);border:1px solid rgba(94,234,212,0.34);border-radius:7px;padding:5px 11px;font-size:12px;color:#fff;pointer-events:none;z-index:10;white-space:nowrap;"></div>
     </div>
 
     <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.6rem; line-height:1.5;">
-      Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Click legend items to toggle populations
+      Drag to rotate &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Click legend items to toggle populations
     </p>
   </section>
 
-  <!-- ── 4. scRNA-seq Deconvolution ─────────────────────────── -->
-  <section style="margin-bottom:1rem;">
+  <!-- ── 4. scRNA-seq Atlas & TME Composition ───────────────── -->
+  <section style="margin-bottom:3rem;">
     <span class="section-eyebrow">Module 4</span>
-    <h2 style="font-size:1.5rem; margin-bottom:1.5rem;">scRNA-seq Cell-Type Deconvolution</h2>
+    <h2 style="font-size:1.5rem; margin-bottom:1.5rem;">scRNA-seq Atlas &amp; TME Composition</h2>
 
     <div class="result-section">
       <div class="result-section-header">
         <div>
-          <div style="font-weight:700; font-size:0.95rem;">Tumor Microenvironment Cell Composition</div>
-          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">CZ CELLxGENE gastric cancer datasets · Seurat v5 · CIBERSORT deconvolution</div>
+          <div style="font-weight:700; font-size:0.95rem;">Tumour Microenvironment Cell Composition</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Kumar et al. 2022 (CZ CELLxGENE) · Seurat v5 · Harmony batch correction on donor</div>
         </div>
-        <span class="coming-soon-badge">⏳ Coming Soon</span>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip">147,181 cells</span>
+          <span class="finding-chip">25 cell types</span>
+          <span class="finding-chip">36 samples · 27 donors</span>
+        </div>
       </div>
       <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
 
-        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:1.25rem 1.5rem; margin-bottom:1.25rem;">
+          <!-- UMAP cell types — real data -->
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_umap_celltypes.jpg" alt="Single-cell UMAP of 147,181 gastric cells coloured by the 25 annotated cell types" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">UMAP — Cell Type Clusters</div>
+              <p>Harmony-integrated UMAP of 147,181 cells from 27 donors, annotated into 25 cell
+                 types spanning the epithelial, immune and stromal compartments. Colours are the
+                 same hexes used by the interactive 3D UMAP above, so the two views can be read
+                 against each other.</p>
+            </div>
+          </div>
+
+          <!-- TME composition — real data -->
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_tme_composition.jpg" alt="Stacked bar chart of epithelial, immune and stromal cell fractions for each of 36 gastric samples" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">TME Composition — Stacked Bar</div>
+              <p>Compartment fractions per sample (T = tumour, N = normal). Pooled across cells,
+                 the immune fraction rises from 52% to 71% while resident epithelium falls from
+                 33% to 16%; the stromal fraction is essentially unchanged (15% → 13%).</p>
+            </div>
+          </div>
+
+          <!-- Composition shift — real data -->
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_composition_shift.jpg" alt="Log2 fold change in cell-type proportion between gastric tumour and normal samples" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Cell-Type Abundance Shift</div>
+              <p>Log₂ fold change in sample-level cell-type proportion, tumour vs. normal
+                 (Wilcoxon rank-sum, BH-adjusted). The malignant compartment expands ~10-fold
+                 (log₂FC = +3.37, FDR = 0.013); differentiated gastric lineages — chief, parietal,
+                 enteroendocrine — are progressively lost.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+            The gastric tumour microenvironment is <strong>immune-dominated and epithelium-depleted</strong>:
+            immune cells make up 71% of tumour cells versus 52% of normal, while normal gastric
+            epithelium falls from 33% to 16% as differentiated lineages (chief, parietal,
+            enteroendocrine) are replaced by a malignant compartment that is the only population
+            to clear FDR &lt; 0.05 (log₂FC = +3.37). With 26 tumour and 10 normal samples the
+            proportion test is underpowered for the smaller populations, so the remaining ranking
+            should be read as descriptive. Note also that the <em>stromal fraction barely moves</em>
+            (15% → 13%) — which matters for the section below, because the INHBA signal turns out
+            to be a change in what stromal cells <em>do</em>, not how many of them there are.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. INHBA Target Biology ─────────────────────────────── -->
+  <section style="margin-bottom:1rem;">
+    <span class="section-eyebrow">Module 5</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Target Biology — Which Cells Make INHBA</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:640px;">
+      Bulk RNA-seq showed <em>INHBA</em> is up in tumour tissue and predicts worse survival, but a
+      bulk sample averages every cell in it. Single-cell resolution answers the question bulk
+      cannot: which cell type actually transcribes the gene, and which cells can receive its signal.
+    </p>
+
+    <div class="result-section">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">INHBA Expression at Single-Cell Resolution</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Kumar et al. 2022 · 116,284 tumour and 30,897 normal cells · log-normalised counts</div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip">Fibroblasts: 1.5% → 21.0% INHBA⁺</span>
+          <span class="finding-chip">13.4× · FDR &lt; 1e-190</span>
+        </div>
+      </div>
+      <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
+
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_INHBA_umap.jpg" alt="UMAP of gastric cells coloured by INHBA expression, split into normal and gastric cancer panels, showing INHBA induction in the fibroblast cluster of tumours" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">INHBA on the UMAP — Normal vs. Tumour</div>
+              <p>4,472 of 116,284 tumour cells carry an <em>INHBA</em> transcript (3.9%) versus 340
+                 of 30,897 normal cells (1.1%). The signal is spatially concentrated: it lights up
+                 the fibroblast and macrophage islands, and leaves the malignant epithelial cluster
+                 essentially dark.</p>
+            </div>
+          </div>
+
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_INHBA_celltype_dotplot.jpg" alt="Dot plot of the percentage of cells expressing INHBA and mean expression level, by cell type and tissue" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">INHBA by Cell Type</div>
+              <p>Dot size = fraction of cells with ≥1 <em>INHBA</em> transcript; colour = mean
+                 log-normalised expression. Fibroblasts go from 1.5% positive in normal tissue to
+                 21.0% in tumour. Macrophages sit at ~18% in <strong>both</strong> tissues — a
+                 constitutive, not a tumour-induced, source.</p>
+            </div>
+          </div>
+
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_INHBA_source.jpg" alt="Fold change in the fraction of INHBA-expressing cells per cell type, and the cell-type composition of the INHBA-positive pool" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">The Cellular Source of INHBA</div>
+              <p>Fibroblasts are the only large population with a tumour-specific induction
+                 (13.4×, Fisher exact FDR = 4.7 × 10⁻¹⁹¹); endothelium (10.2×, FDR = 2.9 × 10⁻⁵)
+                 and T cells (3.2×, FDR = 3.8 × 10⁻⁴) follow. Fibroblasts rise from 13% to 44% of
+                 all <em>INHBA</em>⁺ cells. Malignant cells are not a source (0.8% → 1.3%, n.s.).</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- INHBA source summary table -->
+        <div style="margin-top:1.25rem; overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
+                <th style="text-align:left;  padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Cell Type</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">% INHBA⁺ Normal</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">% INHBA⁺ Tumour</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Fold</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">FDR</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">Fibroblasts</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">1.52%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; font-weight:700;">20.97%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">13.4×</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">4.7 × 10⁻¹⁹¹</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">TUMOUR-INDUCED</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">Endothelial</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">0.06%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">1.03%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">10.2×</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">2.9 × 10⁻⁵</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">TUMOUR-INDUCED</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">T-Cells</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">0.06%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">0.30%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#0d9488; font-weight:600;">3.2×</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">3.8 × 10⁻⁴</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">TUMOUR-INDUCED</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">Macrophages</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">17.98%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; font-weight:700;">18.41%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#64748b; font-weight:600;">1.02×</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">n.s.</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#e0f2fe;color:#0369a1;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">CONSTITUTIVE</span></td>
+              </tr>
+              <tr>
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">Malignant epithelium</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">0.80%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">1.34%</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem; color:#64748b; font-weight:600;">1.6×</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">n.s.</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;"><span style="background:#ede9fe;color:#5b21b6;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">NOT A SOURCE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            <strong>The INHBA signal that bulk RNA-seq detects is stromal, not epithelial.</strong>
+            Cancer-associated fibroblasts go from 1.5% <em>INHBA</em>-positive in normal gastric
+            tissue to 21.0% in tumour — a 13.4-fold induction (Fisher exact,
+            FDR = 4.7 × 10⁻¹⁹¹) — and rise from 13% to 44% of every <em>INHBA</em>-expressing cell
+            in the tissue. Macrophages express it at ~18% in both tumour and normal, making them a
+            constitutive contributor rather than a tumour-driven one. Malignant epithelial cells,
+            the population bulk RNA-seq weights most heavily, are essentially not a source at all
+            (0.8% → 1.3%, n.s.). The same split appears in the compartment-level differential
+            expression: <em>INHBA</em> detection rises from 1.2% to 4.4% of non-epithelial cells
+            (p<sub>adj</sub> = 1.0 × 10⁻²⁰²) but only 0.24% to 0.79% of epithelial cells.
+          </p>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            <strong>This resolves the apparent paradox in Module 3.</strong> INHBA correlated
+            positively with EMT, TNFα/NF-κB, inflammation and hypoxia, and negatively with E2F
+            targets, MYC targets and oxidative phosphorylation — programs of tumour-cell
+            proliferation. If INHBA were a tumour-cell gene, being anti-correlated with tumour-cell
+            proliferation would be strange. Once the source is a fibroblast, it is the expected
+            result: a bulk sample rich in INHBA is a sample rich in activated stroma, which is by
+            construction proportionally poorer in malignant epithelium. INHBA is not marking a
+            proliferative state inside the cancer cell; it is marking <em>how much activated stroma
+            surrounds it</em>.
+          </p>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+            <strong>Sender and receiver are different cells.</strong> Activin A is a secreted
+            TGF-β-superfamily ligand, so the cells that transcribe <em>INHBA</em> need not be the
+            cells that respond to it. In tumour tissue, <em>ACVR1B</em> — the type I activin
+            receptor — tracks the epithelial lineages rather than the immune ones: 13.8% of
+            malignant cells carry it, against 4.0% of macrophages and 0.9% of T cells. Fibroblasts
+            themselves carry <em>ACVR1</em> (20.1%) and <em>TGFBR2</em> (42.8%) and show high
+            <em>SERPINE1</em> (40.8%, second only to endothelium at 57.4%), a direct SMAD2/3 target
+            that reads out active rather than merely potential signalling. The picture is a
+            fibroblast-to-tumour
+            paracrine axis running alongside a fibroblast autocrine loop that would sustain the CAF
+            state. That makes INHBA a plausible <em>stromal</em> therapeutic target — one whose
+            effect on tumour cells is indirect, and which the bulk survival association
+            (log-rank p = 0.023) would be reporting through stromal content.
+          </p>
+        </div>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.6; margin:0.9rem 0 0;">
+          <strong style="color:#64748b;">Caveats.</strong> Single-cell fractions reflect what
+          dissociates and is captured, so compartment percentages index but do not equal tissue
+          composition; fibroblasts and epithelium dissociate with different efficiency. Droplet
+          scRNA-seq is also shallow, so "% of cells expressing" understates true prevalence for
+          every gene — the tumour/normal contrast is the interpretable quantity, not the absolute
+          rate. Cell-type labels are the authors' published annotations, carried through unchanged.
+          Ligand transcript is not secreted protein, and receptor transcript is not an active
+          receptor complex; <em>SERPINE1</em> and <em>SKIL</em> are included precisely because they
+          read out downstream pathway activity. Finally, this cohort is independent of TCGA-STAD:
+          it explains the bulk result mechanistically but does not re-derive it in the same patients.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. Therapeutic Targeting ────────────────────────────── -->
+  <section style="margin-bottom:1rem;">
+    <span class="section-eyebrow">Module 6</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Therapeutic Targeting — The Activin A Axis as a Drug Target</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:640px;">
+      If <em>INHBA</em> is transcribed by fibroblasts but read by tumour epithelium, the druggable
+      question is not "can we silence the gene" but "where in the ligand–receptor–SMAD chain can the
+      signal be interrupted, and which cells would that hit." This module maps the axis onto
+      existing pharmacology.
+    </p>
+
+    <div class="result-section">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">Ligand–Receptor Axis &amp; Druggability</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Kumar et al. 2022 tumour cells · activin A / TGF-β superfamily signalling components</div>
+        </div>
+        <span class="coming-soon-badge">⏳ In Progress</span>
+      </div>
+      <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
+
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/plots/sc_INHBA_signaling_axis.jpg" alt="Dot plot of activin A ligand, receptor and SMAD target gene expression across gastric tumour cell types" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">The Activin A Signalling Axis</div>
+              <p>Ligand, receptor and SMAD-target expression across tumour cell types.
+                 <em>ACVR1B</em>, the type I activin receptor, is an epithelial receptor here —
+                 13.8% of malignant cells carry it versus 0.9% of T cells. Fibroblasts carry
+                 <em>ACVR1</em> (20.1%) and <em>TGFBR2</em> (42.8%) and show high
+                 <em>SERPINE1</em> (40.8%), second only to endothelium. This is the map a drug
+                 would have to act on.</p>
+            </div>
+          </div>
+
+          <div class="chart-placeholder" style="min-height:200px;">
+            <div class="chart-icon">💊</div>
+            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Druggable Node Inventory</div>
+            <p>Each component of the axis — INHBA/activin A, ACVR1B, ACVR2A/B, SMAD2/3 — mapped
+               against existing inhibitors, ligand traps and neutralising antibodies, with
+               development stage and gastric-cancer evidence.</p>
+          </div>
+
+          <div class="chart-placeholder" style="min-height:200px;">
+            <div class="chart-icon">🎯</div>
+            <div style="font-weight:600; font-size:0.875rem; color:#475569;">On-Target Cell Selectivity</div>
+            <p>Which cell populations express each candidate target, to estimate what an inhibitor
+               would hit besides the intended CAF–tumour axis — the on-target, off-tissue burden.</p>
+          </div>
+
+          <div class="chart-placeholder" style="min-height:200px;">
+            <div class="chart-icon">📈</div>
+            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Stratification Hypothesis</div>
+            <p>Whether the INHBA-high group that carries the survival signal (log-rank p = 0.023)
+               is also the group enriched for an intact receptor-and-SMAD-target axis, i.e. the
+               patients a stromal inhibitor would be expected to help.</p>
+          </div>
+
+        </div>
+
+        <div style="margin-top:1.25rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:1.25rem 1.5rem;">
           <div style="display:flex; gap:0.75rem; align-items:flex-start;">
             <div style="font-size:1.25rem; line-height:1;">🔬</div>
             <div>
-              <div style="font-size:0.82rem; font-weight:700; color:#92400e; margin-bottom:0.3rem;">Analysis In Progress</div>
+              <div style="font-size:0.82rem; font-weight:700; color:#92400e; margin-bottom:0.3rem;">Section In Progress</div>
               <p style="font-size:0.82rem; color:#78350f; line-height:1.65; margin:0;">
-                Single-cell RNA-seq data acquisition from CZ CELLxGENE is underway. Upon
-                completion, this module will report cell-type composition fractions for each
-                TCGA-STAD tumor sample, resolved by Seurat clustering and SingleR annotation
-                against the Human Cell Atlas. Integration with bulk DEG results will enable
-                identification of cell-type-specific expression programs driving the observed
-                pathway dysregulation.
+                The signalling-axis figure above is real data and is placed here because it is the
+                foundation of the targeting argument rather than of the cell-source argument in
+                Module 5. The remaining panels are placeholders: the druggability annotation and
+                the stratification analysis have not been run yet, and no claim about drug
+                response is being made from these data.
               </p>
             </div>
           </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:1rem;">
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">🍩</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">UMAP — Cell Type Clusters</div>
-            <p>Single-cell UMAP projection color-coded by cell type annotation (T cells, B cells,
-               fibroblasts, malignant epithelial, myeloid).</p>
-          </div>
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">📦</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">TME Composition — Stacked Bar</div>
-            <p>Estimated immune and stromal cell fractions per TCGA-STAD sample, grouped
-               by TCGA molecular subtype (EBV / MSI / CIN / GS).</p>
-          </div>
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">🔗</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Pseudo-Bulk Validation</div>
-            <p>Correlation of pseudo-bulk DEG log₂FC (scRNA-seq) vs. bulk DESeq2 log₂FC
-               across matched cell types to validate cross-modal concordance.</p>
-          </div>
-
         </div>
       </div>
     </div>
@@ -491,6 +777,81 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="assets/page-enhancements.js"></script>
 
+<script>
+/* ── whenScrolledIntoView(id, cb) ─────────────────────────────────
+   Fires cb once, the first time #id enters the viewport, then stops
+   observing. Used to gate the two interactive-visualisation loading
+   overlays so each one plays exactly once per page load. If the browser
+   has no IntersectionObserver, cb fires immediately (loader behaves as
+   it did before, i.e. tied to page load rather than to scroll).
+──────────────────────────────────────────────────────────────────── */
+/* ── Loader session state ─────────────────────────────────────────
+   Each interactive map's loading animation plays once per refresh, not
+   once per page view: the flag lives in sessionStorage, so leaving for
+   Methods and coming back does not replay it. Only a genuine reload
+   clears the flags (see the head script on every page).
+──────────────────────────────────────────────────────────────────── */
+function loaderAlreadyPlayed(key) {
+  try { return sessionStorage.getItem('stad:loaderPlayed:' + key) === '1'; }
+  catch (e) { return false; }
+}
+
+function markLoaderPlayed(key) {
+  try { sessionStorage.setItem('stad:loaderPlayed:' + key, '1'); }
+  catch (e) { /* storage blocked — loader simply plays again next visit */ }
+}
+
+function removeLoaderNow(id) {
+  var el = document.getElementById(id);
+  if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+
+function whenScrolledIntoView(id, cb) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var done = false;
+  var obs = null;
+
+  function fire() {
+    if (done) return;
+    done = true;
+    window.removeEventListener('scroll', check);
+    window.removeEventListener('resize', check);
+    if (obs) obs.disconnect();
+    cb();
+  }
+
+  function check() {
+    if (done) return;
+    var r = el.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    var visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+    /* These sections are taller than the viewport, so "15% of the element"
+       alone would never trigger on a short screen — cap against the viewport
+       too. */
+    if (visible > Math.min(r.height * 0.15, vh * 0.35)) fire();
+  }
+
+  /* Two independent triggers, because neither is reliable alone here: the
+     observer is compositor-driven and catches scrolls that never emit scroll
+     events (programmatic jumps, anchor links), while the scroll/resize
+     listeners cover the case where the observer's delivery is delayed by the
+     GSAP/WebGL work happening in these sections. Whichever wins calls fire(),
+     which is idempotent. */
+  if ('IntersectionObserver' in window) {
+    obs = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) { fire(); return; }
+      }
+    }, { threshold: 0.15 });
+    obs.observe(el);
+  }
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check);
+  check();   /* in case the page loads already scrolled onto the section */
+}
+</script>
+
 <!-- 3D force graph — must load after GSAP, before init script -->
 <script src="https://unpkg.com/3d-force-graph@1"></script>
 <script>
@@ -502,6 +863,106 @@
    The JSON file must use the same { nodes, links } schema.
 ──────────────────────────────────────────────────────────────── */
 (function () {
+  var MIN_VIZ_LOADING_MS = 2000;
+
+  /* The loading overlay plays exactly once per page load: the first time the
+     user scrolls the visualisation into view, and never again afterwards.
+     Data still fetches eagerly on page load, so by the time the user gets
+     here it is usually already parsed. The bar therefore holds at 0 while
+     off-screen and animates 0 -> real progress once the section is reached,
+     otherwise the user would arrive to a bar frozen at 100%. */
+  var geneSeenAt = 0;
+  var geneRealPct = 0;
+  var geneShownPct = 0;
+  var geneDismissed = false;
+
+  if (loaderAlreadyPlayed('gene')) {
+    /* Already seen earlier this session — drop the overlay before first
+       paint so returning from another page shows the graph straight away. */
+    geneDismissed = true;
+    removeLoaderNow('gene-loading');
+  } else {
+    whenScrolledIntoView('gene-network-section', function () {
+      geneSeenAt = performance.now();
+      requestAnimationFrame(tickVizProgress);
+    });
+  }
+
+  function paintVizProgress(prefix, pct, label) {
+    var percentEl = document.getElementById(prefix + '-loading-percent');
+    var barEl = document.getElementById(prefix + '-loading-bar');
+    var labelEl = document.getElementById(prefix + '-loading-label');
+    if (percentEl) percentEl.textContent = Math.round(pct) + '%';
+    if (barEl) {
+      /* The bar carries an inline width transition for the old step-wise
+         updates; we now drive it every frame, so the easing would only ever
+         lag behind the number. */
+      barEl.style.transition = 'none';
+      barEl.style.width = pct + '%';
+    }
+    if (labelEl && label) labelEl.textContent = label;
+  }
+
+  /* Records real load progress; only paints once the section has been seen. */
+  /* Stage labels are recorded against the percentage they arrived at, so the
+     sweep can replay them in order instead of jumping straight to the last
+     one — otherwise the overlay reads "Ready" while the bar sits at 2%. */
+  var geneLabelStops = [];
+
+  function setVizProgress(prefix, value, label) {
+    if (geneDismissed) return;
+    geneRealPct = Math.max(0, Math.min(100, Math.round(value)));
+    if (label) geneLabelStops.push({ pct: geneRealPct, label: label });
+    if (!geneSeenAt) return;
+    paintVizProgress(prefix, geneShownPct, labelFor(geneLabelStops, geneShownPct));
+  }
+
+  function labelFor(stops, pct) {
+    var found = null;
+    for (var i = 0; i < stops.length; i++) {
+      if (stops[i].pct <= pct) found = stops[i].label;
+    }
+    return found;
+  }
+
+  /* Walks the displayed bar toward the real value, never faster than
+     MIN_VIZ_LOADING_MS for the full sweep, then dismisses the overlay. */
+  function tickVizProgress() {
+    var elapsed = performance.now() - geneSeenAt;
+    var ceiling = (elapsed / MIN_VIZ_LOADING_MS) * 100;
+    geneShownPct = Math.min(geneRealPct, ceiling);
+    paintVizProgress('gene', geneShownPct, labelFor(geneLabelStops, geneShownPct));
+    if (geneShownPct >= 100) {
+      dismissVizLoader('gene');
+      return;
+    }
+    requestAnimationFrame(tickVizProgress);
+  }
+
+  function finishVizProgress(prefix) {
+    setVizProgress(prefix, 100);
+  }
+
+  function dismissVizLoader(prefix) {
+    var loadingEl = document.getElementById(prefix + '-loading');
+    if (!loadingEl || loadingEl.dataset.dismissed) return;
+    loadingEl.dataset.dismissed = '1';
+    geneDismissed = true;
+    markLoaderPlayed('gene');
+    setTimeout(function () {
+      loadingEl.style.opacity = '0';
+      loadingEl.style.transition = 'opacity 0.28s ease';
+      setTimeout(function () {
+        /* Removed rather than hidden: the graph re-inits on container resize
+           and pushes fresh progress values, which would otherwise repaint —
+           and re-reveal — an overlay the user has already seen. Once it's out
+           of the DOM the loader cannot come back for this page load. */
+        if (loadingEl.parentNode) loadingEl.parentNode.removeChild(loadingEl);
+        window.dispatchEvent(new Event('resize'));
+      }, 300);
+    }, 180);
+  }
+
   /* ── Color & label maps by group ──────────────────────────── */
   var GROUP_COLORS = {
     suppressor:    '#ff4757',
@@ -607,12 +1068,14 @@
   };
 
   /* ── Bootstrap ─────────────────────────────────────────────── */
+  setVizProgress('gene', 8);
   initGraph(NETWORK_DATA);
 
   /* ── Main init function ────────────────────────────────────── */
   function initGraph(data) {
     var container = document.getElementById('gene-graph-3d');
     if (!container || typeof ForceGraph3D === 'undefined') return;
+    setVizProgress('gene', 24);
 
     /* Enrich nodes with display properties */
     var nodes = data.nodes.map(function (n) {
@@ -622,6 +1085,7 @@
       });
     });
     var gData = { nodes: nodes, links: data.links };
+    setVizProgress('gene', 42);
 
     /* ── Highlight state ──────────────────────────────────────── */
     var hlNodes = new Set();
@@ -670,8 +1134,21 @@
       .cooldownTicks(0)
       .cameraPosition({ z: 500 })
       .width(container.offsetWidth || 800)
-      .height(container.offsetHeight || 580)
-      .onEngineStop(function () { setTimeout(function () { graph.zoomToFit(400, 50); }, 0); })
+      .height(container.offsetHeight || 720)
+      .onEngineStop(function () {
+        setVizProgress('gene', 92);
+        setTimeout(function () {
+          /* Fitting against a container that has not been laid out yet picks
+             a nonsense camera distance, which is what makes the network
+             occasionally come up enormous. Re-sync the renderer to the real
+             box first, and only fit once that box is real. */
+          if (container.offsetWidth && container.offsetHeight) {
+            graph.width(container.offsetWidth).height(container.offsetHeight);
+            graph.zoomToFit(400, 50);
+          }
+          finishVizProgress('gene');
+        }, 0);
+      })
       .onNodeClick(function (node) {
         if (selectedNode === node) {
           /* Deselect */
@@ -704,10 +1181,41 @@
           .linkDirectionalParticles(linkParticles);
       });
 
+    if (graph.controls) {
+      var graphControls = graph.controls();
+      if (graphControls) {
+        graphControls.enableZoom = false;
+        graphControls.autoRotate = true;
+        graphControls.autoRotateSpeed = 0.8;
+      }
+    }
+
     /* ── Responsive resize ────────────────────────────────────── */
-    new ResizeObserver(function () {
-      graph.width(container.offsetWidth).height(container.offsetHeight);
-    }).observe(container);
+    /* The camera distance chosen by zoomToFit is only correct for the
+       container size it was computed against. Resizing the window changes
+       the viewport but not the camera, so a graph fitted while the window
+       was narrow stays fitted for a narrow window — which reads as the whole
+       network being blown up. Re-fit after the size settles, unless the user
+       has taken control of the camera, in which case leave their view alone. */
+    var userMovedCamera = false;
+    ['pointerdown', 'wheel'].forEach(function (evt) {
+      container.addEventListener(evt, function () { userMovedCamera = true; }, { passive: true });
+    });
+
+    var refitTimer = null;
+    function resizeGraph() {
+      var w = container.offsetWidth || 800;
+      var h = container.offsetHeight || 720;
+      if (!w || !h) return;
+      graph.width(w).height(h);
+      clearTimeout(refitTimer);
+      refitTimer = setTimeout(function () {
+        if (!userMovedCamera) graph.zoomToFit(300, 50);
+      }, 220);
+    }
+
+    window.addEventListener('resize', resizeGraph);
+    new ResizeObserver(resizeGraph).observe(container);
 
     /* ── Info panel ───────────────────────────────────────────── */
     function showPanel(node, neighbours) {
@@ -740,54 +1248,40 @@
         .linkDirectionalParticles(linkParticles);
     });
 
-    /* ── Interaction toggle (gene network) ─────────────────────
-       Transparent overlay intercepts wheel events when inactive,
-       keeping normal page scroll. The external button above the
-       viz drives the active/inactive state.
+    /* ── Auto interaction gate ─────────────────────────────────
+       Wheel keeps normal page scroll until the user directly starts
+       interacting with the model via pointer/touch.
     ─────────────────────────────────────────────────────────── */
-    container.style.position = 'relative';
-
-    var netOverlay = document.createElement('div');
-    netOverlay.style.cssText =
-      'position:absolute;inset:0;z-index:20;border-radius:14px;cursor:default;';
-    container.appendChild(netOverlay);
-
-    var netBtn    = document.getElementById('gene-net-toggle');
     var netActive = false;
 
     function netActivate() {
       netActive = true;
-      netOverlay.style.display = 'none';
-      if (netBtn) {
-        netBtn.textContent = '✕  Exit 3D Mode (or press Esc)';
-        netBtn.style.background = '#0f172a';
-        netBtn.style.color      = '#0d9488';
-        netBtn.style.border     = '1.5px solid #0d9488';
-        netBtn.style.boxShadow  = '0 0 0 3px rgba(13,148,136,0.15)';
-      }
+      var controls = graph.controls && graph.controls();
+      if (controls) controls.autoRotate = false;
+    }
+
+    function netRelease() {
+      var controls = graph.controls && graph.controls();
+      if (controls) controls.autoRotate = true;
     }
 
     function netDeactivate() {
       netActive = false;
+      var controls = graph.controls && graph.controls();
+      if (controls) controls.autoRotate = true;
       selectedNode = null;
       hlNodes.clear();
       hlLinks.clear();
       document.getElementById('gene-panel').style.display = 'none';
       graph.nodeColor(nodeColor).linkWidth(linkWidth)
            .linkColor(linkColor).linkDirectionalParticles(linkParticles);
-      netOverlay.style.display = 'block';
-      if (netBtn) {
-        netBtn.textContent = '▶ Enable 3D Interaction';
-        netBtn.style.background = '#0d9488';
-        netBtn.style.color      = '#fff';
-        netBtn.style.border     = 'none';
-        netBtn.style.boxShadow  = 'none';
-      }
     }
 
-    if (netBtn) netBtn.addEventListener('click', function () {
-      if (netActive) netDeactivate(); else netActivate();
-    });
+    container.addEventListener('pointerdown', netActivate, true);
+    window.addEventListener('pointerup', netRelease, true);
+    container.addEventListener('touchstart', netActivate, true);
+    window.addEventListener('touchend', netRelease, true);
+    window.addEventListener('touchcancel', netRelease, true);
 
     /* Esc key exits */
     document.addEventListener('keydown', function (e) {
@@ -821,13 +1315,96 @@
 (function () {
   var container = document.getElementById('umap-container');
   if (!container || typeof THREE === 'undefined') return;
+  var MIN_UMAP_LOADING_MS = 2000;
+
+  /* Same rule as the gene network: the overlay plays once, on the first scroll
+     into view after a refresh, then never again. See the comment there. */
+  var umapSeenAt = 0;
+  var umapRealPct = 0;
+  var umapShownPct = 0;
+  var umapLabelStops = [];
+  var umapDismissed = false;
+
+  if (loaderAlreadyPlayed('umap')) {
+    umapDismissed = true;
+    removeLoaderNow('umap-loading');
+  } else {
+    whenScrolledIntoView('umap-section', function () {
+      umapSeenAt = performance.now();
+      requestAnimationFrame(tickUMAPProgress);
+    });
+  }
+
+  function paintUMAPProgress(pct, label) {
+    var percentEl = document.getElementById('umap-loading-percent');
+    var barEl = document.getElementById('umap-loading-bar');
+    var labelEl = document.getElementById('umap-loading-label');
+    if (percentEl) percentEl.textContent = Math.round(pct) + '%';
+    if (barEl) {
+      barEl.style.transition = 'none';   /* driven per frame — see gene network */
+      barEl.style.width = pct + '%';
+    }
+    if (labelEl && label) labelEl.textContent = label;
+  }
+
+  function setUMAPProgress(value, label) {
+    if (umapDismissed) return;
+    umapRealPct = Math.max(0, Math.min(100, Math.round(value)));
+    if (label) umapLabelStops.push({ pct: umapRealPct, label: label });
+    if (!umapSeenAt) return;
+    paintUMAPProgress(umapShownPct, umapLabelAt(umapShownPct));
+  }
+
+  function umapLabelAt(pct) {
+    var found = null;
+    for (var i = 0; i < umapLabelStops.length; i++) {
+      if (umapLabelStops[i].pct <= pct) found = umapLabelStops[i].label;
+    }
+    return found;
+  }
+
+  function tickUMAPProgress() {
+    var elapsed = performance.now() - umapSeenAt;
+    var ceiling = (elapsed / MIN_UMAP_LOADING_MS) * 100;
+    umapShownPct = Math.min(umapRealPct, ceiling);
+    paintUMAPProgress(umapShownPct, umapLabelAt(umapShownPct));
+    if (umapShownPct >= 100) {
+      dismissUMAPLoader();
+      return;
+    }
+    requestAnimationFrame(tickUMAPProgress);
+  }
+
+  function finishUMAPProgress() {
+    setUMAPProgress(100, 'Ready');
+  }
+
+  function dismissUMAPLoader() {
+    var loadEl = document.getElementById('umap-loading');
+    if (!loadEl || loadEl.dataset.dismissed) return;
+    loadEl.dataset.dismissed = '1';
+    umapDismissed = true;
+    markLoaderPlayed('umap');
+    setTimeout(function () {
+      loadEl.style.opacity = '0';
+      loadEl.style.transition = 'opacity 0.28s ease';
+      setTimeout(function () {
+        /* Removed, not hidden — see the gene network loader. */
+        if (loadEl.parentNode) loadEl.parentNode.removeChild(loadEl);
+        window.dispatchEvent(new Event('resize'));
+      }, 300);
+    }, 180);
+  }
 
   /* ── Fetch real data ─────────────────────────────────────────── */
+  setUMAPProgress(5, 'Fetching cell coordinates');
   fetch('data/umap_real.json')
-    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      setUMAPProgress(28, 'Downloading cell coordinates');
+      return r.json();
+    })
     .then(function (data) {
-      var loadEl = document.getElementById('umap-loading');
-      if (loadEl) loadEl.style.display = 'none';
+      setUMAPProgress(58, 'Preparing 147,181 cells');
       initUMAP(data);
     })
     .catch(function () {
@@ -844,6 +1421,7 @@
        cells:       [[x, y, z, typeIdx], ...]  (30k downsampled)
   ════════════════════════════════════════════════════════════ */
   function initUMAP(data) {
+    setUMAPProgress(66, 'Building cell buffers');
     var types        = data.types;
     var compartments = data.compartments;
     var cells        = data.cells;
@@ -861,6 +1439,7 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
+    setUMAPProgress(74, 'Initializing renderer');
 
     /* ── Glow sprite texture (cached per hex color) ────────────── */
     var glowCache = {};
@@ -874,9 +1453,9 @@
       cv.width = cv.height = 64;
       var cx2 = cv.getContext('2d');
       var grd = cx2.createRadialGradient(32,32,0, 32,32,32);
-      grd.addColorStop(0,    rgba(1));
-      grd.addColorStop(0.32, rgba(0.82));
-      grd.addColorStop(0.68, rgba(0.18));
+      grd.addColorStop(0,    rgba(0.96));
+      grd.addColorStop(0.34, rgba(0.64));
+      grd.addColorStop(0.72, rgba(0.08));
       grd.addColorStop(1,    rgba(0));
       cx2.fillStyle = grd;
       cx2.fillRect(0, 0, 64, 64);
@@ -886,14 +1465,63 @@
     }
 
     /* ── Compartment color lookup ────────────────────────────────  */
+    var solidCompartmentColors = {
+      Immune:     '#60b7d4',
+      Epithelial: '#d6a64a',
+      Stroma:     '#79bd72',
+      Blood:      '#c86f76'
+    };
+
+    var solidCellTypeColors = {
+      'T-Cells':                  '#60b7d4',
+      'Plasma-Cells':             '#9b8bd8',
+      'Fibroblasts':              '#79bd72',
+      'Macrophages':              '#d48a4f',
+      Cancer:                     '#45c5ae',
+      Endothelial:                '#7bc1c9',
+      'B-Cells':                  '#b07ad0',
+      'Neck-Cells':               '#d29743',
+      Foveolar_Differentiated:    '#d6a64a',
+      Foveolar_Intermediate:      '#c7973e',
+      Chief:                      '#b77c3d',
+      Mast:                       '#c86ba2',
+      Enterocytes_Intermediate:   '#a9c95d',
+      Intestinal_Undifferentiated:'#8fb757',
+      Enteroendocrine_CHGA:       '#c86f76',
+      Goblet:                     '#73a04e',
+      Parietal:                   '#a66c3b',
+      Enteroendocrine_GHRL:       '#bd5b68',
+      Enterocytes:                '#b9db67',
+      Enteroendocrine_GAST:       '#d9828b',
+      SMG:                        '#87583b',
+      Basal:                      '#7a8da3',
+      Erythrocyte:                '#d15f5f',
+      Suprabasal:                 '#96a8bb',
+      Superficial:                '#b8c5d2'
+    };
+
+    function cellColor(ct) {
+      return solidCellTypeColors[ct.name]
+        || solidCompartmentColors[ct.compartment]
+        || ct.color
+        || '#8aa1b4';
+    }
+
     var compColorMap = {};
-    compartments.forEach(function (c) { compColorMap[c.name] = c.color; });
+    compartments.forEach(function (c) {
+      compColorMap[c.name] = solidCompartmentColors[c.name] || c.color;
+    });
 
     /* ── Group cells by typeIdx ──────────────────────────────────── */
     var byType = types.map(function () { return []; });
     cells.forEach(function (c) { byType[c[3]].push(c); });
+    setUMAPProgress(82, 'Grouping cell types');
 
     /* ── Build one Points mesh per cell type ─────────────────────  */
+    var cloudGroup = new THREE.Group();
+    cloudGroup.scale.setScalar(0.78);
+    scene.add(cloudGroup);
+
     var clusters = [];
     types.forEach(function (ct, typeIdx) {
       var pts = byType[typeIdx];
@@ -908,20 +1536,21 @@
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
       var mat = new THREE.PointsMaterial({
-        color:           new THREE.Color(ct.color),
+        color:           new THREE.Color(cellColor(ct)),
         size:            0.44,
-        map:             makeGlowTex(ct.color),
+        map:             makeGlowTex(cellColor(ct)),
         transparent:     true,
-        opacity:         0.86,
+        opacity:         1,
         depthWrite:      false,
-        blending:        THREE.AdditiveBlending,
+        blending:        THREE.NormalBlending,
         sizeAttenuation: true
       });
 
       var mesh = new THREE.Points(geo, mat);
-      scene.add(mesh);
+      cloudGroup.add(mesh);
       clusters.push({ mesh: mesh, ct: ct, typeIdx: typeIdx, on: true });
     });
+    setUMAPProgress(92, 'Rendering atlas');
 
     /* ── Color-by mode ───────────────────────────────────────────── */
     var colorMode = 'celltype';
@@ -931,7 +1560,7 @@
       clusters.forEach(function (cl) {
         var hex = mode === 'compartment'
           ? (compColorMap[cl.ct.compartment] || '#888888')
-          : cl.ct.color;
+          : cellColor(cl.ct);
         cl.mesh.material.color.set(hex);
         cl.mesh.material.map = makeGlowTex(hex);
         cl.mesh.material.needsUpdate = true;
@@ -953,13 +1582,15 @@
       legendEl.appendChild(header);
 
       var items = mode === 'compartment'
-        ? compartments.map(function (c) { return { label: c.name, color: c.color, count: null, cl: null }; })
+        ? compartments.map(function (c) {
+            return { label: c.name, color: compColorMap[c.name] || c.color, count: null, cl: null };
+          })
         : clusters.map(function (cl) {
             return {
               label: cl.ct.name,
               color: colorMode === 'compartment'
                 ? (compColorMap[cl.ct.compartment] || '#888')
-                : cl.ct.color,
+                : cellColor(cl.ct),
               count: cl.ct.count,
               cl:    cl
             };
@@ -977,7 +1608,7 @@
         var dot = document.createElement('span');
         dot.style.cssText =
           'width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block;'
-          + 'background:' + item.color + ';box-shadow:0 0 4px ' + item.color + ';'
+          + 'background:' + item.color + ';box-shadow:0 0 0 1px rgba(255,255,255,0.16),0 0 5px rgba(64,153,143,0.16);'
           + 'transition:box-shadow 0.18s;';
 
         var label = document.createElement('span');
@@ -1008,11 +1639,11 @@
           });
         }
         row.addEventListener('mouseenter', function () {
-          dot.style.boxShadow = '0 0 9px ' + item.color;
+          dot.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.24),0 0 8px rgba(64,153,143,0.24)';
           if (item.cl) row.style.background = 'rgba(255,255,255,0.04)';
         });
         row.addEventListener('mouseleave', function () {
-          dot.style.boxShadow = '0 0 4px ' + item.color;
+          dot.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.16),0 0 5px rgba(64,153,143,0.16)';
           row.style.background = '';
         });
 
@@ -1024,27 +1655,28 @@
     document.querySelectorAll('[data-umap-mode]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('[data-umap-mode]').forEach(function (b) {
-          b.style.background   = 'rgba(0,212,170,0.05)';
-          b.style.borderColor  = 'rgba(0,212,170,0.2)';
+          b.style.background   = 'rgba(77,106,128,0.08)';
+          b.style.borderColor  = 'rgba(77,106,128,0.32)';
           b.style.color        = '#64748b';
           b.style.fontWeight   = '500';
         });
-        btn.style.background  = 'rgba(0,212,170,0.18)';
-        btn.style.borderColor = 'rgba(0,212,170,0.5)';
-        btn.style.color       = '#00d4aa';
+        btn.style.background  = 'rgba(13,148,136,0.2)';
+        btn.style.borderColor = 'rgba(13,148,136,0.72)';
+        btn.style.color       = '#5eead4';
         btn.style.fontWeight  = '600';
         applyColorMode(btn.dataset.umapMode);
       });
     });
 
     /* ══════════════════════════════════════════════════════════
-       Orbit controls — Left-drag: rotate  Right-drag: pan  Wheel: zoom
+       Orbit controls — Left-drag: rotate  Right-drag: pan
     ══════════════════════════════════════════════════════════ */
     var sph = { theta: 0.35, phi: Math.PI * 0.43, r: 30 };
     var tgt = new THREE.Vector3(0, 0, 0);
     var dragging = false, panning = false;
     var lm = { x: 0, y: 0 };
     var autoRotate = true;
+    var umapActive = false;
 
     function updateCam() {
       camera.position.set(
@@ -1057,6 +1689,16 @@
 
     var cvs = renderer.domElement;
 
+    function umapActivate() {
+      umapActive = true;
+      autoRotate = false;
+    }
+
+    function umapDeactivate() {
+      umapActive = false;
+      autoRotate = true;
+    }
+
     cvs.addEventListener('mousedown', function (e) {
       if (e.button === 0) { dragging = true; panning = false; }
       if (e.button === 2) { panning  = true; dragging = false; }
@@ -1066,12 +1708,14 @@
     cvs.addEventListener('mousemove', function (e) {
       var dx = e.clientX - lm.x, dy = e.clientY - lm.y;
       if (dragging) {
+        if (Math.abs(dx) + Math.abs(dy) > 0.5) umapActivate();
         sph.theta -= dx * 0.006;
         sph.phi   -= dy * 0.006;
         sph.phi    = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
         updateCam();
       }
       if (panning) {
+        if (Math.abs(dx) + Math.abs(dy) > 0.5) umapActivate();
         var spd = sph.r * 0.0008;
         var dir = new THREE.Vector3();
         camera.getWorldDirection(dir);
@@ -1084,15 +1728,15 @@
       doRaycast(e);
     });
 
-    cvs.addEventListener('mouseup',     function () { dragging = false; panning = false; });
-    cvs.addEventListener('mouseleave',  function () { dragging = false; panning = false; });
-    cvs.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-    cvs.addEventListener('wheel', function (e) {
-      e.preventDefault();
-      sph.r = Math.max(7, Math.min(80, sph.r * (1 + e.deltaY * 0.001)));
-      updateCam();
-    }, { passive: false });
+    function umapRelease() {
+      dragging = false;
+      panning = false;
+      autoRotate = true;
+    }
 
+    cvs.addEventListener('mouseup',     umapRelease);
+    cvs.addEventListener('mouseleave',  umapRelease);
+    cvs.addEventListener('contextmenu', function (e) { e.preventDefault(); });
     cvs.addEventListener('touchstart', function (e) {
       e.preventDefault();
       if (e.touches.length === 1) {
@@ -1104,6 +1748,7 @@
       e.preventDefault();
       if (dragging && e.touches.length === 1) {
         var dx = e.touches[0].clientX - lm.x, dy = e.touches[0].clientY - lm.y;
+        if (Math.abs(dx) + Math.abs(dy) > 0.5) umapActivate();
         sph.theta -= dx * 0.006;
         sph.phi   -= dy * 0.006;
         sph.phi    = Math.max(0.08, Math.min(Math.PI - 0.08, sph.phi));
@@ -1111,12 +1756,11 @@
         lm = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }
     }, { passive: false });
-    cvs.addEventListener('touchend', function () { dragging = false; });
+    cvs.addEventListener('touchend', umapRelease);
+    cvs.addEventListener('touchcancel', umapRelease);
 
-    container.addEventListener('mouseenter', function () { autoRotate = false; });
     container.addEventListener('mouseleave', function () {
-      dragging = false; panning = false;
-      setTimeout(function () { autoRotate = true; }, 1500);
+      umapRelease();
     });
 
     /* ── Raycasting + tooltip ─────────────────────────────────────  */
@@ -1144,7 +1788,7 @@
         var outerRect = container.parentElement.getBoundingClientRect();
         var dotColor = colorMode === 'compartment'
           ? (compColorMap[hit.ct.compartment] || '#888')
-          : hit.ct.color;
+          : cellColor(hit.ct);
         ttEl.style.display = 'block';
         ttEl.style.left    = (e.clientX - outerRect.left + 12) + 'px';
         ttEl.style.top     = (e.clientY - outerRect.top  - 44) + 'px';
@@ -1179,48 +1823,10 @@
     (function loop() {
       requestAnimationFrame(loop);
       if (!inView) return;
-      if (autoRotate && !dragging) { sph.theta += 0.003; updateCam(); }
+      if (autoRotate) { sph.theta += 0.003; updateCam(); }
       renderer.render(scene, camera);
     })();
-
-    /* ── Interaction toggle ──────────────────────────────────────── */
-    var umapOverlay = document.createElement('div');
-    umapOverlay.style.cssText = 'position:absolute;inset:0;z-index:20;cursor:default;';
-    container.style.position  = 'relative';
-    container.appendChild(umapOverlay);
-
-    var umapBtn    = document.getElementById('umap-toggle');
-    var umapActive = false;
-
-    function umapActivate() {
-      umapActive = true;
-      umapOverlay.style.display = 'none';
-      autoRotate = false;
-      if (umapBtn) {
-        umapBtn.textContent     = '✕  Exit 3D Mode (or press Esc)';
-        umapBtn.style.background = '#0f172a';
-        umapBtn.style.color      = '#0d9488';
-        umapBtn.style.border     = '1.5px solid #0d9488';
-        umapBtn.style.boxShadow  = '0 0 0 3px rgba(13,148,136,0.15)';
-      }
-    }
-
-    function umapDeactivate() {
-      umapActive = false;
-      umapOverlay.style.display = 'block';
-      autoRotate = true;
-      if (umapBtn) {
-        umapBtn.textContent     = '▶ Enable 3D Interaction';
-        umapBtn.style.background = '#0d9488';
-        umapBtn.style.color      = '#fff';
-        umapBtn.style.border     = 'none';
-        umapBtn.style.boxShadow  = 'none';
-      }
-    }
-
-    if (umapBtn) umapBtn.addEventListener('click', function () {
-      if (umapActive) umapDeactivate(); else umapActivate();
-    });
+    requestAnimationFrame(finishUMAPProgress);
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && umapActive) umapDeactivate();
@@ -1238,6 +1844,78 @@
       scrollTrigger: { trigger: '#umap-section', start: 'top 82%', once: true }
     });
   }
+})();
+</script>
+
+<script>
+/* Replay 3D loading overlays whenever the user scrolls into each visualization. */
+(function () {
+  function replayLoading(prefix, label) {
+    var overlay = document.getElementById(prefix + '-loading');
+    var percent = document.getElementById(prefix + '-loading-percent');
+    var bar = document.getElementById(prefix + '-loading-bar');
+    var labelEl = document.getElementById(prefix + '-loading-label');
+    if (!overlay || !percent || !bar) return;
+
+    var token = Date.now();
+    overlay.dataset.replayToken = String(token);
+    overlay.style.transition = 'none';
+    overlay.style.opacity = '1';
+    overlay.style.visibility = 'visible';
+    overlay.style.display = 'flex';
+    if (labelEl && label) labelEl.textContent = label;
+
+    function setProgress(value) {
+      var pct = Math.max(0, Math.min(100, Math.round(value)));
+      percent.textContent = pct + '%';
+      bar.style.width = pct + '%';
+    }
+
+    setProgress(0);
+
+    var start = performance.now();
+    var duration = 2000;
+
+    function tick(now) {
+      if (overlay.dataset.replayToken !== String(token)) return;
+      var t = Math.min(1, (now - start) / duration);
+      setProgress(t * 100);
+      if (t < 1) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      setTimeout(function () {
+        if (overlay.dataset.replayToken !== String(token)) return;
+        overlay.style.transition = 'opacity 0.28s ease';
+        overlay.style.opacity = '0';
+        setTimeout(function () {
+          if (overlay.dataset.replayToken === String(token)) {
+            overlay.style.visibility = 'hidden';
+            window.dispatchEvent(new Event('resize'));
+          }
+        }, 300);
+      }, 120);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  function observeReplay(sectionSelector, prefix, label) {
+    var section = document.querySelector(sectionSelector);
+    if (!section) return;
+    var inSection = false;
+    new IntersectionObserver(function (entries) {
+      var visible = entries[0].isIntersecting;
+      if (visible && !inSection) {
+        inSection = true;
+        replayLoading(prefix, label);
+      }
+      if (!visible) inSection = false;
+    }, { threshold: 0.08 }).observe(section);
+  }
+
+  observeReplay('#gene-graph-frame', 'gene', 'Preparing gene network');
+  observeReplay('#umap-container', 'umap', 'Preparing single-cell atlas');
 })();
 </script>
 
