@@ -39,6 +39,15 @@
   animation: particle-fade 600ms ease-out forwards;
 }
 
+.has-cursor-trail #umap-container,
+.has-cursor-trail #umap-container *,
+.has-cursor-trail #gene-graph-3d,
+.has-cursor-trail #gene-graph-3d *,
+.has-cursor-trail .umap-frame,
+.has-cursor-trail .umap-frame * {
+  cursor: auto !important;
+}
+
 /* ── Navbar scroll behavior ──────────────────────────────────
    Scoped to `.dark-nav` (index.html only): that page's body is dark
    navy from top to bottom, so a transparent nav-at-top state still

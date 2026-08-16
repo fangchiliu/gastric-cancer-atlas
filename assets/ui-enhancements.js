@@ -20,8 +20,28 @@
     document.body.appendChild(lead);
 
     var mx = 0, my = 0, lx = 0, ly = 0, leadVisible = false;
+    var noTrailSelector = '#umap-container, #gene-graph-3d, .umap-frame';
+
+    function isNoTrailTarget(target) {
+      return target && target.closest && target.closest(noTrailSelector);
+    }
+
+    function pointerOverNoTrailArea() {
+      var el = document.elementFromPoint(mx, my);
+      return isNoTrailTarget(el);
+    }
+
+    function hideLead() {
+      leadVisible = false;
+      lead.style.opacity = '0';
+    }
 
     document.addEventListener('mousemove', function (e) {
+      if (isNoTrailTarget(e.target)) {
+        mx = e.clientX; my = e.clientY;
+        hideLead();
+        return;
+      }
       mx = e.clientX; my = e.clientY;
       if (!leadVisible) {
         leadVisible = true;
@@ -35,6 +55,11 @@
     });
 
     (function tick() {
+      if (pointerOverNoTrailArea()) {
+        hideLead();
+        requestAnimationFrame(tick);
+        return;
+      }
       lx += (mx - lx) * 0.35;
       ly += (my - ly) * 0.35;
       lead.style.left = lx + 'px';
@@ -75,6 +100,8 @@
     }
 
     document.addEventListener('mousemove', function (e) {
+      if (isNoTrailTarget(e.target)) return;
+      if (pointerOverNoTrailArea()) return;
       var dx = e.clientX - lastX;
       var dy = e.clientY - lastY;
       /* Only spawn when cursor moves at least 4 px — avoids over-spawning
@@ -84,6 +111,10 @@
       lastY = e.clientY;
       spawnParticles(e.clientX, e.clientY);
     });
+
+    window.addEventListener('scroll', function () {
+      if (pointerOverNoTrailArea()) hideLead();
+    }, { passive: true });
   }
 
   /* ── 2. Navbar scroll behaviour ────────────────────────────
