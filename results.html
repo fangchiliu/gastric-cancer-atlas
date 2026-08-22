@@ -667,83 +667,285 @@
     </div>
   </section>
 
-  <!-- ── 6. Therapeutic Targeting ────────────────────────────── -->
-  <section style="margin-bottom:1rem;">
+  <!-- ── 6. Therapeutic Landscape ─────────────────── -->
+  <section style="margin-bottom:3rem;">
     <span class="section-eyebrow">Module 6</span>
-    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Therapeutic Targeting — The Activin A Axis as a Drug Target</h2>
-    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:640px;">
-      If <em>INHBA</em> is transcribed by fibroblasts but read by tumour epithelium, the druggable
-      question is not "can we silence the gene" but "where in the ligand–receptor–SMAD chain can the
-      signal be interrupted, and which cells would that hit." This module maps the axis onto
-      existing pharmacology.
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Therapeutic Landscape — What Targeting Activin A Would Involve</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:660px;">
+      If <em>INHBA</em> is transcribed by fibroblasts but read by tumour epithelium, the next
+      question is where in the ligand–receptor–SMAD chain that signal could be interrupted, and
+      what already exists to do it. This module is a target assessment, not a drug proposal —
+      no compound here was designed, screened or docked for gastric cancer.
     </p>
 
     <div class="result-section">
       <div class="result-section-header">
         <div>
-          <div style="font-weight:700; font-size:0.95rem;">Ligand–Receptor Axis &amp; Druggability</div>
-          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Kumar et al. 2022 tumour cells · activin A / TGF-β superfamily signalling components</div>
+          <div style="font-weight:700; font-size:0.95rem;">Ligand–Receptor Axis &amp; Existing Pharmacology</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Kumar et al. 2022 tumour cells · activin A / TGF-β superfamily components · ChEMBL, RCSB, FDA labels</div>
         </div>
-        <span class="coming-soon-badge">⏳ In Progress</span>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip">Protein–protein interface</span>
+          <span class="finding-chip">Every clinical agent is a biologic</span>
+        </div>
       </div>
       <div class="result-section-body">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
 
-          <div class="figure-card">
-            <div class="figure-img">
-              <img src="real_data/plots/sc_INHBA_signaling_axis.jpg" alt="Dot plot of activin A ligand, receptor and SMAD target gene expression across gastric tumour cell types" loading="lazy" />
-            </div>
-            <div class="figure-card-body">
-              <div class="figure-card-title">The Activin A Signalling Axis</div>
-              <p>Ligand, receptor and SMAD-target expression across tumour cell types.
-                 <em>ACVR1B</em>, the type I activin receptor, is an epithelial receptor here —
-                 13.8% of malignant cells carry it versus 0.9% of T cells. Fibroblasts carry
-                 <em>ACVR1</em> (20.1%) and <em>TGFBR2</em> (42.8%) and show high
-                 <em>SERPINE1</em> (40.8%), second only to endothelium. This is the map a drug
-                 would have to act on.</p>
-            </div>
+        <div class="figure-card" style="max-width:620px; margin-bottom:1.5rem;">
+          <div class="figure-img">
+            <img src="real_data/plots/sc_INHBA_signaling_axis.jpg" alt="Dot plot of activin A ligand, receptor and SMAD target gene expression across gastric tumour cell types" loading="lazy" />
           </div>
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">💊</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Druggable Node Inventory</div>
-            <p>Each component of the axis — INHBA/activin A, ACVR1B, ACVR2A/B, SMAD2/3 — mapped
-               against existing inhibitors, ligand traps and neutralising antibodies, with
-               development stage and gastric-cancer evidence.</p>
-          </div>
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">🎯</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">On-Target Cell Selectivity</div>
-            <p>Which cell populations express each candidate target, to estimate what an inhibitor
-               would hit besides the intended CAF–tumour axis — the on-target, off-tissue burden.</p>
-          </div>
-
-          <div class="chart-placeholder" style="min-height:200px;">
-            <div class="chart-icon">📈</div>
-            <div style="font-weight:600; font-size:0.875rem; color:#475569;">Stratification Hypothesis</div>
-            <p>Whether the INHBA-high group that carries the survival signal (log-rank p = 0.023)
-               is also the group enriched for an intact receptor-and-SMAD-target axis, i.e. the
-               patients a stromal inhibitor would be expected to help.</p>
-          </div>
-
-        </div>
-
-        <div style="margin-top:1.25rem; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:1.25rem 1.5rem;">
-          <div style="display:flex; gap:0.75rem; align-items:flex-start;">
-            <div style="font-size:1.25rem; line-height:1;">🔬</div>
-            <div>
-              <div style="font-size:0.82rem; font-weight:700; color:#92400e; margin-bottom:0.3rem;">Section In Progress</div>
-              <p style="font-size:0.82rem; color:#78350f; line-height:1.65; margin:0;">
-                The signalling-axis figure above is real data and is placed here because it is the
-                foundation of the targeting argument rather than of the cell-source argument in
-                Module 5. The remaining panels are placeholders: the druggability annotation and
-                the stratification analysis have not been run yet, and no claim about drug
-                response is being made from these data.
-              </p>
-            </div>
+          <div class="figure-card-body">
+            <div class="figure-card-title">The Activin A Signalling Axis</div>
+            <p>Ligand, receptor and SMAD-target expression across tumour cell types.
+               <em>ACVR1B</em>, the type I activin receptor, tracks the epithelial lineages —
+               13.8% of malignant cells carry it versus 0.9% of T cells. Fibroblasts carry
+               <em>ACVR1</em> (20.1%) and <em>TGFBR2</em> (42.8%) and show high
+               <em>SERPINE1</em> (40.8%), a direct SMAD2/3 target that reads out active rather
+               than merely potential signalling. This is the map any intervention would act on.</p>
           </div>
         </div>
+
+        <h3 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0 0 0.75rem;">What already exists against this pathway</h3>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
+                <th style="text-align:left; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Agent</th>
+                <th style="text-align:left; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Modality</th>
+                <th style="text-align:left; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Status</th>
+                <th style="text-align:left; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Indication</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:600;">Garetosmab</td>
+                <td style="padding:0.55rem 0.75rem;">Anti-activin A monoclonal antibody</td>
+                <td style="padding:0.55rem 0.75rem;">Under FDA review</td>
+                <td style="padding:0.55rem 0.75rem;">Fibrodysplasia ossificans progressiva</td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:600;">Sotatercept <span style="color:#94a3b8;font-weight:400;">(Winrevair)</span></td>
+                <td style="padding:0.55rem 0.75rem;">ActRIIA-Fc ligand trap</td>
+                <td style="padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">APPROVED</span></td>
+                <td style="padding:0.55rem 0.75rem;">Pulmonary arterial hypertension</td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:600;">Luspatercept <span style="color:#94a3b8;font-weight:400;">(Reblozyl)</span></td>
+                <td style="padding:0.55rem 0.75rem;">Modified ActRIIB-Fc trap</td>
+                <td style="padding:0.55rem 0.75rem;"><span style="background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;">APPROVED</span></td>
+                <td style="padding:0.55rem 0.75rem;">Anaemia in MDS / β-thalassaemia</td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:600;">ALK4 / <em>ACVR1B</em> kinase inhibitors</td>
+                <td style="padding:0.55rem 0.75rem;">Small molecule <span style="color:#94a3b8;">(SB-431542, vactosertib, galunisertib)</span></td>
+                <td style="padding:0.55rem 0.75rem;">Investigational</td>
+                <td style="padding:0.55rem 0.75rem;">Various — generally cross-reactive with ALK5/TGF-βR1</td>
+              </tr>
+              <tr>
+                <td style="padding:0.55rem 0.75rem; font-weight:600;">Follistatin, FSTL3</td>
+                <td style="padding:0.55rem 0.75rem;">Endogenous antagonists</td>
+                <td style="padding:0.55rem 0.75rem;">—</td>
+                <td style="padding:0.55rem 0.75rem;">Already engaged in these tumours — see below</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.75rem; color:#94a3b8; line-height:1.6; margin:0.7rem 0 1.5rem;">
+          <strong style="color:#64748b;">Neither approved agent was developed for cancer, and neither
+          is used in gastric cancer.</strong> What they establish is that this pathway can be blocked
+          in people and tolerated — pathway drugability, not efficacy in this disease.
+        </p>
+
+        <h3 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0 0 0.75rem;">Why the target is attractive</h3>
+        <ul style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0 0 1.5rem; padding-left:1.1rem;">
+          <li style="margin-bottom:0.45rem;"><strong>The evidence converges.</strong> Bulk differential
+            expression, independent-cohort replication, a survival association, pathway co-expression
+            and single-cell cell-of-origin all point the same way.</li>
+          <li style="margin-bottom:0.45rem;"><strong>The mechanism is specific and falsifiable.</strong>
+            "CAFs secrete activin A, malignant epithelium carries <em>ACVR1B</em>" is a concrete
+            paracrine claim, testable by co-culture, conditioned medium or receptor knockdown.</li>
+          <li style="margin-bottom:0.45rem;"><strong>The subunit is committed.</strong> <em>INHA</em> is
+            near-absent (~0.12% of cells), so the βA subunit has nowhere to go but activin A — the
+            signal is not diluted across inhibin.</li>
+          <li><strong>The target is extracellular.</strong> A secreted ligand needs no cell
+            penetration, which is precisely why the antibody and trap route worked clinically.</li>
+        </ul>
+
+        <h3 style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:0 0 0.75rem;">Four reasons to be careful</h3>
+        <ol style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0 0 1.5rem; padding-left:1.2rem;">
+          <li style="margin-bottom:0.45rem;"><strong>The survival association is probably confounded
+            with stromal content.</strong> Stroma-rich tumours do worse across many cancers. Since
+            <em>INHBA</em> is a CAF marker here, log-rank p = 0.023 may be reporting how much stroma a
+            tumour has rather than any dependency on activin A. This is the weakest link in the chain,
+            and a Cox model adjusted for purity would settle it. It has not been run.</li>
+          <li style="margin-bottom:0.45rem;"><strong>The pathway has a bypass.</strong> Endothelium
+            expresses <em>INHBB</em> (20.8%), supplying activin B through the same ALK4/SMAD2/3 route.
+            Blocking activin A alone may simply be routed around.</li>
+          <li style="margin-bottom:0.45rem;"><strong>The tumour is already braking it.</strong> Among
+            <em>INHBA</em>-positive CAFs, 46% co-express <em>FSTL3</em> and 20% <em>FST</em> —
+            endogenous antagonists, and <em>FSTL3</em> is itself a SMAD2/3 target. Free rather than
+            total activin A is the quantity that matters, and it has not been measured.</li>
+          <li><strong>Systemic blockade is not free.</strong> Activin A is broadly physiological —
+            erythropoiesis, reproduction, inflammation, bone. Both approved traps carry haematologic
+            effects.</li>
+        </ol>
+
+        <div style="padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            <strong>The defensible claim here is a mechanism, not a medicine.</strong>
+            <em>INHBA</em> marks a CAF-derived, activin A–driven stromal phenotype in gastric cancer,
+            and single-cell resolution explains a bulk observation that looked paradoxical. That is
+            the contribution. This work did not identify, design or propose a drug.
+          </p>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+            If there is a therapeutic angle, the honest version is a <strong>stratification
+            hypothesis</strong>: the pathway is already clinically validated in other diseases by
+            agents that exist, and the open question is whether a CAF-high, <em>INHBA</em>-high
+            gastric subgroup would be the right population in which to test one. That is a question
+            about patient selection, not a discovery claim.
+          </p>
+        </div>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.6; margin:0.9rem 0 0;">
+          <strong style="color:#64748b;">Scope.</strong> Every result on this page is observational.
+          <em>INHBA</em> is associated with these phenotypes; nothing here shows it drives them. No
+          docking, screening or compound design was performed in this project, and no agent named
+          above has been studied in gastric cancer. Drug statuses are current as of writing and
+          should be re-checked against the FDA label before being relied on.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. Target Structure ─────────────────────────────────── -->
+  <section id="structure-section" style="margin-bottom:3rem;">
+    <span class="section-eyebrow">Module 7</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.4rem;">Target Structure — Activin A in 3D</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.25rem; line-height:1.65; max-width:660px;">
+      <em>INHBA</em> encodes the inhibin βA subunit; two βA chains disulfide-bond into
+      <strong>activin A</strong>, the secreted ligand the fibroblast analysis above points to.
+      Both structures shown here are X-ray crystal structures of mature activin A bound to a
+      small molecule — these are <strong>experimental poses, not docking predictions</strong>.
+    </p>
+
+    <!-- Structure switch -->
+    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+      <span style="font-size:0.78rem; color:#4d6a80; font-weight:600; letter-spacing:0.04em;">STRUCTURE</span>
+      <button data-struct="6Y6N" class="struct-btn" style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.5);background:rgba(0,212,170,0.18);color:#00d4aa;cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;">6Y6N · ODQ</button>
+      <button data-struct="6Y6O" class="struct-btn" style="font-size:0.78rem;padding:0.28rem 0.85rem;border-radius:6px;border:1px solid rgba(0,212,170,0.2);background:rgba(0,212,170,0.05);color:#64748b;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.15s;">6Y6O · OCK</button>
+      <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.78rem;color:#64748b;margin-left:0.5rem;cursor:pointer;">
+        <input type="checkbox" id="struct-pocket" style="accent-color:#0d9488;cursor:pointer;" /> Show contact residues
+      </label>
+    </div>
+
+    <button id="struct-toggle" style="display:inline-flex;align-items:center;gap:0.4rem;background:#0d9488;color:#fff;font-weight:600;font-size:0.875rem;padding:0.65rem 1.4rem;border-radius:8px;border:none;cursor:pointer;margin-bottom:0.75rem;transition:background 0.15s,color 0.15s,box-shadow 0.15s;font-family:inherit;">▶&nbsp;Enable 3D Interaction</button>
+
+    <!-- Viewers: complex (wide) + ligand (narrow) -->
+    <div style="display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:1rem;" id="struct-grid">
+
+      <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(0,212,170,0.18); box-shadow:0 4px 32px rgba(0,0,0,0.18);">
+        <div id="struct-complex" style="width:100%; height:520px; background:#0a1628; position:relative;"></div>
+        <div style="position:absolute;top:12px;left:14px;display:flex;gap:0.75rem;flex-wrap:wrap;font-size:11px;font-family:system-ui,sans-serif;color:rgba(255,255,255,0.82);background:rgba(6,13,26,0.82);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 11px;backdrop-filter:blur(10px);pointer-events:none;">
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#00d4aa;display:inline-block;"></span>βA chain A</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#4895ef;display:inline-block;"></span>βA chain B</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:2px;background:#F5A623;display:inline-block;"></span>ligand</span>
+        </div>
+        <div id="struct-loading-1" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;color:#4d6a80;font-size:0.82rem;font-family:system-ui,sans-serif;">
+          <div style="width:36px;height:36px;border:3px solid rgba(0,212,170,0.18);border-top-color:#00d4aa;border-radius:50%;animation:struct-spin 0.8s linear infinite;"></div>
+          Loading structure from RCSB…
+        </div>
+      </div>
+
+      <div style="position:relative; border-radius:14px; overflow:hidden; border:1px solid rgba(0,212,170,0.18); box-shadow:0 4px 32px rgba(0,0,0,0.18);">
+        <div id="struct-ligand" style="width:100%; height:520px; background:#0a1628; position:relative;"></div>
+        <div style="position:absolute;top:12px;left:14px;font-size:11px;font-family:system-ui,sans-serif;color:rgba(255,255,255,0.82);background:rgba(6,13,26,0.82);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 11px;backdrop-filter:blur(10px);pointer-events:none;">
+          Ligand only · ball-and-stick
+        </div>
+      </div>
+    </div>
+    <style>@keyframes struct-spin{to{transform:rotate(360deg)}}
+      @media (max-width:700px){#struct-grid{grid-template-columns:1fr !important;}}</style>
+
+    <p style="font-size:0.75rem; color:#94a3b8; margin-top:0.6rem; line-height:1.5;">
+      Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Right-drag to pan &nbsp;·&nbsp; Esc or double-click exits 3D mode
+    </p>
+
+    <!-- Compound facts -->
+    <div class="result-section" style="margin-top:1.25rem;">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;" id="struct-title">Mature activin A with small molecule 2</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;" id="struct-sub">PDB 6Y6N · X-ray · 2.03 Å · homodimer, chains A + B</div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip" id="struct-chip-mw">MW 246.31</span>
+          <span class="finding-chip" id="struct-chip-formula">C₁₄H₁₈N₂O₂</span>
+        </div>
+      </div>
+      <div class="result-section-body">
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <thead>
+              <tr style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
+                <th style="text-align:left;  padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">PDB</th>
+                <th style="text-align:left;  padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Ligand</th>
+                <th style="text-align:left;  padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Compound</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Formula</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">MW</th>
+                <th style="text-align:right; padding:0.6rem 0.75rem; color:#64748b; font-weight:600;">Resolution</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:0.55rem 0.75rem; font-weight:600;"><a href="https://www.rcsb.org/structure/6Y6N" target="_blank" rel="noopener">6Y6N</a></td>
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">ODQ</td>
+                <td style="padding:0.55rem 0.75rem;">(3<em>R</em>)-3,4-dimethyl-3-propyl-1<em>H</em>-1,4-benzodiazepine-2,5-dione</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">C₁₄H₁₈N₂O₂</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">246.31</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">2.03 Å</td>
+              </tr>
+              <tr>
+                <td style="padding:0.55rem 0.75rem; font-weight:600;"><a href="https://www.rcsb.org/structure/6Y6O" target="_blank" rel="noopener">6Y6O</a></td>
+                <td style="padding:0.55rem 0.75rem; font-weight:500;">OCK</td>
+                <td style="padding:0.55rem 0.75rem;">(3<em>R</em>)-4-ethyl-3-methyl-3-propyl-1<em>H</em>-1,4-benzodiazepine-2,5-dione</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">C₁₅H₂₀N₂O₂</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">260.33</td>
+                <td style="text-align:right; padding:0.55rem 0.75rem;">2.04 Å</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:1.25rem; padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Key Finding</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0 0 0.85rem;">
+            The two ligands differ by a single atom — an <em>N</em>-methyl in ODQ becomes an
+            <em>N</em>-ethyl in OCK — so switching structures above isolates what one methylene
+            does to the binding mode. Both are benzodiazepine-2,5-diones under 261 Da, i.e.
+            fragment-scale chemical matter rather than optimised leads.
+          </p>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+            <strong>Activin A is a hard small-molecule target and the public chemistry is thin.</strong>
+            It is a secreted cytokine that works by protein–protein interaction, with no enzyme
+            active site to occupy. ChEMBL lists only three compounds with recorded activity against
+            the human inhibin βA chain. Every agent that has reached the clinic is a biologic
+            instead: <strong>garetosmab</strong>, an anti-activin A monoclonal antibody for
+            fibrodysplasia ossificans progressiva, and <strong>sotatercept</strong> (Winrevair),
+            an ActRIIA-Fc ligand trap approved for pulmonary arterial hypertension. The fragments
+            above are, in effect, the state of the public art for binding activin A directly.
+          </p>
+        </div>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.6; margin:0.9rem 0 0;">
+          <strong style="color:#64748b;">Note.</strong> Coordinates stream live from RCSB, so the
+          viewer needs a network connection and reflects whatever the PDB currently serves.
+          A crystallographic pose shows that a compound binds and where — it is not evidence of
+          potency, selectivity, or cellular activity, none of which are established for these
+          fragments. Related activin A complexes in the same series: 8QCF, 9N6V, 9N6W, 9N6X,
+          9N74, 9N75, 9N6Y.
+        </p>
       </div>
     </div>
   </section>
@@ -1962,5 +2164,154 @@ function whenScrolledIntoView(id, cb) {
 
 <script src="assets/ui-enhancements.js"></script>
 <script src="assets/nav.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.4.2/3Dmol-min.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   Module 6 — activin A structure viewers (3Dmol.js)
+   Coordinates fetched live from RCSB; no local files, no GPU.
+════════════════════════════════════════════════════════════════ */
+(function () {
+  var elC = document.getElementById('struct-complex');
+  var elL = document.getElementById('struct-ligand');
+  if (!elC || !elL || typeof $3Dmol === 'undefined') return;
+
+  var META = {
+    '6Y6N': { lig:'ODQ', title:'Mature activin A with small molecule 2',
+              res:'2.03 Å', mw:'MW 246.31', formula:'C₁₄H₁₈N₂O₂' },
+    '6Y6O': { lig:'OCK', title:'Mature activin A with small molecule 42',
+              res:'2.04 Å', mw:'MW 260.33', formula:'C₁₅H₂₀N₂O₂' }
+  };
+  var CHAIN_COLS = { A:'#00d4aa', B:'#4895ef' };
+  var LIG_CARBON = '#F5A623';
+  /* 3Dmol wants a whole element->colour map here. The shorthand
+     { prop:'elem', C:'#F5A623' } parses fine but throws inside render(),
+     so build the map off the default palette with carbon overridden. */
+  var LIG_SCHEME = { prop:'elem',
+    map: Object.assign({}, $3Dmol.elementColors.defaultColors, { C: 0xF5A623 }) };
+  var cache = {}, current = '6Y6N', showPocket = false;
+
+  var vC = $3Dmol.createViewer(elC, { backgroundColor:'#0a1628' });
+  var vL = $3Dmol.createViewer(elL, { backgroundColor:'#0a1628' });
+
+  function fetchPDB(id) {
+    if (cache[id]) return Promise.resolve(cache[id]);
+    return fetch('https://files.rcsb.org/download/' + id + '.pdb')
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (t) { cache[id] = t; return t; });
+  }
+
+  function render(id) {
+    var m = META[id];
+    var load = document.getElementById('struct-loading-1');
+    if (load) load.style.display = 'flex';
+
+    return fetchPDB(id).then(function (data) {
+      /* ---- complex: cartoon dimer + ligand sticks ---- */
+      vC.clear();
+      vC.addModel(data, 'pdb');
+      vC.setStyle({ chain:'A' }, { cartoon:{ color:CHAIN_COLS.A, opacity:0.92, thickness:0.4 } });
+      vC.setStyle({ chain:'B' }, { cartoon:{ color:CHAIN_COLS.B, opacity:0.92, thickness:0.4 } });
+      vC.setStyle({ resn:m.lig }, { stick:{ radius:0.22, colorscheme:LIG_SCHEME },
+                                    sphere:{ radius:0.32, colorscheme:LIG_SCHEME } });
+      if (showPocket) {
+        var near = { within:{ distance:4.5, sel:{ resn:m.lig } }, not:{ resn:m.lig } };
+        vC.addStyle(near, { stick:{ radius:0.12, colorscheme:'whiteCarbon', opacity:0.85 } });
+      }
+      /* halo so the fragment is findable inside the dimer */
+      vC.addSurface($3Dmol.SurfaceType.VDW, { opacity:0.28, color:LIG_CARBON }, { resn:m.lig });
+      vC.zoomTo({ resn:m.lig });
+      vC.zoom(0.45);
+      vC.render();
+
+      /* ---- ligand alone ---- */
+      vL.clear();
+      vL.addModel(data, 'pdb');
+      vL.setStyle({}, {});
+      vL.setStyle({ resn:m.lig }, { stick:{ radius:0.16, colorscheme:LIG_SCHEME },
+                                    sphere:{ radius:0.34, colorscheme:LIG_SCHEME } });
+      vL.zoomTo({ resn:m.lig });
+      vL.render();
+      vL.spin('y', 0.4);
+
+      if (load) load.style.display = 'none';
+
+      document.getElementById('struct-title').textContent = m.title;
+      document.getElementById('struct-sub').textContent =
+        'PDB ' + id + ' · X-ray · ' + m.res + ' · homodimer, chains A + B · ligand ' + m.lig;
+      document.getElementById('struct-chip-mw').textContent = m.mw;
+      document.getElementById('struct-chip-formula').textContent = m.formula;
+    }).catch(function (err) {
+      if (window.console) console.error('[structure]', err);
+      if (load) load.innerHTML =
+        '<div style="color:#ef4444;font-family:system-ui,sans-serif;text-align:center;padding:0 1rem;">'
+        + 'Could not display the structure.<br><span style="color:#4d6a80;font-size:0.78rem;">'
+        + 'The viewer streams coordinates from files.rcsb.org.</span></div>';
+    });
+  }
+
+  /* ---- structure switch ---- */
+  var btns = document.querySelectorAll('.struct-btn');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      current = b.getAttribute('data-struct');
+      btns.forEach(function (o) {
+        var on = o === b;
+        o.style.border     = '1px solid rgba(0,212,170,' + (on ? '0.5' : '0.2') + ')';
+        o.style.background = 'rgba(0,212,170,' + (on ? '0.18' : '0.05') + ')';
+        o.style.color      = on ? '#00d4aa' : '#64748b';
+        o.style.fontWeight = on ? '600' : '500';
+      });
+      render(current);
+    });
+  });
+
+  var pocket = document.getElementById('struct-pocket');
+  if (pocket) pocket.addEventListener('change', function () {
+    showPocket = pocket.checked; render(current);
+  });
+
+  /* ---- scroll-safe interaction gate (same pattern as the other 3D panels) ---- */
+  function gate(el, viewer) {
+    el.style.position = 'relative';
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:absolute;inset:0;z-index:20;cursor:default;';
+    el.appendChild(ov);
+    return ov;
+  }
+  var ovC = gate(elC), ovL = gate(elL);
+  var btn = document.getElementById('struct-toggle'), active = false;
+
+  function activate() {
+    active = true; ovC.style.display = 'none'; ovL.style.display = 'none';
+    btn.textContent = '✕  Exit 3D Mode (or press Esc)';
+    btn.style.background = '#0f172a'; btn.style.color = '#0d9488';
+    btn.style.border = '1.5px solid #0d9488';
+    btn.style.boxShadow = '0 0 0 3px rgba(13,148,136,0.15)';
+  }
+  function deactivate() {
+    active = false; ovC.style.display = 'block'; ovL.style.display = 'block';
+    btn.textContent = '▶ Enable 3D Interaction';
+    btn.style.background = '#0d9488'; btn.style.color = '#fff';
+    btn.style.border = 'none'; btn.style.boxShadow = 'none';
+  }
+  if (btn) btn.addEventListener('click', function () { active ? deactivate() : activate(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && active) deactivate(); });
+  [elC, elL].forEach(function (el) {
+    el.addEventListener('dblclick', function () { if (active) deactivate(); });
+  });
+
+  /* ---- responsive ---- */
+  new ResizeObserver(function () { vC.resize(); vL.resize(); }).observe(elC);
+
+  render(current);
+
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.from('#structure-section', {
+      opacity: 0, y: 36, duration: 0.78, ease: 'power2.out',
+      scrollTrigger: { trigger: '#structure-section', start: 'top 82%', once: true }
+    });
+  }
+})();
+</script>
 </body>
 </html>

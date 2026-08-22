@@ -110,10 +110,16 @@
         <ul style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0; padding-left:1.1rem;">
           <li style="margin-bottom:0.6rem;"><strong>Not causality.</strong> Every result here is
             observational and cross-sectional. <em>INHBA</em> may drive stromal activation, be a
-            marker of it, or both; nothing in this data distinguishes those.</li>
+            marker of it, or both; nothing in this data distinguishes those. The perturbation
+            experiments discussed below do establish that the pathway can drive the phenotype in
+            model systems <a href="#ref-2" style="text-decoration:none;">[2]</a><a href="#ref-3" style="text-decoration:none;">[3]</a> —
+            in cell lines, which is not the same as in a patient.</li>
           <li style="margin-bottom:0.6rem;"><strong>Not protein-level signalling.</strong> Activin A
             is regulated post-transcriptionally and antagonised by follistatin. Transcript
-            abundance is a proxy for ligand availability, not a measurement of it.</li>
+            abundance is a proxy for ligand availability, not a measurement of it. Immunohistochemistry
+            in an independent cohort <a href="#ref-1" style="text-decoration:none;">[1]</a> does confirm the
+            protein rises with the transcript, but stains where the secreted ligand accumulates rather
+            than which cell produced it.</li>
           <li style="margin-bottom:0.6rem;"><strong>Not the same patients.</strong> The single-cell
             cohort is independent of TCGA-STAD. It explains the bulk result mechanistically; it
             does not re-derive it in the individuals where the survival association was measured.</li>
@@ -167,6 +173,219 @@
     </div>
   </section>
 
+  <!-- ── External evidence ───────────────────────────────────── -->
+  <section style="margin-bottom:3rem;">
+    <span class="section-eyebrow">External Evidence</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.5rem;">What Independent Groups Have Shown</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:660px;">
+      Everything on the Results page is computational and observational. It can show that
+      <em>INHBA</em> is high, that the association replicates, that it tracks survival and EMT, and
+      which cells transcribe it — but it cannot show that the gene <em>does</em> anything. Three
+      published studies test it functionally. Read against this analysis they close that gap, and
+      raise one question worth taking seriously.
+    </p>
+
+    <div class="result-section" style="margin-bottom:1.5rem;">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">The protein follows the transcript</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Liu et al. 2023 · immunohistochemistry, matched gastric tissue <a href="#ref-1" style="text-decoration:none;">[1]</a></div>
+        </div>
+        <span class="finding-chip">Protein-level confirmation</span>
+      </div>
+      <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1rem;">
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_liu2023_ihc.jpg" alt="Immunohistochemical staining for INHBA in normal gastric mucosa and gastric cancer tissue" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">INHBA Immunohistochemistry — Normal vs. Cancer</div>
+              <p>Anti-INHBA staining in matched tissue. Normal mucosa (A) is largely counterstain-blue with only scattered brown signal; the tumour (B) carries strong, widespread cytoplasmic DAB across the glandular compartment. This is the protein-level counterpart of Module 1 — the upregulation seen in TCGA-STAD and replicated in GSE66229 is not a sequencing artefact, it reaches the protein.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Liu et al. 2023, <em>Scientific Reports</em> (CC BY 4.0).</p>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-size:0.8rem; color:#475569; line-height:1.7; margin:1.1rem 0 0;">
+          One caution that matters for the argument below: immunohistochemistry localises
+          <em>accumulated protein</em>. Activin A is secreted, so brown staining marks where the ligand
+          ends up — deposited on and around epithelium — not which cell transcribed it. That
+          distinction is precisely what Module 5 resolves, and it is why an IHC image showing signal
+          "in the tumour" is not in conflict with a single-cell result placing the transcript in
+          fibroblasts.
+        </p>
+      </div>
+    </div>
+
+    <div class="result-section" style="margin-bottom:1.5rem;">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">Manipulating INHBA moves the phenotype in both directions</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Zhou et al. 2026 · knockdown, overexpression, xenograft <a href="#ref-3" style="text-decoration:none;">[3]</a></div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip">Loss and gain of function</span>
+          <span class="finding-chip">In vivo</span>
+        </div>
+      </div>
+      <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem;">
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_zhou2026_knockdown.jpg" alt="INHBA knockdown in Hs746T gastric cancer cells with qPCR, western blot and wound-healing assay" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Knockdown — Migration Falls</div>
+              <p>Four independent siRNAs lower <em>INHBA</em> in Hs746T (qPCR, and the 47 kDa band against 36 kDa GAPDH). In the scratch assay the knockdown monolayers have closed visibly less of the wound at 48 h than control.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Zhou et al. 2026, <em>Oncology Research</em>.</p>
+            </div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_zhou2026_overexpression.jpg" alt="INHBA overexpression in AGS cells with qPCR, western blot and migration quantification" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Overexpression — Migration Rises</div>
+              <p>The reciprocal experiment. Transfected AGS cells reach roughly 600-fold <em>INHBA</em> mRNA and ~3.2× protein, and the migrated fraction in HGC-27 roughly doubles, 0.12 → 0.23. The effect tracks the direction of the manipulation rather than appearing only on loss.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Zhou et al. 2026, <em>Oncology Research</em>.</p>
+            </div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_zhou2026_xenograft.jpg" alt="Nude mouse xenografts comparing vector and INHBA-overexpressing gastric cancer cells" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Xenograft — Tumours Grow Larger</div>
+              <p>Subcutaneous xenografts in nude mice. By day 18 the <em>INHBA</em>-overexpressing tumours reach ≈650 mm³ against ≈240 mm³ for vector, and excised weight rises from ≈0.30 g to ≈0.50 g. The gene is not merely correlated with an aggressive state — supplying more of it produces one.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Zhou et al. 2026, <em>Oncology Research</em>.</p>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-size:0.8rem; color:#475569; line-height:1.7; margin:1.1rem 0 0;">
+          This is the piece the present analysis cannot supply. Modules 1–3 establish that
+          <em>INHBA</em> is high, replicated, associated with worse survival and co-expressed with EMT;
+          all of that is observational. A bidirectional perturbation with a matching <em>in vivo</em>
+          readout is what turns "associated with an invasive state" into "capable of producing one".
+        </p>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-header">
+        <div>
+          <div style="font-weight:700; font-size:0.95rem;">The mechanism runs through myeloid cells</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-top:0.2rem;">Zhang et al. 2025 · macrophage co-culture and sh-INHBA xenografts <a href="#ref-2" style="text-decoration:none;">[2]</a></div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="finding-chip">M2 polarisation</span>
+          <span class="finding-chip">TGF-β / CCL2</span>
+        </div>
+      </div>
+      <div class="result-section-body">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1rem;">
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_zhang2025_invitro.jpg" alt="INHBA knockdown in AGS and HGC-27 cells and reduced M2 markers in co-cultured THP-1 macrophages" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Co-culture — M2 Markers Collapse</div>
+              <p>INHBA is knocked down in AGS and HGC-27 (A, B), and THP-1-derived M0 macrophages are co-cultured with them. All four M2 markers — <em>Arg-1</em>, <em>IL-10</em>, <em>CD163</em>, <em>CD206</em> — fall with both siRNAs and in both cell lines (C, D). Activin A availability is changing what the macrophages become.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Zhang et al. 2025, <em>Pathology – Research and Practice</em>.</p>
+            </div>
+          </div>
+          <div class="figure-card">
+            <div class="figure-img">
+              <img src="real_data/external/ext_zhang2025_invivo.jpg" alt="sh-INHBA xenograft tumour growth, weight and immunohistochemistry for Ki-67, E-cadherin and cleaved caspase-3" loading="lazy" />
+            </div>
+            <div class="figure-card-body">
+              <div class="figure-card-title">Knockdown Xenograft — Growth, EMT and Apoptosis</div>
+              <p>sh-INHBA tumours reach ≈175 mm³ against ≈380 mm³ at day 22, and weigh ≈140 mg against ≈300 mg. The stained sections carry the phenotype: Ki-67 down, <strong>E-cadherin restored</strong>, cleaved caspase-3 up. Losing INHBA makes these tumours less proliferative, more epithelial and more apoptotic.</p>
+              <p style="font-size:0.72rem; color:#94a3b8; margin:0.6rem 0 0;">Reproduced from Zhang et al. 2025, <em>Pathology – Research and Practice</em>.</p>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-size:0.8rem; color:#475569; line-height:1.7; margin:1.1rem 0 0;">
+          Two things here line up with this project directly. The E-cadherin panel is EMT reversing on
+          INHBA loss — the same programme Module 3 found <em>INHBA</em> co-varying with most strongly
+          (NES = 3.76). And the macrophage result gives a role to the population Module 5 flagged as a
+          <em>constitutive</em> INHBA source: macrophages sit near 18% positive in both tumour and
+          normal tissue, so they are both a supplier of this ligand and, per this paper, a responder to it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Source vs sufficiency ───────────────────────────────── -->
+  <section style="margin-bottom:3rem;">
+    <span class="section-eyebrow">Reconciliation</span>
+    <h2 style="font-size:1.5rem; margin-bottom:0.5rem;">Source Versus Sufficiency</h2>
+    <p style="font-size:0.84rem; color:#64748b; margin-bottom:1.5rem; line-height:1.6; max-width:660px;">
+      There is an apparent conflict between those experiments and this analysis, and it is worth
+      stating plainly rather than leaving for a reader to notice.
+    </p>
+
+    <div class="result-section">
+      <div class="result-section-body">
+        <p style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0 0 1.1rem;">
+          All three functional studies manipulate <em>INHBA</em> <strong>inside gastric cancer cell
+          lines</strong> — AGS, HGC-27, Hs746T — and get clean, dose-appropriate phenotypes. This
+          project's single-cell result says the malignant epithelium is <strong>not</strong> a
+          meaningful source of the transcript in patient tissue: 0.80% → 1.34% positive, not
+          significant, while fibroblasts go 1.52% → 20.97%. Taken at face value those look
+          incompatible.
+        </p>
+        <p style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0 0 1.1rem;">
+          They are not, because they answer different questions. <strong>A cell line has no
+          stroma.</strong> A gastric cancer line in a dish has no cancer-associated fibroblast to
+          supply activin A, so whatever it needs it must transcribe itself. That makes such a line an
+          excellent test of whether the pathway <em>can</em> drive migration, proliferation and M2
+          polarisation, and a poor model of <em>who supplies the ligand</em> in a patient. The same
+          applies to the xenografts: human tumour cells in an immunodeficient mouse recruit murine
+          stroma and lack functional lymphocytes, so they establish that tumour-derived activin A is
+          <em>sufficient</em>, not that it is the physiological source. And the immunohistochemistry
+          stains secreted protein where it accumulates, which for a diffusible ligand is not the same
+          question as which cell made it.
+        </p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:1rem; margin:0 0 1.25rem;">
+          <div style="padding:0.9rem 1.1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+            <div style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.35rem;">What the published work establishes</div>
+            <p style="font-size:0.8rem; color:#475569; line-height:1.65; margin:0;">
+              Activin A signalling is <strong>sufficient</strong> to produce the invasive, immune-remodelling
+              phenotype — in both directions, in vitro and in vivo.
+            </p>
+          </div>
+          <div style="padding:0.9rem 1.1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+            <div style="font-size:0.78rem; font-weight:700; color:#0f172a; margin-bottom:0.35rem;">What this analysis adds</div>
+            <p style="font-size:0.8rem; color:#475569; line-height:1.65; margin:0;">
+              In actual patient tissue the ligand is <strong>supplied</strong> mostly by CAFs, with
+              macrophages as a constitutive contributor and the epithelium carrying the receptor.
+            </p>
+          </div>
+        </div>
+        <p style="font-size:0.86rem; color:#334155; line-height:1.7; margin:0 0 1.1rem;">
+          Two experiments would separate these cleanly: a <strong>CAF–tumour co-culture in which only
+          the fibroblast compartment carries <em>INHBA</em></strong>, testing whether stromal ligand
+          reproduces the tumour-cell phenotype; and <strong>spatial transcriptomics</strong> placing
+          <em>INHBA</em> transcript relative to <em>ACVR1B</em>-positive epithelium in intact tissue.
+          Neither has been done here.
+        </p>
+        <div style="padding:1rem 1.25rem; background:#f0fdfa; border:1px solid #99f6e4; border-radius:8px;">
+          <div style="font-size:0.8rem; font-weight:700; color:#0f766e; margin-bottom:0.4rem;">Why the distinction is the point</div>
+          <p style="font-size:0.82rem; color:#134e4a; line-height:1.65; margin:0;">
+            If the pathway is functional but the physiological source is stromal, then an intervention
+            aimed at the tumour cell is aimed at the wrong compartment — and the question that matters
+            becomes the one raised in Module 6: <strong>which patients</strong>, meaning the CAF-high,
+            <em>INHBA</em>-high subgroup, rather than <strong>which molecule</strong>. That is the
+            contribution this project makes to a story the three papers below had already started.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ── Where to go next ────────────────────────────────────── -->
   <section style="margin-bottom:1rem;">
     <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
@@ -176,6 +395,59 @@
       <a href="methods.html" style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.6rem 1.1rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.85rem; font-weight:600; color:#0f172a; text-decoration:none;">
         Methods
       </a>
+    </div>
+  </section>
+
+
+  <!-- ── References ──────────────────────────────────────────── -->
+  <section id="references" style="margin-bottom:1rem;">
+    <span class="section-eyebrow">References</span>
+    <h2 style="font-size:1.5rem; margin-bottom:1.25rem;">References</h2>
+
+    <div class="result-section">
+      <div class="result-section-body">
+        <ol style="list-style:none; padding:0; margin:0; counter-reset:ref;">
+          <li id="ref-1" style="display:flex; gap:0.9rem; padding:0.9rem 0; border-bottom:1px solid #f1f5f9;">
+            <span style="flex:0 0 auto; font-weight:700; color:#0d9488; font-size:0.85rem;">[1]</span>
+            <span style="font-size:0.84rem; color:#334155; line-height:1.65;">
+              Liu F, Liu J, Shi X, Hu X, et al.
+              <strong>Identification of INHBA as a potential biomarker for gastric cancer through a
+              comprehensive analysis.</strong>
+              <em>Scientific Reports</em> 2023;13(1).
+              <a href="https://doi.org/10.1038/s41598-023-39784-1" target="_blank" rel="noopener">doi:10.1038/s41598-023-39784-1</a>
+              <span style="color:#94a3b8;">· Open access, CC BY 4.0</span>
+            </span>
+          </li>
+          <li id="ref-2" style="display:flex; gap:0.9rem; padding:0.9rem 0; border-bottom:1px solid #f1f5f9;">
+            <span style="flex:0 0 auto; font-weight:700; color:#0d9488; font-size:0.85rem;">[2]</span>
+            <span style="font-size:0.84rem; color:#334155; line-height:1.65;">
+              Zhang F, Zhou C, Wang X, Liu Y, et al.
+              <strong>INHBA, transcriptionally activated by SPI1, facilitates gastric cancer progression
+              by inducing macrophage recruitment and M2 polarization via activating the TGF-β signaling
+              to increase CCL2.</strong>
+              <em>Pathology – Research and Practice</em> 2025;269:155920.
+              <a href="https://doi.org/10.1016/j.prp.2025.155920" target="_blank" rel="noopener">doi:10.1016/j.prp.2025.155920</a>
+            </span>
+          </li>
+          <li id="ref-3" style="display:flex; gap:0.9rem; padding:0.9rem 0;">
+            <span style="flex:0 0 auto; font-weight:700; color:#0d9488; font-size:0.85rem;">[3]</span>
+            <span style="font-size:0.84rem; color:#334155; line-height:1.65;">
+              Zhou G, Zhang R, Nie L, Si Y, et al.
+              <strong>INHBA promotes the progression of gastric cancer by activating MAPK signaling
+              pathway via targeting ITGA6.</strong>
+              <em>Oncology Research</em> 2026;34(3):1–10.
+              <a href="https://doi.org/10.32604/or.2025.070333" target="_blank" rel="noopener">doi:10.32604/or.2025.070333</a>
+            </span>
+          </li>
+        </ol>
+
+        <p style="font-size:0.72rem; color:#94a3b8; line-height:1.6; margin:1.1rem 0 0;">
+          <strong style="color:#64748b;">Figure reuse.</strong> Panels above are reproduced from the
+          cited papers for discussion, each credited beneath its caption. Reference [1] is open access
+          under CC BY 4.0. Rights for the remaining panels rest with their publishers and have not been
+          cleared here.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -196,6 +468,51 @@
     </div>
   </div>
 </footer>
+
+
+<!-- Lightbox — click any figure image to enlarge -->
+<div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
+  <button class="lightbox-close" aria-label="Close">✕</button>
+  <img class="lightbox-img" src="" alt="" />
+  <div class="lightbox-caption"></div>
+</div>
+
+<script>
+(function () {
+  var overlay = document.getElementById('lightbox-overlay');
+  if (!overlay) return;
+  var imgEl     = overlay.querySelector('.lightbox-img');
+  var captionEl = overlay.querySelector('.lightbox-caption');
+  var closeBtn  = overlay.querySelector('.lightbox-close');
+
+  function open(src, alt, caption) {
+    imgEl.src = src; imgEl.alt = alt || '';
+    captionEl.textContent = caption || '';
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.figure-img img').forEach(function (img) {
+    img.addEventListener('click', function () {
+      var card  = img.closest('.figure-card');
+      var title = card && card.querySelector('.figure-card-title');
+      open(img.src, img.alt, title ? title.textContent : '');
+    });
+  });
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay || e.target === imgEl) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
+})();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>

@@ -1,2 +1,7 @@
 .DS_Store
 **/.DS_Store
+
+# Source PDFs for the papers cited on the Discussion page. Kept locally only:
+# publisher rights are not cleared for redistribution, and the folder is ~98 MB.
+# The figures actually shown on the site live in real_data/external/.
+external_papers/
